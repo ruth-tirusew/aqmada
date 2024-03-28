@@ -1,0 +1,99 @@
+import { NextRequest, NextResponse } from "next/server";
+
+import { db } from "@/app/lib/db";
+import { InvoiceType } from "@/app/types";
+
+import {generateRefNumber} from "@/app/lib/utils/generateRefNumber"
+
+export async function POST(request: Request) {
+    const body = await request.json();
+    let { vendor, order_number,file, items } = body;
+     if (!order_number){
+      order_number = generateRefNumber("PO")
+     }
+     for (const item of items) {
+      if(item.id === ''){
+        console.log("HERE")
+        throw new Error('Please select an item')
+      }
+    }
+    try {
+        const vendor_input = await db.vendor.create({
+          data: {
+            name: vendor,
+          },
+        });
+        vendor = vendor_input.id;
+      
+       const purchase = await db.purchase.create({
+        data: {
+            vendor_id: vendor_input?.id, 
+            order_number,
+            file
+        },
+      });
+      const purchaseInventoryData = items.map((item: any) => {
+        return {
+          inventory_id: item.id,
+          purchase_id: purchase.id,
+          quantity: item.quantity,
+          price: item.initial_price,
+        };
+      });
+  
+      await db.purchaseItem.createMany({
+        data: purchaseInventoryData,
+      });
+  
+      for (const item of items) {
+        await db.item.update({
+          where: { id: item.id },
+          data: { quantity: { increment: item.quantity } },
+        });
+      }
+  
+      console.log(purchase);
+      return NextResponse.json(purchase);
+    } catch (error) {
+      console.error('Error creating purchase:', error);
+      return NextResponse.error();
+    }
+  }
+  
+
+  interface InvoiceParams {
+    id?: string;
+    customer_name?: string;
+  }
+  
+  export async function GET(request: NextRequest, params?: InvoiceParams): Promise<NextResponse> {
+    const { id, customer_name } = params || {};
+  
+    console.log(params)
+    const queryOptions: any = {
+      include: {
+        inventory: true,
+      },
+    };
+  
+    if (id) {
+      console.log("HERE SERVE")
+      queryOptions.where = {
+        id: id,
+      };
+    }
+  
+    if (customer_name) {
+      queryOptions.where = {
+        ...queryOptions.where,
+        customer_name,
+      };
+    }
+  
+    const items = await db.invoice.findMany(queryOptions);
+  
+    // console.log(items);
+    return NextResponse.json(items);
+  }
+
+

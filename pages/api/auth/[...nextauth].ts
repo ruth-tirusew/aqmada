@@ -1,0 +1,79 @@
+import GoogleProvider from "next-auth/providers/google";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import NextAuth, {AuthOptions} from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import bcrypt from "bcrypt";
+
+import { db } from "@/app/lib/db";
+
+export const authOptions: AuthOptions = {
+  adapter: PrismaAdapter(db),
+  providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      profile(profile){
+        return{
+          id: profile.sub,
+          name: profile.name,
+          email: profile.email,
+          image: profile.picture,
+        }
+        
+      }
+    }),
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        email: { label: "Email", type: "text" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        // if (credentials?.email || credentials?.password) {
+        //   throw new Error("Invalid email or password");
+        // }
+        console.log("Here1", credentials)
+        const user = await db.user.findUnique({
+          where: { email: credentials?.email as string },
+        });
+
+        console.log("Here2", user)
+        // if (!user) {
+        //   throw new Error("Invalid email or password");
+        // }
+
+        const isValid = await bcrypt.compare(
+          credentials?.password as string,
+          user?.password as string
+        );
+        console.log(isValid, user?.password)
+        // if (!isValid) {
+        //   throw new Error("Invalid email or password");
+        // }
+
+        return user;
+      },
+    }),
+  ],
+  pages: {
+    signIn: "/login",
+  },
+  //   callbacks: {
+  //     async session({ session, token, user }) {
+  //       session.user.id = user.id;
+  //       return session;
+  //     },
+  //   },
+
+  session: {
+    strategy: "jwt",
+  },
+  secret: process.env.NEXTAUTH_SECRET,
+  // jwt: {
+  //   secret: process.env.AUTH_SECRET_KEY,
+  // },
+  debug: process.env.NODE_ENV === "development",
+};
+
+
+export default NextAuth(authOptions);

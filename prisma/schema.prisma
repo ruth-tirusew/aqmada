@@ -1,0 +1,213 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+enum Role {
+  RootUser
+  CandidateUser
+}
+
+enum PaymentStatus{
+  PAID
+  DUE
+}
+
+model Waitlist{
+  id  String   @id @unique @default(uuid())
+  email String @unique
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  
+}
+
+
+model Account {
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Company{
+  id         String   @id @unique @default(uuid())
+  name String
+  size String
+  industry String
+  location String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+ // is_deleted Boolean @default(false)
+
+  users User[]
+  warehouse Warehouse[]
+  invoices Invoice[]
+  logs Logs[]
+}
+
+model Logs{
+  id         String   @id @unique @default(uuid())
+  company_id String
+  company Company @relation(fields: [company_id], references: [id])
+  action String
+  
+  created_at DateTime @default(now())
+}
+
+model User {
+  id         String   @id @unique @default(uuid())
+  name String?
+  // last_name  String
+  email      String @unique
+  image      String?
+  password   String?
+  emailVerified Boolean? @default(false)
+  role Role @default(RootUser)
+
+  company_id String?
+  company Company? @relation(fields: [company_id], references: [id])
+
+  accounts        Account[]
+  received_items ReceivingNote[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Warehouse{
+  id  String   @id @unique @default(uuid())
+  name String? 
+  location String?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  company_id String
+  company Company @relation(fields: [company_id], references: [id])
+  receiving_note ReceivingNote[]
+
+  items Item[]
+}
+
+model ReceivingNote{
+  id String @id @unique @default(uuid())
+  warehouse_id String
+  warehouse Warehouse @relation(fields: [warehouse_id], references: [id])
+
+  items ReceivedItem[]
+  
+  created_at DateTime @default(now())
+  created_by_id String
+  created_by User @relation(fields: [created_by_id], references: [id])
+  updated_at DateTime @updatedAt
+}
+
+model ReceivedItem{
+  id String @id @unique @default(uuid())
+  receiving_note_id String
+  receiving_note ReceivingNote @relation(fields: [receiving_note_id], references: [id])
+
+  item_id String
+  items Item @relation(fields: [item_id], references: [id])
+
+  quantity Int
+}
+
+model Item {
+    id         String   @id @unique @default(uuid())
+    image String?
+    name String
+    description String?
+    quantity Int @default(0)
+    initial_price Float
+    created_at DateTime @default(now())
+    updated_at DateTime @updatedAt
+    is_deleted Boolean @default(false)
+
+    warehouse_id String
+    warehouse Warehouse @relation(fields: [warehouse_id], references: [id])
+      
+    invoice InvoiceItem[]
+    purchase PurchaseItem[]
+    receiving_note_item ReceivedItem[]
+}
+model Invoice  {
+    id  String   @id @unique @default(uuid())
+    ref_number String @unique
+    customer_name String?
+    payment_status PaymentStatus 
+    items InvoiceItem[]
+    company_id String
+
+    company Company @relation(fields: [company_id], references: [id])
+
+    created_at DateTime @default(now())
+    updated_at DateTime @updatedAt
+    
+  }
+
+model InvoiceItem {
+    item Item     @relation(fields: [inventory_id], references: [id])
+    inventory_id     String 
+    invoice   Invoice @relation(fields: [invoice_id], references: [id])
+    invoice_id String 
+    quantity Int @default(0)
+    selling_price Float @default(0.0)
+    created_at DateTime @default(now())
+
+    @@id([inventory_id, invoice_id])
+}
+
+model Vendor{
+  id  String   @id @unique @default(uuid())
+  name String
+
+  purchases Purchase[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+model Purchase  {
+    id  String   @id @unique @default(uuid())
+    order_number String?  @unique
+    file String?
+ 
+    inventory PurchaseItem[]
+
+    vendor_id String
+    vendor Vendor  @relation(fields: [vendor_id], references: [id])
+
+    created_at DateTime @default(now())
+    updated_at DateTime @updatedAt
+    
+}
+model PurchaseItem {
+    item  Item     @relation(fields: [inventory_id], references: [id])
+    inventory_id     String 
+    quantity Int
+    price Float
+    purchase   Purchase @relation(fields: [purchase_id], references: [id])
+    purchase_id String 
+    created_at DateTime @default(now())
+
+    @@id([inventory_id, purchase_id])
+}
+
+
