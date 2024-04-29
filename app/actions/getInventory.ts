@@ -2,7 +2,7 @@ import { db } from "@/app/lib/db";
 
 import { getServerSession } from "next-auth/next"
 import { authOptions } from 'pages/api/auth/[...nextauth]';
-import { ItemType } from "../types";
+import { ItemType } from "../[locale]/types";
 import getCurrentUser from "./getCurrentUser";
 import { NextResponse } from "next/server";
 export default async function getInventory(): Promise<ItemType[]>{

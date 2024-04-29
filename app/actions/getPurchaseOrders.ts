@@ -1,5 +1,5 @@
 import { db } from "@/app/lib/db";
-import { InvoiceType } from "../types";
+import { InvoiceType } from "../[locale]/types";
 
 export default async function getPurchaseOrders(){
     try{

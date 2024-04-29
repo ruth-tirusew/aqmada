@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { db } from "@/app/lib/db";
-import { InvoiceType } from "@/app/types";
+import { InvoiceType } from "@/app/[locale]/types";
 
 import {generateRefNumber} from "@/app/lib/utils/generateRefNumber"
 

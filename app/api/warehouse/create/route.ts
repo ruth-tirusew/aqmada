@@ -8,6 +8,7 @@ export async function POST(request: Request) {
     try{
         const user = await getCurrentUser()
         const body = await request.json();
+        
     
         const {name, location} = body
     
@@ -22,6 +23,7 @@ export async function POST(request: Request) {
         return NextResponse.json(warehouse)
     }
     catch(error:any){
+        console.log(error)
         return NextResponse.json({error: error.message, status: 500})
     }
     }

@@ -49,6 +49,7 @@ interface DataTableProps<TData, TValue> {
   search?: string;
   buttonObj?: buttonObj;
   title?: string;
+  searchPlaceholder?: string;
 }
 
 export function DataTable<TData, TValue>({
@@ -60,6 +61,7 @@ export function DataTable<TData, TValue>({
   search,
   buttonObj,
   title,
+  searchPlaceholder
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -89,7 +91,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="w-full bg-white p-4 rounded-md mt-4 dark:bg-black">
+    <div className="w-full bg-white dark:bg-black p-4 rounded-md mt-4">
         {button && buttonObj?.name && (
         <div className="flex customers-center py-4">
           <Link href={buttonObj.url} passHref>
@@ -103,14 +105,14 @@ export function DataTable<TData, TValue>({
           </Link>
           <div className="flex ml-auto items-center">
           <Input
-            placeholder="Search..."
+            placeholder={searchPlaceholder}
             value={
               (table.getColumn(`${search}`)?.getFilterValue() as string) ?? ""
             }
             onChange={(event) =>
               table.getColumn(`${search}`)?.setFilterValue(event.target.value)
             }
-            className="max-w-sm"
+            className="max-w-sm bg-transparent"
           />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

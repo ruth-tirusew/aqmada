@@ -69,12 +69,21 @@ export async function POST(request: Request) {
   }
   
   export async function GET(request: NextRequest): Promise<NextResponse> {
+    const user = await getCurrentUser()
+    if (!user) {
+      return NextResponse.json({ message: "You are not logged in" }, { status: 401 });
+    }
+  
     const queryOptions: any = {
+      where: {
+          company_id: user?.company_id
+      },
       include: {
         items: {
           include: {
             item: true
           }
+
         },
       },
       orderBy: {

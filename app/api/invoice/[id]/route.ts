@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/app/lib/db";
-import { Invoice } from "@/app/types";
 
 
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
@@ -10,7 +9,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       id: id,
     },
     include: {
-      inventory: {
+      items: {
         include: {
           item : true
         }
@@ -22,14 +21,13 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     return new Response("Not Found", { status: 404 });
   }
 
-  console.log(invoice);
   return NextResponse.json(invoice);
 }
 
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {
       const { id } = params
-       await db.itemInvoice.deleteMany({
+       await db.invoiceItem.deleteMany({
           where: {
               invoice_id: id
           }

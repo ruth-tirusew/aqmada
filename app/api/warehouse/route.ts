@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 import { db } from "@/app/lib/db";
 import getCurrentUser from "@/app/actions/getCurrentUser";
-import { WarehouseType } from "@/app/types";
+import { WarehouseType } from "@/app/[locale]/types";
 
 
 export async function GET(request: Request){

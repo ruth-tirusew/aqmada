@@ -1,10 +1,10 @@
 
 import axios from 'axios';
-import { Invoice } from '../../types';
+import { InvoiceType } from 'app/[locale]/types';
 
-const getFilteredInvoices = async (filter?: string, invoice?: Invoice[]) => {
+const getFilteredInvoices = async (filter?: string, invoice?: InvoiceType[]) => {
     try {
-      let invoices:Invoice[] = []
+      let invoices:InvoiceType[] = []
       if (invoice) {
         invoices = invoice;
       } else {
@@ -40,4 +40,4 @@ const getFilteredInvoices = async (filter?: string, invoice?: Invoice[]) => {
   };
   
 
-  export default getFilteredInvoices;
+  export default getFilteredInvoices; 

@@ -1,6 +1,6 @@
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import { db } from "@/app/lib/db";
-import { UserType } from "../types";
+import { UserType } from "../[locale]/types";
 
 export async function getUsers(): Promise<UserType[]> {
     try{

@@ -3,7 +3,7 @@ import { db } from "@/app/lib/db";
 import { getServerSession } from "next-auth/next"
 import { authOptions } from 'pages/api/auth/[...nextauth]';
 
-import { InvoiceType } from "../types";
+import { InvoiceType } from "../[locale]/types";
 
 export default async function getInvoices(): Promise<InvoiceType[]>{
     try{
@@ -33,7 +33,7 @@ export default async function getInvoices(): Promise<InvoiceType[]>{
           }
         }
         const invoices = await db.invoice.findMany(queryOptions)
-        const safeInvoice = invoices.map((invoice)=>{
+        const safeInvoice = invoices.map((invoice: any)=>{
             return({
               ...invoice,
               created_at: invoice.created_at.toISOString(),
