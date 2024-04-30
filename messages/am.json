@@ -4,6 +4,9 @@
     "Inventory": "ሸቀጥ",
     "inventoryItems": "አጠቃላይ ሸቀጥ",
     "Invoices": "ደረሰኞች",
+    "invoice":"ደረሰኝ",
+    "invoiceDetails":"የደረሰኝ ዝርዝሮች",
+    "dateIssued":"የተሰጠበት ቀን",
     "Purchases": "ግዢ",
     "Reports": "ሪፖርትዎች",
     "Users": "ተጠቃሚዎች",
@@ -56,6 +59,8 @@
     "click":"ለመጫን መታ ያድርጉ",
     "selectWarehouse":"መጋዘን ይምረጡ",
     "invoiceSubheading":"የተቀመዝገቡ ጠቅላላ ደረሰኞች ሪፖርት",
+    "invoiceFormHeading":"የደረሰኝ ቅጽ",
+    "invoiceFormSubheading":"ደረሰኝ ለመመዝገብ ቅጹን ይሙሉ።",
     "email":"ኢሜይል",
     "fullName":"ሙሉ ስም",
     "role":"ሚና",
@@ -76,6 +81,10 @@
             "industry":"ኢንዱስትሪ",
             "location":"አድራሻ"
         }
-    }
+    },
+    "image":"ምስል",
+    "printInvoice":"ደረሰኝ ያትሙ",
+    "editInvoice":"ደረሰኝ አርትዕ",
+    "Form": "ቅጽ"
     
     }

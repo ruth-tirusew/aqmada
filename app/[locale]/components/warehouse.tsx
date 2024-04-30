@@ -44,7 +44,7 @@ const Warehouse = () => {
       <DialogTrigger asChild>
         <Button
           variant="ghost"
-          className="text-md w-full text-center px-8 py-4 md:px-6 md:py-3 dark:text-white text-black dark:bg-gray-900 hover:bg-gray-800"
+          className="text-md w-full text-center px-8 py-4 md:px-6 md:py-3 dark:text-white text-black dark:bg-gray-900 "
         >
             <span className="font-semibold text-xl mr-2">+</span>
             <p>Register Warehouse</p>

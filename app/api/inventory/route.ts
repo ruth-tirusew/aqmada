@@ -6,7 +6,7 @@ import getCurrentUser from "@/app/actions/getCurrentUser";
 
 export async function POST(request: Request) {
     const body = await request.json();
-    const { image, name, quantity, initial_price, warehouse_id } = body;
+    const { image, name, description, quantity, initial_price, warehouse_id } = body;
     const user = await getCurrentUser();
   
     if (!user) {
@@ -30,6 +30,7 @@ export async function POST(request: Request) {
       data: {
         warehouse_id,
         image,
+        description,
         name,
         quantity,
         initial_price

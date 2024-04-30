@@ -36,6 +36,7 @@ const deleteItem = async (id: string) => {
 };
 
 
+
 export const columns: ColumnDef<ItemType>[] = [
   
   {
@@ -79,6 +80,16 @@ export const columns: ColumnDef<ItemType>[] = [
 
       return (
         <div className="flex space-x-2">
+            <Button
+                variant="ghost"
+                size="sm"
+                className="rounded-full bg-white/90 px-2 py-2 text-gray-400 transition hover:text-blue-500"
+                onClick={()=>{
+                  window.location.href = `/dashboard/inventory/${item.id}`;
+                }}
+              >
+                <TbPencil className="h-4 w-4 text-blue-500 cursor-pointer"/>
+            </Button>
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button

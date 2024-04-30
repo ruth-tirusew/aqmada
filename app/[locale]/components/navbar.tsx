@@ -6,7 +6,6 @@ import { FaLinkedinIn } from "react-icons/fa";
 import { GoRocket } from "react-icons/go";
 import { FaTelegramPlane } from "react-icons/fa";
 import ThemeSwitch from "./theme-switch";
-import JoinWaitlist from "./joinwaitlist";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -89,7 +88,6 @@ const Navbar = () => {
           <a href="#" className="dark:text-white px-3 py-2 text-base font-medium flex gap-2 items-center my-2">
             <FaLinkedinIn /> <span>Linked In</span>
           </a>
-          <JoinWaitlist />
         </div>
       </div>
     </nav>

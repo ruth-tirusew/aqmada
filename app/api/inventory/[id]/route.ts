@@ -1,8 +1,10 @@
 import { NextResponse, NextRequest } from "next/server";
 import { db } from "@/app/lib/db";
 
-export async function GET(request: NextRequest, id: string) {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+    console.log(request)
     try {
+        const { id } = params;
         if (!id) {
             return NextResponse.next();
         }
@@ -50,7 +52,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
     const {id} = params;
     try {
-        const { image, item_name, quantity, initial_price, warehouse_id } = await request.json();
+        const { image, name, description, quantity, initial_price, warehouse_id } = await request.json();
         if (!id) {
             return NextResponse.next();
         }
@@ -61,7 +63,8 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
                   },
                   data: {
                     image: image,
-                    name: item_name,
+                    name: name,
+                    description: description,
                     quantity: quantity,
                     initial_price: initial_price,
                     warehouse_id: warehouse_id

@@ -62,7 +62,7 @@ export default function InventoryFormPage({params: {locale}}) {
       const response = await axios.post("/api/inventory", formData);
       setLoading(true);
       console.log("Save response:", response.data);
-      router.push("/inventory");
+      router.push("/dashboard/inventory");
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -123,8 +123,7 @@ export default function InventoryFormPage({params: {locale}}) {
           </p>
         </div>
         <form>
-          <div className="flex gap-4">
-            <ImageUpload onChange={(value) => setImage(value)} value={image} locale={locale}/>
+          <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-4 w-full">
               <div className="flex flex-col">
                 <p>{dict?.warehouse}</p>
@@ -134,8 +133,8 @@ export default function InventoryFormPage({params: {locale}}) {
               >
                 <SelectTrigger className="w-full dark:bg-gray-900">
                   <SelectValue placeholder={dict?.selectWarehouse}/>
-                  <SelectContent className="dark:bg-gray-900 dark:text-white hover:bg-gray-800">
-                    <SelectGroup className="dark:bg-gray-900 dark:text-white hover:bg-gray-800">
+                  <SelectContent className="dark:bg-gray-900 dark:text-white dark:hover:bg-black">
+                    <SelectGroup className="dark:bg-gray-900 dark:text-white dark:hover:bg-black">
                       {warehouses.map((warehouse) => (
                         <SelectItem
                           key={warehouse.id}
@@ -199,6 +198,13 @@ export default function InventoryFormPage({params: {locale}}) {
                   />
                 </div>
               </div>
+            </div>
+            <div className="upload">
+            <label htmlFor="name">
+                  {dict?.image}
+                  <span className="text-neutral-400 text-xs">(optional)</span>
+                </label>
+            <ImageUpload onChange={(value) => setImage(value)} value={image} locale={locale}/>
             </div>
           </div>
           <div className="w-full flex justify-end mt-6 mb-2 gap-2">

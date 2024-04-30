@@ -4,6 +4,7 @@
     "Inventory": "Inventory",
     "inventoryItems": "Inventory Items",
     "Invoices":"Invoices",
+    "invoiceDetails":"Invoice Details",
     "Purchases":"Purchases",
     "Reports":"Reports",
     "Users":"Users",
@@ -80,5 +81,13 @@
             "industry":"Industry",
             "location":"Location"
         }
-    }
+    },
+    "image":"Image",
+    "invoice":"Invoice",
+    "dateIssued":"Date Issued",
+    "printInvoice":"Print Invoice",
+    "editInvoice":"Edit Invoice",
+    "invoiceFormHeading":"Invoice Form",
+    "invoiceFormSubheading":"Fill in the form to register an invoices.",
+    "Form":"Form"
 }

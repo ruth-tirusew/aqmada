@@ -27,7 +27,7 @@ const SideBar: React.FC<{ locale: "en" | "am" }> = ({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getDictionary(locale);
+        const data = await getDictionary(locale || "en");
         setDict(data);
       } catch (error) {
         console.error("Dictionary error:", error);
@@ -59,17 +59,17 @@ const SideBar: React.FC<{ locale: "en" | "am" }> = ({
                       alt="logo"
                       className="sm:w-auto sm:h-auto h-16 w-16"
                     />
-                    <p className="hidden md:block dark:text-white font-semibold lg:text-2xl ">{dict?.logo}</p> 
+                    <p className="hidden md:block dark:text-white font-semibold lg:text-2xl ">{dict?.logo || "Aqmada"}</p> 
                   </Link>
             
                   <div className="list mt-4 grid grid-cols-1 gap-3">
-                    <NavLink heading= {dict?.Dashboard} link= "" icon={MdOutlineDashboard} />
-                    <NavLink heading={dict?.Inventory} link="inventory" icon={MdOutlineStorefront} />
-                    <NavLink heading={dict?.Invoices} link="invoices" icon={LiaFileInvoiceDollarSolid} />
-                    <NavLink heading={dict?.Purchases} link="purchases" icon={LiaCartArrowDownSolid} />
-                    <NavLink heading={dict?.Reports} link="reports" icon={HiOutlineDocumentReport} />
-                    <NavLink heading={dict?.Users} link="users" icon={MdOutlineAccountCircle} />
-                    <NavLink heading={dict?.Settings} link="settings" icon={GoGear} />
+                    <NavLink heading= {dict?.Dashboard || "Dashboard"} link= "" icon={MdOutlineDashboard} />
+                    <NavLink heading={dict?.Inventory || "Inventory"} link="inventory" icon={MdOutlineStorefront} />
+                    <NavLink heading={dict?.Invoices || "Invoices"} link="invoices" icon={LiaFileInvoiceDollarSolid} />
+                    <NavLink heading={dict?.Purchases || "Purchases"} link="purchases" icon={LiaCartArrowDownSolid} />
+                    <NavLink heading={dict?.Reports || "Reports"} link="reports" icon={HiOutlineDocumentReport} />
+                    <NavLink heading={dict?.Users || "Users"} link="users" icon={MdOutlineAccountCircle} />
+                    <NavLink heading={dict?.Settings || "Settings"} link="settings" icon={GoGear} />
                     <div
                       className="flex items-center group pl-8 py-3 gap-2"
                       onClick={() => {
@@ -78,7 +78,7 @@ const SideBar: React.FC<{ locale: "en" | "am" }> = ({
                     >
                       <IoIosLogOut className="group-hover:text-red-500 tex-2xl sm:text-md" />
                       <span className="group-hover:text-black text-gray-500 dark:group-hover:text-white font-semibold hidden sm:block pointer-cursor">
-                        {dict?.Logout}
+                        {dict?.Logout || "Logout"}
                       </span>
                     </div>
                   </div>
