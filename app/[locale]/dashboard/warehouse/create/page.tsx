@@ -108,7 +108,7 @@ export default function Dashboard() {
         </div>
         <form onSubmit={handleSubmit}>
           <div className="flex gap-4">
-            <ImageUpload onChange={(value) => setImage(value)} value={image} />
+            <ImageUpload onChange={(value) => setImage(value)} value={image} locale="en"/>
             <div className="flex flex-col gap-4 w-full">
               <div className="flex flex-col gap-1">
                 <label htmlFor="name">Name</label>
