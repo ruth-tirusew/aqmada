@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import getFilteredInvoices  from '@/app/lib/utils/getFilteredInvoices';
 import Breadcrumb from "@/app/[locale]/components/breadcrumb";
 import { Page } from "@/app/[locale]/types";
-import { getProfitMargin } from "@/app/lib/utils/getProfitMargin";
 import { DataTable } from "@/components/ui/datatable";
 import { ReportType } from "@/app/[locale]/types";
 import { columns } from "./column";
@@ -22,17 +21,18 @@ import { getDictionary } from '@/lib/locales';
 export default function Report({params:{locale}}) {
   const [report, setReport] = useState<ReportType[]>([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [filter, setFilter] = useState<string | undefined>(undefined);
+  const [filter, setFilter] = useState<string >("month");
 
   useEffect(() => {
     const fetchInvoices = async () => {
       const invoices = await getFilteredInvoices(filter);
       const newReport = invoices.flatMap((invoice:any) =>
-        invoice.inventory?.map((item: any) => ({
-          item_name: item.Inventory.name,
+        invoice.items?.map((item: any) => ({
+          item_name: item.item.name,
           quantity: item.quantity,
           price: item.selling_price,
-          profit_margin: getProfitMargin(item.selling_price, item.Inventory.initial_price),
+          // round profit margin to 2 decimal places
+          profit_margin:  (((item.selling_price - item.item.initial_price) / item.selling_price) * 100).toFixed(2)
         })) ?? []
       );
 
@@ -61,7 +61,7 @@ export default function Report({params:{locale}}) {
   
 const pages: Page[] = [
   {
-    name: dict?.report,
+    name: dict?.report || "Reports",
     href: "/dashboard/reports",
   },
 ];

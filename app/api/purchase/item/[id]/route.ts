@@ -6,7 +6,7 @@ import { InvoiceItem } from "@prisma/client";
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
     try {
         const { id } = params
-         await db.invoiceItem.delete({
+         await db.purchaseItem.delete({
             where: {
                 id: id
             }
@@ -14,7 +14,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
        
   
         return NextResponse.json({
-            message: "Invoice item deleted successfully",
+            message: "Purchase Item  deleted successfully",
             status: 200
         })
     } catch (error) {

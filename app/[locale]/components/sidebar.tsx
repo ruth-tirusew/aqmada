@@ -9,6 +9,7 @@ import { CiMenuFries } from "react-icons/ci";
 import { IoIosLogOut } from "react-icons/io";
 import { HiOutlineDocumentReport } from "react-icons/hi";
 import { LiaCartArrowDownSolid } from "react-icons/lia";
+import Logo from '@/public/aqmada-03.png'
 
 
 
@@ -53,7 +54,7 @@ const SideBar: React.FC<{ locale: "en" | "am" }> = ({
                     className=" flex flex-col items-center justify-center w-full font-bold text-lg my-4 sm:mb-4 sm:p-2"
                   >
                     <Image
-                      src={"/aqmada-03.png"}
+                      src={Logo}
                       width={120}
                       height={120}
                       alt="logo"
@@ -92,13 +93,13 @@ const SideBar: React.FC<{ locale: "en" | "am" }> = ({
         className=" flex flex-col items-center justify-center w-full font-bold text-lg my-4 sm:mb-4 sm:p-2"
       >
         <Image
-          src={"/aqmada-03.png"}
+          src={Logo}
           width={120}
           height={120}
           alt="logo"
           className="sm:w-auto sm:h-auto"
         />
-        <p className="hidden md:block dark:text-white font-semibold lg:text-2xl ">{dict?.logo}</p> 
+        <p className="hidden md:block dark:text-white font-semibold lg:text-2xl ">{dict?.logo || "Aqmada"}</p> 
       </Link>
 
       <div className="list mt-4 grid grid-cols-1 gap-3">

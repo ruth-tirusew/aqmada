@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { PiSpinner } from "react-icons/pi";
+import Logo from '@/public/aqmada-03.png'
 
 interface Errors {
   general?: string;
@@ -115,7 +116,7 @@ export default function Onboarding() {
       <div className="">
         <div className="mx-auto max-w-md px-4 sm:max-w-2xl sm:px-6 lg:max-w-7xl lg:px-8 mt-4 flex">
           <Link href={"/"} className="flex items-center gap-2" prefetch={true}>
-            <Image src={"/aqmada-03.png"} width={50} height={40} alt="logo" />
+            <Image src={Logo} width={50} height={40} alt="logo" />
             <span className="text-lg font-bold text-[#021044] dark:text-white">
               Aqmada
             </span>

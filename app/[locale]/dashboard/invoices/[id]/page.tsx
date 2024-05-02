@@ -19,7 +19,7 @@ import axios from "axios";
 import { getDictionary } from "@/lib/locales";
 import { TbPencil } from "react-icons/tb";
 import Link from "next/link";
-
+import Logo from '@/public/aqmada-03.png'
 
 
 // @ts-ignore
@@ -95,7 +95,7 @@ export default function InvoiceDetail({ params: { locale } }) {
             <>
               <div className="flex items-center px-4 border-gray-200 border-b-[1px] py-4 mb-2">
                 <Image
-                  src="/aqmada-03.png"
+                  src={Logo}
                   width={100}
                   height={70}
                   alt="logo"

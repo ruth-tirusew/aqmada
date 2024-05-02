@@ -72,7 +72,7 @@ export default function Listing() {
       <Link href={"/"}>
                 <div className="logo flex items-center">
                 <Image
-                    src={"/aqmada-03.png"}
+                    src={"/hero-image.png"}
                     width={60}
                     height={60}
                     alt="logo"

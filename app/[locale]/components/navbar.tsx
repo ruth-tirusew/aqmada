@@ -6,6 +6,7 @@ import { FaLinkedinIn } from "react-icons/fa";
 import { GoRocket } from "react-icons/go";
 import { FaTelegramPlane } from "react-icons/fa";
 import ThemeSwitch from "./theme-switch";
+import Logo from '@/public/aqmada-03.png'
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -18,7 +19,7 @@ const Navbar = () => {
     <nav className=" sticky items-center top-0 mx-auto px-2 sm:px-6 lg:px-8 max-w-7xl py-4 z-40 backdrop-blur">
       <div className="flex justify-between ">
         <div className="flex items-center">
-          <Image src={"/aqmada-03.png"} width={50} height={40} alt="logo" />
+          <Image src={Logo} width={50} height={40} alt="logo" />
           <span className="text-lg font-bold text-[#021044] dark:text-white">
             Aqmada
           </span>

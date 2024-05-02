@@ -14,6 +14,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import { Input } from "@/components/ui/input";
 import { getDictionary } from "@/lib/locales";
 import Image from "next/image";
+import Logo from '@/public/aqmada-03.png'
 
 
 
@@ -170,9 +171,9 @@ export default function Invoices() {
             Fill in the form to register an invoices.
           </p>
         </div>
-        <div className="flex items-center px-4 border-gray-200 border-b-[1px] py-4 mb-2">
+        <div className="flex items-center px-4 border-gray-200 border-b-[1px] py-4 mb-2">app/[locale]/dashboard/purchases/item/[id]
                 <Image
-                  src="/aqmada-03.png"
+                  src={Logo}
                   width={100}
                   height={70}
                   alt="logo"

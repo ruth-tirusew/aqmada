@@ -18,6 +18,7 @@ import {
 import { Button } from "@/components/ui/button"
 
 import axios from 'axios'
+import Link from "next/link";
 
 
 async function DeletePurchase (id: string) {
@@ -55,6 +56,9 @@ export const ItemCategoryColumn: ColumnDef<any>[] = [
     {
         header: "Order Number",
         accessorKey: "order_number",
+        cell: ({ row }) => {
+          return <Link href={`/dashboard/purchases/${row.original.id}`} className="text-left text-indigo-500 font-medium cursor-pointer">#{row.getValue("order_number")}</Link>
+        },
     },
     {
         header: "Order Date",
