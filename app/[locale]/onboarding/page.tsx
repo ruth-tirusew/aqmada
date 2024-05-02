@@ -47,22 +47,20 @@ export default function Onboarding() {
   // check if user has company
   useEffect(() =>{
   if(status === "authenticated" && user){
-    console.log(user)
     const fetchCompany = async () => {
       try {
-        console.log(user)
         const res = await axios.get(`/api/company/${user}`)
         if(res?.data?.id){
           router.push("/dashboard")
         }
       } catch (error) {
-        console.log(error)
+        
       }
 
     }
     fetchCompany()
   }
-  })
+  }, [])
   
   function handleNext() {
     setSteps(steps + 1);
@@ -80,8 +78,6 @@ export default function Onboarding() {
         warehouse,
         user
       });
-      console.log(res);
-      
       if (res.status === 200) {
         router.push("/dashboard");
         setLoading(false);
@@ -92,7 +88,6 @@ export default function Onboarding() {
      
     } catch (error) {
       setErrors({ general: "Something went wrong" });
-      console.log(error);
     }
   };
 

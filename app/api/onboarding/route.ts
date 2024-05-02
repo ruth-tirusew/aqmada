@@ -8,14 +8,12 @@ export async function POST(request: Request) {
     warehouse,
     user,
   } = await request.json();
-  console.log(request.json())
   try{
     const user_data = await db.user.findUnique({
       where: {
         email: user
       }
     }) 
-    console.log(user_data)
 
     const company_data = await db.company.create({
       data: {

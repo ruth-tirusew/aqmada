@@ -40,7 +40,6 @@ export default async function getInvoices(): Promise<InvoiceType[]>{
               updated_at: invoice.updated_at.toISOString(),
             })
           })
-        console.log(invoices)
         return safeInvoice;
     }
     else{

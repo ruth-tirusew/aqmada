@@ -14,7 +14,7 @@ export default async function getCompany(email: string){
             return company
         }    
     }catch(e){
-        console.log(e)
+        return null
     }
 }
 

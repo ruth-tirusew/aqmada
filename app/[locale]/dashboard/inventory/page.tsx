@@ -23,7 +23,7 @@ export default async function Dashboard({ params: { locale } }) {
 
 
     return (
-        <div className="">
+        <div className="h-screen">
             <Breadcrumb page={pages} heading={dict.Inventory} subheading={dict.inventorySubheading} />
             <DataTable
                 columns={columns}

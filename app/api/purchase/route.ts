@@ -13,8 +13,7 @@ export async function POST(request: Request) {
      }
      for (const item of items) {
       if(item.id === ''){
-        console.log("HERE")
-        throw new Error('Please select an item')
+        return NextResponse.json({message:`Please select an item`}, { status: 400 }) 
       }
     }
     try {
@@ -51,8 +50,7 @@ export async function POST(request: Request) {
           data: { quantity: { increment: item.quantity } },
         });
       }
-  
-      console.log(purchase);
+
       return NextResponse.json(purchase);
     } catch (error) {
       console.error('Error creating purchase:', error);
@@ -68,8 +66,6 @@ export async function POST(request: Request) {
   
   export async function GET(request: NextRequest, params?: InvoiceParams): Promise<NextResponse> {
     const { id, customer_name } = params || {};
-  
-    console.log(params)
     const queryOptions: any = {
       include: {
         inventory: true,
@@ -77,7 +73,6 @@ export async function POST(request: Request) {
     };
   
     if (id) {
-      console.log("HERE SERVE")
       queryOptions.where = {
         id: id,
       };
@@ -91,8 +86,6 @@ export async function POST(request: Request) {
     }
   
     const items = await db.invoice.findMany(queryOptions);
-  
-    // console.log(items);
     return NextResponse.json(items);
   }
 

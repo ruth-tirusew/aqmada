@@ -25,7 +25,6 @@ async function DeletePurchase (id: string) {
             await axios.delete(`/api/purchase/${id}`)
             window.location.reload()
         } catch (error) {
-            console.log(error)
         }
     
 }

@@ -37,8 +37,7 @@ const deleteItem = async (id: string) => {
 
 
 
-export const columns: ColumnDef<ItemType>[] = [
-  
+export const columns: ColumnDef<ItemType>[] = [  
   {
     accessorKey: "name",
 
@@ -69,7 +68,7 @@ export const columns: ColumnDef<ItemType>[] = [
     header: () => <div className="text-left">Initial Price</div>,
     cell: ({ row }) => {
       const initial_price = parseFloat(row.getValue("initial_price"));
-      return <div className="text-left font-medium">$ {initial_price}</div>;
+      return <span className="text-left font-medium">{initial_price} ETB</span>;
     },
   },
   {

@@ -161,7 +161,7 @@ export default function InvoiceDetail({ params: { locale } }) {
           </button>
           <Link
             className=" flex items-center border-2 gap-1 rounded-sm border-[#1C40CA] font-medium text-[#1C40CA] text-md px-8 py-2 hover:bg-gray-200/[30%]"
-            href={`/${locale}/dashboard/invoice/edit/${routeParam?.id}/`}
+            href={`/${locale}/dashboard/invoices/edit/${routeParam?.id}/`}
           > 
           <TbPencil />
             <span>{dict?.editInvoice || "Edit Invoice"}</span>

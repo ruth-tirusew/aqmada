@@ -19,11 +19,9 @@ export async function POST(request: Request) {
             company_id: user?.company_id || "",
             }
         })
-        console.log(warehouse)
         return NextResponse.json(warehouse)
     }
     catch(error:any){
-        console.log(error)
         return NextResponse.json({error: error.message, status: 500})
     }
     }

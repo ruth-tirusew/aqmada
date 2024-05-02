@@ -14,7 +14,7 @@ interface Props{
 const Breadcrumb: React.FC<Props> = ({page, heading, subheading}) => {
     return(
         <div className="mb-4 print:hidden ">
-            <div className="breadcrumb flex items-center text-sm mb-2 ">
+            <div className="breadcrumb flex items-center text-sm sm:mb-2 my-4 ">
                 <Link href="/dashboard" className="text-cyan-900 dark:text-white">
                 <IoHomeOutline />
                 </Link>

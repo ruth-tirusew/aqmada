@@ -30,7 +30,6 @@ export default function Signup() {
       const user = await signIn("google", {
         callbackUrl: "/onboarding",
       });
-      console.log(user);
       setLoading(false);
     } catch (error:any) {
       setLoading(false);
@@ -52,19 +51,16 @@ export default function Signup() {
           password,
         })
         .then((res) => {
-          console.log(res);
           if (res.status === 200) {
             router.push("/login");
           }
           setLoading(false);
         })
         .catch((err) => {
-          console.log(err);
           setLoading(false);
         });
 
       } catch (error) {
-        console.log(error);
       }
     },
     [name, email, password, router],

@@ -29,34 +29,33 @@ export const authOptions: AuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        // if (credentials?.email || credentials?.password) {
-        //   throw new Error("Invalid email or password");
-        // }
-        console.log("Here1", credentials)
-        const user = await db.user.findUnique({
-          where: { email: credentials?.email as string },
-        });
+          const user = await db.user.findUnique({
+            where: { email: credentials?.email as string },
+          });
+  
+          if (!user) {
+            throw new Error("Invalid email or password");
+          }
+          try{
+            const isValid = await bcrypt.compare(
+              credentials?.password as string,
+              user?.password as string
+            );
+            if (!isValid) {
+              throw new Error("Invalid email or password");
+            }
+          }catch{
+            throw new Error("Invalid email or password");
 
-        console.log("Here2", user)
-        // if (!user) {
-        //   throw new Error("Invalid email or password");
-        // }
-
-        const isValid = await bcrypt.compare(
-          credentials?.password as string,
-          user?.password as string
-        );
-        console.log(isValid, user?.password)
-        // if (!isValid) {
-        //   throw new Error("Invalid email or password");
-        // }
-
-        return user;
+          }
+    
+          return user;
       },
     }),
   ],
   pages: {
     signIn: "/login",
+    error:"/login"
   },
   //   callbacks: {
   //     async session({ session, token, user }) {

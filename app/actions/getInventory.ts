@@ -21,7 +21,6 @@ export default async function getInventory(): Promise<ItemType[]>{
             },
           },
         });
-        console.log(items)
         if (items === undefined) {
           return [];
         }

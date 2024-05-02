@@ -93,12 +93,12 @@ export function DataTable<TData, TValue>({
   return (
     <div className="w-full bg-white dark:bg-black p-4 rounded-md mt-4">
         {button && buttonObj?.name && (
-        <div className="flex customers-center py-4">
+        <div className="sm:flex customers-center py-4">
           <Link href={buttonObj.url} passHref>
             <Button
               variant="outline"
               size="sm"
-              className="border-[#1C40CA] bg-slate-100 dark:bg-black hover:text-[#1C40CA] text-[#1C40CA] px-6"
+              className="border-[#1C40CA] bg-slate-100 dark:bg-black hover:text-[#1C40CA] text-[#1C40CA] px-6 sm:mb-0 mb-2"
             >
               + {buttonObj.name}
             </Button>

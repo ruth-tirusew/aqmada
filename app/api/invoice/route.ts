@@ -23,7 +23,7 @@ export async function POST(request: Request) {
         });
        const available_quantity = inventory?.quantity? inventory.quantity : 0
        const requested_quantity = Number(item.quantity)
-       console.log(available_quantity,requested_quantity)
+
       // ts.ignore
        if (available_quantity < requested_quantity ){
         return NextResponse.json({message:`Only ${available_quantity} ${inventory?.name} are available`}, { status: 400 }) 
@@ -38,8 +38,6 @@ export async function POST(request: Request) {
           company_id : user.company_id || "",
         },
       });
-
-      console.log(inventory_items)
       const inventoryInvoiceData = inventory_items.map((item: any) => {
         return {
           inventory_id: item.inventory_id,
@@ -59,8 +57,6 @@ export async function POST(request: Request) {
           data: { quantity: { decrement: item.quantity } },
         });
       }
-  
-      console.log(invoice);
       return NextResponse.json(invoice);
     } catch (error) {
       console.error('Error creating invoice:', error);
@@ -68,15 +64,14 @@ export async function POST(request: Request) {
     }
   }
   
-  export async function GET(request: NextRequest): Promise<NextResponse> {
+  export async function GET(request: NextRequest) {
     const user = await getCurrentUser()
     if (!user) {
       return NextResponse.json({ message: "You are not logged in" }, { status: 401 });
     }
-  
     const queryOptions: any = {
       where: {
-          company_id: user?.company_id
+          company_id: user?.company?.id
       },
       include: {
         items: {
@@ -99,7 +94,6 @@ export async function POST(request: Request) {
         updated_at: item.updated_at.toISOString(),
       })
     })
-  
-    // console.log(items);
+
     return NextResponse.json(safeItems);
   }

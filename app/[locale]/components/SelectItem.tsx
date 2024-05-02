@@ -31,7 +31,6 @@ const SelectItems: React.FC<SelectItemsProps> = ({ onChange, value }) => {
       setItems(response.data);
       setLoading(false);
     } catch (error) {
-      console.log(error);
     }
   };
 

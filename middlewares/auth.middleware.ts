@@ -1,5 +1,4 @@
 import { NextFetchEvent, NextRequest, NextResponse } from 'next/server'
-
 import { getToken } from 'next-auth/jwt'
 import { Locale, i18n } from '@/i18n.config'
 import { CustomMiddleware } from './chain'
@@ -28,7 +27,6 @@ export function withAuthMiddleware(middleware: CustomMiddleware) {
     const response = NextResponse.next()
 
     const token = await getToken({ req: request })
-  
 
     // @ts-ignore
     request.nextauth = request.nextauth || {}
@@ -46,10 +44,7 @@ export function withAuthMiddleware(middleware: CustomMiddleware) {
       return NextResponse.redirect(signInUrl)
     }
 
-
-
-  
-
     return middleware(request, event, response)
   }
 }
+

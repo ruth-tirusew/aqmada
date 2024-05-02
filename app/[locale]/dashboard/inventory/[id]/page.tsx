@@ -26,7 +26,7 @@ export default function InventoryFormPage({ params: { locale } }) {
   const [warehouses, setWarehouses] = useState<WarehouseType[]>([]);
   const [warehouseLoading, setWarehouseLoading] = useState(false);
   const [warehouseError, setWarehouseError] = useState("");
-  const [selectedWarehouse, setSelectedWarehouse] = useState("");
+  const [warehouse, setWarehouse] = useState("");
   const [image, setImage] = useState("");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -35,11 +35,22 @@ export default function InventoryFormPage({ params: { locale } }) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  const [inventoryData, setInventoryData] = useState<any>({
+    warehouse_id: "",
+    name: "",
+    description: "",
+    initial_price: 0,
+    quantity: 0,
+    image: "",
+  });
+  
+
+
   const routeParam = useParams<{ id: string }>();
 
-  const handleWarehouseChange = (value: string) => {
-    setSelectedWarehouse(value);
-  };
+  // const handleWarehouseChange = (value: string) => {
+  //   setSelectedWarehouse(value);
+  // };
 
   const handleReset = () => {
     setName("");
@@ -53,7 +64,7 @@ export default function InventoryFormPage({ params: { locale } }) {
     setLoading(true);
     try {
       const formData = {
-        warehouse_id: selectedWarehouse,
+        warehouse_id: warehouse,
         image,
         name,
         description,
@@ -78,6 +89,7 @@ export default function InventoryFormPage({ params: { locale } }) {
       setWarehouseLoading(true);
       const response = await axios.get("/api/warehouse");
       setWarehouses(response.data);
+      console.log(warehouses, "WAREHOUSES")
     } catch (error) {
       console.error("Warehouses error:", error);
     } finally {
@@ -89,7 +101,7 @@ export default function InventoryFormPage({ params: { locale } }) {
 
   const fetchDictionary = async () => {
     try {
-      const data = await getDictionary(locale);
+      const data = await getDictionary(locale || "en");
       setDict(data);
     } catch (error) {
       console.error("Dictionary error:", error);
@@ -97,16 +109,15 @@ export default function InventoryFormPage({ params: { locale } }) {
   };
 
   const fetchInventory = async () => {
-    console.log("Fetching Inventory data");
     try {
       const response = await axios.get(`/api/inventory/${routeParam?.id}`);
       const data = response.data;
+      setWarehouse(data.warehouse_id);
       console.log("Inventory data:", data);
       setName(data.name);
       setDescription(data.description || "");
       setQuantity(data.quantity);
-      setInitialPrice(data.initial_price);
-      setSelectedWarehouse(data.warehouse_id);
+      setInitialPrice(data.initial_price)
       setImage(data.image);
     } catch (error) {
       console.error("Inventory error:", error);
@@ -117,15 +128,18 @@ export default function InventoryFormPage({ params: { locale } }) {
     fetchDictionary();
     fetchInventory();
     fetchWarehouses();
-  }, [routeParam?.id, locale]);
+
+    console.log(warehouse, "warehouse_id")
+    console.log(name,"name")
+  }, []);  
 
   const pages: Page[] = [
     {
-      name: dict?.Inventory,
+      name: dict?.Inventory || "Inventory",
       href: `/${locale}/dashboard/inventory`,
     },
     {
-      name: dict?.inventoryForm,
+      name: dict?.inventoryForm || "Inventory Form",
       href: `/${locale}/dashboard/inventory/create`,
     },
   ];
@@ -135,7 +149,7 @@ export default function InventoryFormPage({ params: { locale } }) {
       <Breadcrumb page={pages} heading={dict?.inventoryForm || "Inventory Form"} />
       <div className="bg-white rounded-md w-full p-4 dark:bg-gray-900">
         <div className="mb-4">
-          <p className="text-md font-semibold ">{dict?.invFormHeading}</p>
+          <p className="text-md font-semibold ">{dict?.invFormHeading || "Fill in the form to register an item."}</p>
         </div>
         <form onSubmit={handleSubmit}>
           <div className="flex flex-col gap-4">
@@ -143,11 +157,11 @@ export default function InventoryFormPage({ params: { locale } }) {
               <div className="flex flex-col">
                 <p>{dict?.warehouse}</p>
                 <Select
-                  onValueChange={(value: string) => handleWarehouseChange(value)}
-                  value={selectedWarehouse}
+                 onValueChange={(value: string) => setWarehouse(value)}
+                  value={warehouse}
                 >
                   <SelectTrigger className="w-full dark:bg-gray-900">
-                    <SelectValue placeholder={dict?.selectWarehouse} />
+                    <SelectValue placeholder={dict?.selectWarehouse} defaultValue={warehouse}/>
                     <SelectContent className="dark:bg-gray-900 dark:text-white dark:hover:bg-gray-800">
                       <SelectGroup className="dark:bg-gray-900 dark:text-white dark:hover:bg-gray-800">
                         {warehouses.map((warehouse) => (
@@ -163,7 +177,7 @@ export default function InventoryFormPage({ params: { locale } }) {
                 </Select>
               </div>
               <div className="flex flex-col gap-1">
-                <label htmlFor="name">{dict?.name}</label>
+                <label htmlFor="name">{dict?.name || "Name"}</label>
                 <input
                   className="border border-neutral-300 focus:ring-0 active:ring-0 active:outline-none focus:outline-none active:ring-0 focus:border-[#1C40CA] active:border-[#1C40CA] focus:border-black rounded-sm px-2 py-1"
                   placeholder="Item-1"
@@ -174,7 +188,7 @@ export default function InventoryFormPage({ params: { locale } }) {
               </div>
               <div className="flex flex-col">
                 <label htmlFor="name">
-                  {dict?.description}
+                  {dict?.description || "Description"}
                   <span className="text-neutral-400 text-xs">(optional)</span>
                 </label>
                 <textarea
@@ -185,9 +199,9 @@ export default function InventoryFormPage({ params: { locale } }) {
                   onChange={(e) => setDescription(e.target.value)}
                 />
               </div>
-              <div className="flex gap-4">
+              <div className="sm:flex grid grid-cols-1 gap-4">
                 <div className="flex flex-col w-full">
-                  <label htmlFor="name">{dict?.initialPrice}</label>
+                  <label htmlFor="name">{dict?.initialPrice || "Initial Price"}</label>
                   <input
                     className="border border-neutral-300 focus:ring-0 active:ring-0 active:outline-none focus:outline-none active:ring-0 focus:border-[#1C40CA] active:border-[#1C40CA] focus:border-black rounded-sm px-2 py-1"
                     placeholder="$ 0.0"
@@ -198,7 +212,7 @@ export default function InventoryFormPage({ params: { locale } }) {
                   />
                 </div>
                 <div className="flex flex-col w-full">
-                  <label htmlFor="name">{dict?.quantity}</label>
+                  <label htmlFor="name">{dict?.quantity || "Quantity"}</label>
                   <input
                     className="border border-neutral-300 focus:ring-0 active:ring-0 active:outline-none focus:outline-none active:ring-0 focus:border-[#1C40CA] active:border-[#1C40CA] focus:border-black rounded-sm px-2 py-1"
                     placeholder="12"
@@ -212,7 +226,7 @@ export default function InventoryFormPage({ params: { locale } }) {
             </div>
             <div className="upload">
               <label htmlFor="name">
-                {dict?.image}
+                {dict?.image || "Image"}
                 <span className="text-neutral-400 text-xs">(optional)</span>
               </label>
               <ImageUpload

@@ -30,6 +30,7 @@ export type UserType = Omit<User, "created_at" | "updated_at" | "emailVerified" 
 
 
 export type InvoiceType = Omit<Invoice, "created_at" | "updated_at"> & {
+  items: InvoiceItemsType[];
   created_at: String;
   updated_at: String;
 };
@@ -47,7 +48,7 @@ export type InvoiceItemsType = Omit<InvoiceItem, "created_at"> & {
   created_at: String;
 };
 
-export type InvoiceItemForm = { invoice_id?: string; inventory_id: string; quantity: number; selling_price: number };
+export type InvoiceItemForm = { id?: string; invoice_id?: string; inventory_id: string; quantity: number; selling_price: number };
 
 export type WarehouseType = Omit<
   Warehouse,

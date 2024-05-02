@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { FcGoogle } from "react-icons/fc";
+import { PiSpinner } from "react-icons/pi";
 
 interface Errors {
   email?: string;
@@ -17,6 +18,7 @@ interface Errors {
 export default function Listing() {
   const [errors, setErrors] = useState<Errors>({});
   const router = useRouter();
+  const[loading, setLoading]=useState(false)
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,6 +26,7 @@ export default function Listing() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrors({});
+
     if (!email) {
       setErrors((prev) => ({ ...prev, email: "Email is required" }));
     }
@@ -32,14 +35,27 @@ export default function Listing() {
     }
     if (email && password){
       try{
+        setLoading(true)
         signIn("credentials", {
           email: email,
           password: password,
-          callbackUrl: "/onboarding"
-        });
+          callbackUrl: "/onboarding",
+          redirect:false
+        }).then(((res) => {
+            if(res?.error){
+              setErrors((prev:any) => ({ ...prev, general: res.error }));
+              setTimeout(()=>{
+                setErrors({});  
+              }, 5000);
+            }
+            setLoading(false)
+          })).catch((err:any)=>{
+            setErrors((prev) => ({ ...prev, general: err.error }));
+          })
       }catch(error){
-        console.log(error);
         setErrors((prev) => ({ ...prev, general: "Invalid email or password" }));
+
+        setLoading(false)
       }
     }
   };
@@ -52,10 +68,9 @@ export default function Listing() {
   // };
 
   return (
-    <main>
-      <div className="p-4 mx-10 flex justify-between">
+    <main className="m-4 mx-10">
       <Link href={"/"}>
-                <div className="logo flex">
+                <div className="logo flex items-center">
                 <Image
                     src={"/aqmada-03.png"}
                     width={60}
@@ -63,12 +78,10 @@ export default function Listing() {
                     alt="logo"
                     className="w-auto h-auto"
                   />
-                  <p className="font-bold text-[#003949] py-4 px-2 text-xl dark:text-white">AQMADA</p>
+                  <p className="font-bold text-[#003949] text-xl dark:text-white">AQMADA</p>
                 </div>
           </Link>
-
-      </div>
-      <div className="grid place-content-center w-screen">
+          <div className="grid place-content-center w-screen">
         <div className="flex flex-col gap-4 py-20">
           <div className="">
           <p className="font-bold text-xl">Welcome back,</p> 
@@ -90,35 +103,43 @@ export default function Listing() {
             </div>
             <div className="form">
             <form onSubmit={handleSubmit}>
-            <div className="">
-              {errors.general && (
-                <p className="text-red-500 text-center">{errors.general}</p>
-              )}
+            <div className="grid grid-cols-1 gap-4">
+              <p className="text-red-500 text-center">{errors.general}</p>
               <div className="email ">
-                <label htmlFor="email" className="font-semibold text-md">
+                <label htmlFor="email" className="font-medium text-md">
                   Email
                 </label>
                 <input
                   type="text"
-                  className="block rounded-md border-0 py-1.5 pl-7 pr-20 w-full text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#003949] sm:text-sm sm:leading-6"
+                  className={`block rounded-md border-0 py-1.5 pl-7 sm:pr-20 pr:10 w-full text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#003949] sm:text-sm sm:leading-6 ${errors.email ? 'ring-red-300' : ' '}`}
                   placeholder="john.doe@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   
                 />
+                {
+                  errors.email && (
+                    <span>{errors.email}</span>
+                  )
+                }
               </div>
-              <div className="password grid grid-row gap-2">
-                <label htmlFor="password" className="font-semibold text-md">
+              <div className="password">
+                <label htmlFor="password" className="font-medium text-md">
                   Password
                 </label>
                 <input
                   type="password"
-                  className="block w-full rounded-md border-0 py-1.5 pl-7 pr-28 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#003949] sm:text-sm sm:leading-6"
+                  className={`block rounded-md border-0 py-1.5 pl-7  sm:pr-20 pr:10 w-full text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#003949] sm:text-sm sm:leading-6 ${errors.password ? 'ring-red-300' : ''}`}
                   placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
+                {
+                  errors.password && (
+                    <span>{errors.password}</span>
+                  )
+                }
               </div>
               <div className="flex items-center gap-x-3">
                 {/* <input
@@ -134,12 +155,22 @@ export default function Listing() {
                   Remeber me
                 </label> */}
               </div>
-              <button type="submit" className="bg-[#021044] w-full p-2 text-white font-medium rounded my-4">
-                Login
+              <button type="submit" className="bg-[#021044] w-full p-2 text-white font-medium rounded" disabled={loading || email.length ==0 || password.length == 0}
+              >
+                {loading ? (
+                  <div className="flex items-center justify-center">
+                    <PiSpinner className="h-4 w-4 mr-2 animate-spin text-white" />
+                  <p>
+                    Loading
+                  </p>
+                  </div>
+                ) : (
+                  <p>Login</p>
+                )}
               </button>
             </div>
           </form>
-              <div className="text-center">
+              <div className="text-center my-4">
                 <p className="text-gray-500 font-semibold">
                   Don&apos;t have an account?{" "}
                   <Link href={"/signup"} className="text-[#021044] dark:text-white v">

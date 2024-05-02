@@ -75,12 +75,10 @@ export default function Dashboard() {
       };
       const response = await axios.post("/api/inventory", formData);
       setLoading(true);
-      console.log("Save response:", response.data);
       router.push("/dashboard");
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      console.error("Save error:", error);
     }
   };
 

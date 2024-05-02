@@ -75,7 +75,6 @@ export default function Settings() {
       }
       setLoading(false);
     } catch (error: any) {
-      console.log(error);
       setError(error.response.data.message);
       setTimeout(() => {
         setError("");
@@ -89,7 +88,6 @@ export default function Settings() {
       const user = await axios.get("/api/auth/me")
       setUserData(user.data)
     }catch(error){
-      console.log(error)
     }
   }
 

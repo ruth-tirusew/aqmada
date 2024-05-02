@@ -2,7 +2,6 @@ import { NextResponse, NextRequest } from "next/server";
 import { db } from "@/app/lib/db";
 
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
-    console.log(request)
     try {
         const { id } = params;
         if (!id) {
@@ -14,11 +13,9 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
                     id,
                 },
             });
-            console.log(inventory);
             return new NextResponse(JSON.stringify(inventory), { status: 200 });
         }
     } catch (error) {
-        console.log(error);
         return new NextResponse("Something went wrong", { status: 500 });
     }
 }
@@ -30,7 +27,6 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
         if (!id) {
             return NextResponse.next();
         }
-        console.log(id)
         if (request.method === "DELETE") {
             await db.item.delete({
                 where: {
@@ -42,7 +38,6 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
         }
     }
     catch (error) {
-        console.log(error);
         return new NextResponse("Something went wrong", { status: 500 });
     }
 }
@@ -75,7 +70,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 
         }
         catch (error) {
-            console.log(error);
+            console.log(error)
             return new NextResponse("Something went wrong", { status: 500 });
         }
 }

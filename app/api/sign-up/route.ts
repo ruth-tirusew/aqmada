@@ -8,8 +8,6 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { email, name, password } = body;
 
-    console.log(body);
-
     // Check if email already exists
     const existingUser = await db.user.findUnique({ where: { email } });
     if (existingUser) {
@@ -25,8 +23,6 @@ export async function POST(request: Request) {
         password: hashedPassword,
       },
     });
-
-    console.log(user);
     return NextResponse.json(user);
   } catch (error) {
     console.error('Error creating user:', error);

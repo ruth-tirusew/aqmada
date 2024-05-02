@@ -1,26 +1,25 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import dynamic from "next/dynamic";
 
 import axios from "axios";
 
-import { InvoiceItemsType } from "../types";
+import { InvoiceItemsType, InvoiceType } from "../types";
 
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const TotalSales: React.FC<{ name: string }> = ({ name })  => {
+const TotalSales: React.FC<{ name: string, invoice:InvoiceType[] }> = ({ name, invoice })  => {
   const [months, setMonths] = useState<string[]>([]);
   const [seriesData, setSeriesData] = useState<number[]>([]);
   const [totalSales, setTotalSales] = useState<number>(0);
 
-  const fetchInvoices = async () => {
+  const fetchInvoices: any = useCallback(async () => {
+    console.log("Called")
     try {
-      const response = await axios.get("/api/invoice");
-      const invoices: InvoiceItemsType[] = response.data;
-      invoices.map((i: any) => {});
+      invoice.map((i: any) => {});
 
-      const invoiceMonths = invoices.map((invoice: any) => {
+      const invoiceMonths = invoice.map((invoice: any) => {
         const date = new Date(invoice.created_at);
         return date.toLocaleString("default", { month: "short" });
       });
@@ -52,8 +51,8 @@ const TotalSales: React.FC<{ name: string }> = ({ name })  => {
 
       const seriesData: number[] = [];
       sortedMonths.forEach((month: string) => {
-        const total = invoices
-          .map((invoice) => {
+        const total = invoice
+          .map((invoice: { created_at: any; items: any[]; }) => {
             const date = invoice.created_at;
             return "Jan" === month
               ? invoice.items?.reduce(
@@ -68,7 +67,7 @@ const TotalSales: React.FC<{ name: string }> = ({ name })  => {
       });
       setSeriesData(seriesData);
 
-      const total = invoices.reduce((acc: number, invoice: any) => {
+      const total = invoice.reduce((acc: number, invoice: any) => {
         const salequantity = invoice.items.reduce(
           (inventoryAcc: number, item: any) => {
             const sellingPrice = item.selling_price;
@@ -83,11 +82,11 @@ const TotalSales: React.FC<{ name: string }> = ({ name })  => {
     } catch (error:any) {
       console.error("Error fetching invoices:", error);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchInvoices();
-  });
+  }, [fetchInvoices]);
 
   const options = {
     chart: {
@@ -109,7 +108,7 @@ const TotalSales: React.FC<{ name: string }> = ({ name })  => {
         options: {
           chart: {
             width: 300,
-            height: 210,
+            height: 100,
           },
           legend: {
             position: "bottom" as "bottom",
@@ -138,8 +137,8 @@ const TotalSales: React.FC<{ name: string }> = ({ name })  => {
   ];
 
   return (
-    <div className="bg-white shadow-md p-2 w-full rounded-md px-4 dark:bg-black">
-      <div className="flex justify-between mb-4">
+    <div className="bg-white shadow-md sm:p-2 w-full  rounded-md px-4 dark:bg-black">
+      <div className="flex justify-between">
         <div className="p-2">
           <p className="font-semibold text-lg">
             ${totalSales.toLocaleString()}
@@ -148,14 +147,13 @@ const TotalSales: React.FC<{ name: string }> = ({ name })  => {
           <span></span>
         </div>
       </div>
-
       <Chart
         type="area"
-        height={210}
-        width={1000}
+        width={1100}
+        height={225}
         options={options}
         series={series}
-        className="w-full dark:text-white"
+        className="dark:text-white h-full"
       />
       {/* <button className="w-full text-center border-[#00A0EA] border-2 text-[#00A0EA] mt-4 p-[2px] rounded-sm font-medium">
         Details

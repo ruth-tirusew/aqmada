@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { Montserrat } from "next/font/google";
+import getCurrentUser from "@/app/actions/getCurrentUser";
 
 import "../globals.css";
 import SideBar from "../components/sidebar";
@@ -34,7 +35,7 @@ export default async function RootLayout({
       <body className={montserrat.className}>
       <SessionProvider>
       <Provider>
-        <div className="flex">
+        <div className="flex relative">
           <div className="sm:w-1/4">
           <SideBar locale= {locale} />
           </div>
@@ -44,11 +45,11 @@ export default async function RootLayout({
               <Topnav />
             </div>
              {children} 
-            <div className="text-center pt-10">
+            <footer className="text-center pt-10 bottom-0">
              <span>
                {dict.copyright}  <Link href="https://perbytes.com" target="_blank" rel="noopener noreferrer" aria-label="Perbytes Systems, Inc." title="Perbytes Systems, Inc." aria-hidden="true" className="text-blue-700 hover:text-blue-800">Perbytes Systems, Inc.</Link> &copy; 2024
                 </span>
-            </div>
+            </footer>
           </div>
         </div>
         {/* <Chatbot /> */}

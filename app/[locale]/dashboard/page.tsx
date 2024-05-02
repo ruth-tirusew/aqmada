@@ -48,7 +48,6 @@ const pages: Page[] = [
     invoices = await getInvoices();
     products = await getInventory();
   } catch (error) {
-    console.log(error);
   }
   const total = invoices?.reduce((acc: number, invoice: any) => {
     const salequantity =
@@ -99,8 +98,8 @@ const pages: Page[] = [
       <Breadcrumb page={pages} heading= {dict.Overview} />
       <div className="grid lg:grid-cols-4 gap-2 grid-cols-2">
         <div className="bg-white shadow-md rounded-lg items-center px-2 dark:bg-black">
-          <div className="flex align-center py-4 gap-4">
-            <div className="rounded-full bg-[#00A0EA]/[10%]  text-[#1C40CA] text-center p-4 dark:bg-[#00A0EA]/[20%]">
+          <div className="flex align-center py-4 gap-2">
+            <div className="rounded-full bg-[#00A0EA]/[10%] text-[#00A0EA] p-4 dark:bg-[#00A0EA]/[20%]">
               <IoCalendarOutline />
             </div>
             <div className="">
@@ -115,7 +114,7 @@ const pages: Page[] = [
               <FaChartLine />
             </div>
             <div className="">
-              <p className="text-md">$ {total}</p>
+              <p className="text-md">{total} ETB</p>
               <p className="text-sm text-gray-500 dark:text-white">{dict.totalSales}</p>
             </div>
           </div>
@@ -126,7 +125,7 @@ const pages: Page[] = [
               <MdAttachMoney />
             </div>
             <div className="">
-              <p className="text-md">$ {totalProfit}</p>
+              <p className="text-md">{totalProfit} ETB</p>
               <p className="text-sm text-gray-500 dark:text-white">{dict.totalProfit}</p>
             </div>
           </div>
@@ -145,7 +144,7 @@ const pages: Page[] = [
       </div>
       <div className="flex lg:flex-row flex-col gap-2 mt-4">
         <div className="w-full">
-          <TotalSales name={dict.totalSales} />
+          <TotalSales name={dict.totalSales} invoice={invoices}/>
         </div>
         <div className="lg:w-[33%] w-full">
           <SalesOverview items={products} names={salesOverviewNames}/>

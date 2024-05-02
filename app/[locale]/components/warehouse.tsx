@@ -30,7 +30,6 @@ const Warehouse = () => {
         window.location.reload()
 
     } catch (error:any) {
-      console.log(error);
       setLoading(false);
       setError(error.response.data.error);
       setTimeout(() => {

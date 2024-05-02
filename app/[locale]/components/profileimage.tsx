@@ -57,7 +57,6 @@ function ImageUpload({ uwConfig, setPublicId, onChange, value }: CloudinaryUploa
         );
         widget.open();
       } catch (err: unknown) {
-        console.log(err);
       }
     }
   };

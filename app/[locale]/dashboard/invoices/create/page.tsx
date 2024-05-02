@@ -9,6 +9,9 @@ import { PaymentStatus } from "@prisma/client";
 
 import SelectItems from "@/app/[locale]/components/SelectItem";
 import { PiSpinner } from "react-icons/pi";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { AiOutlineClose } from "react-icons/ai";
+import { Input } from "@/components/ui/input";
 interface FormData {
   customer_name: string;
   payment_status: PaymentStatus;
@@ -76,7 +79,6 @@ export default function Invoices() {
       ...inventory_items,
       { inventory_id: "", quantity: 0, selling_price: 0 },
     ]);
-    console.log(...inventory_items);
   };
 
   const handleRemoveInventoryItem = (index: number): void => {
@@ -96,10 +98,9 @@ export default function Invoices() {
         payment_status,
         inventory_items,
       };
-      console.log(formData.inventory_items);
       setLoading(true)
       await axios.post("/api/invoice", formData);
-      router.push("/dashboard");
+      router.push("/dashboard/invoices");
       setLoading(false)
     } catch (error:any) {
       if (error.response.status === 400){
@@ -145,9 +146,20 @@ export default function Invoices() {
               </div>
               {inventory_items.map((item, index) => (
                 <div key={index} className="w-full flex  gap-2 align-center">
-                  <div className="flex flex-col gap-1 w-full">
-                    <label htmlFor="item">Item</label>
-                    <SelectItems onChange={(event) =>
+                  <Table className=" border-r-[1px] border-gray-200">
+                  <TableHeader>
+                  <TableRow>
+                    <TableHead className="">Item</TableHead>
+                    <TableHead>Quantity</TableHead>
+                    <TableHead>Price</TableHead>
+                    {/*
+                    <TableHead className="text-right">Total</TableHead> */}
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                    <TableRow>
+                      <TableCell>
+                      <SelectItems onChange={(event) =>
                         handleInventoryItemChange(
                           index,
                           "inventory_id",
@@ -157,12 +169,10 @@ export default function Invoices() {
                       }
                       value={item.inventory_id}
                       />
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <label htmlFor="name">Quantity</label>
-                    <input
+                      </TableCell>
+                      <TableCell>
+                      <Input
                       type="number"
-                      className="border border-neutral-300 focus:ring-0 active:ring-0 active:outline-none focus:outline-none active:ring-0 focus:border-[#1C40CA] active:border-[#1C40CA] focus:border-black rounded-md px-2 py-1"
                       value={item.quantity}
                       onChange={(event) =>
                         handleInventoryItemChange(
@@ -172,12 +182,10 @@ export default function Invoices() {
                         )
                       }
                     />
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <label htmlFor="name">Selling price</label>
-                    <input
+                      </TableCell>
+                      <TableCell> 
+                      <Input
                       type="number"
-                      className="border border-neutral-300 focus:ring-0 active:ring-0 active:outline-none focus:outline-none active:ring-0 focus:border-[#1C40CA] active:border-[#1C40CA] focus:border-black rounded-md px-2 py-1"
                       value={item.selling_price}
                       onChange={(event) =>
                         handleInventoryItemChange(
@@ -187,35 +195,29 @@ export default function Invoices() {
                         )
                       }
                     />
-                  </div>
-                  {/* <div className="flex flex-col gap-1">
-                    <label htmlFor="name">Selling Price</label>
-                    <input
-                      type="text"
-                      className="border-2 border-neutral-300 focus:ring-0 active:ring-0 active:outline-none focus:outline-none active:ring-0 focus:border-[#1C40CA] active:border-[#1C40CA] focus:border-black rounded-md px-2 py-1"
-                      value={item.selling_price}
-                      onChange={handleNameChange}
-                    />
-                  </div> */}
 
-                  <button
-                    type="button"
-                    onClick={handleAddInventoryItem}
-                    className="pt-4"
-                  >
-                    <span className="text-green-400 text-3xl">+</span>
-                  </button>
+                      </TableCell>
+                      </TableRow>
+                      </TableBody>
+                  </Table>
                   <button
                     type="button"
                     className="pt-4"
                     onClick={() => handleRemoveInventoryItem(index)}
                   >
-                    <span className="text-red-400 text-3xl">-</span>
+                     <AiOutlineClose className="text-red-500 text-sm cursor-pointer mx-4"/>
                   </button>
                 </div>
               ))}
             </div>
           </div>
+          <button
+                  type="button"
+                  className="border border-[#1C40CA] border rounded-md  text-[#1C40CA] px-8 py-2"
+                  onClick={handleAddInventoryItem}
+                >
+                  + Add Items
+                </button>
           <div className="w-full flex justify-end mt-6 mb-2 gap-2">
             <button
               type="reset"

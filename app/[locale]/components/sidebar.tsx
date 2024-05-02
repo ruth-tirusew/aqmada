@@ -38,13 +38,13 @@ const SideBar: React.FC<{ locale: "en" | "am" }> = ({
   }, [locale]);
   return (
     <div className="">
-      <div className='block sm:hidden fixed left-1 z-50 cursor-pointer bg-transparent  dark:text-white rounded-full p-4 rounded-full' onClick={()=>{setOpen(!open)}}>
+      <div className='block sm:hidden absolute left-1 z-50 cursor-pointer bg-transparent  dark:text-white rounded-full p-4 rounded-full' onClick={()=>{setOpen(!open)}}>
         <CiMenuFries className='text-xl' />
       </div>
       {open && (
         <>
                     <div className="block sm:hidden  fixed top-0 left-0 h-screen w-screen bg-black bg-opacity-50 z-40" onClick={()=>{setOpen(!open)}}></div>
-                  <aside className="block sm:hidden  absolute top-0 left-0 bg-white dark:bg-black dark:text-white flex flex-col bg-white h-screen w-64 z-50 ">
+                  <aside className="block sm:hidden  fixed top-0 left-0 bg-white dark:bg-black dark:text-white flex flex-col bg-white h-screen w-64 z-50 ">
                     <div className="flex justify-end">
 
                     </div>
@@ -77,7 +77,7 @@ const SideBar: React.FC<{ locale: "en" | "am" }> = ({
                       }}
                     >
                       <IoIosLogOut className="group-hover:text-red-500 tex-2xl sm:text-md" />
-                      <span className="group-hover:text-black text-gray-500 dark:group-hover:text-white font-semibold hidden sm:block pointer-cursor">
+                      <span className="group-hover:text-black text-gray-500 dark:group-hover:text-white font-semibold  pointer-cursor">
                         {dict?.Logout || "Logout"}
                       </span>
                     </div>
@@ -102,25 +102,25 @@ const SideBar: React.FC<{ locale: "en" | "am" }> = ({
       </Link>
 
       <div className="list mt-4 grid grid-cols-1 gap-3">
-        <NavLink heading= {dict?.Dashboard} link= "" icon={MdOutlineDashboard} />
-        <NavLink heading={dict?.Inventory} link="inventory" icon={MdOutlineStorefront} />
-        <NavLink heading={dict?.Invoices} link="invoices" icon={LiaFileInvoiceDollarSolid} />
-        <NavLink heading={dict?.Purchases} link="purchases" icon={LiaCartArrowDownSolid} />
-        <NavLink heading={dict?.Reports} link="reports" icon={HiOutlineDocumentReport} />
-        <NavLink heading={dict?.Users} link="users" icon={MdOutlineAccountCircle} />
-        <NavLink heading={dict?.Settings} link="settings" icon={GoGear} />
-        <div
-          className="flex items-center group pl-8 py-3 gap-2"
-          onClick={() => {
-            signOut();
-          }}
-        >
-          <IoIosLogOut className="group-hover:text-red-500 tex-2xl" />
-          <span className="group-hover:text-black text-gray-500 dark:group-hover:text-white font-semibold pointer-cursor">
-            {dict?.Logout}
-          </span>
-        </div>
-      </div>
+                    <NavLink heading= {dict?.Dashboard || "Dashboard"} link= "" icon={MdOutlineDashboard} />
+                    <NavLink heading={dict?.Inventory || "Inventory"} link="inventory" icon={MdOutlineStorefront} />
+                    <NavLink heading={dict?.Invoices || "Invoices"} link="invoices" icon={LiaFileInvoiceDollarSolid} />
+                    <NavLink heading={dict?.Purchases || "Purchases"} link="purchases" icon={LiaCartArrowDownSolid} />
+                    <NavLink heading={dict?.Reports || "Reports"} link="reports" icon={HiOutlineDocumentReport} />
+                    <NavLink heading={dict?.Users || "Users"} link="users" icon={MdOutlineAccountCircle} />
+                    <NavLink heading={dict?.Settings || "Settings"} link="settings" icon={GoGear} />
+                    <div
+                      className="flex items-center group pl-8 py-3 gap-2"
+                      onClick={() => {
+                        signOut();
+                      }}
+                    >
+                      <IoIosLogOut className="group-hover:text-red-500 tex-2xl sm:text-md" />
+                      <span className="group-hover:text-black text-gray-500 dark:group-hover:text-white font-semibold  pointer-cursor">
+                        {dict?.Logout || "Logout"}
+                      </span>
+                    </div>
+                  </div>
     </aside>
 
     </div>

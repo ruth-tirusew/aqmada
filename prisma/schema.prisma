@@ -164,6 +164,7 @@ model Invoice  {
   }
 
 model InvoiceItem {
+    id  String   @id @unique @default(uuid())
     item Item     @relation(fields: [inventory_id], references: [id])
     inventory_id     String 
     invoice   Invoice @relation(fields: [invoice_id], references: [id])
@@ -171,8 +172,6 @@ model InvoiceItem {
     quantity Int @default(0)
     selling_price Float @default(0.0)
     created_at DateTime @default(now())
-
-    @@id([inventory_id, invoice_id])
 }
 
 model Vendor{
@@ -199,6 +198,7 @@ model Purchase  {
     
 }
 model PurchaseItem {
+    id  String   @id @unique @default(uuid())
     item  Item     @relation(fields: [inventory_id], references: [id])
     inventory_id     String 
     quantity Int
@@ -206,8 +206,6 @@ model PurchaseItem {
     purchase   Purchase @relation(fields: [purchase_id], references: [id])
     purchase_id String 
     created_at DateTime @default(now())
-
-    @@id([inventory_id, purchase_id])
 }
 
 

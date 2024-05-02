@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/app/lib/db";
+import { InvoiceItem } from "@prisma/client";
 
 
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
@@ -10,10 +11,10 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     },
     include: {
       items: {
-        include: {
-          item : true
+        include:{
+          item:true
         }
-      },
+      }
     },
   });
 
@@ -47,5 +48,73 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
           message: "Something went wrong",
           error
       })
+  }
+}
+
+export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+  const { id } = params;
+  try {
+    const body = await request.json();
+    if (!id) {
+      return NextResponse.next();
+    }
+    const existingInvoice = await db.invoice.findUnique({where:{id:id}, include:{items:true}})
+
+    if(!existingInvoice){
+    return new NextResponse("Invoice Not Found", { status: 404 }); 
+    }
+
+    if(body !== null){
+      const invoiceUpdate = db.invoice.update({
+        where:{id:id},
+        data:{
+          customer_name:body.customer_name
+        },
+        include:{
+          items:true
+        }
+      })
+
+      // if(body.items.length < existingInvoice.items.length){
+      //   existingInvoice.items.map(async (item: InvoiceItem) => {
+      //     if (!body.items.includes(item)) {
+      //       await db.invoiceItem.delete({
+      //         where: { id: item.id },
+      //       });
+      //     }
+          
+      //   });
+      // }
+
+      body.items.map(async (item: InvoiceItem) => {
+        if (item.id) {
+          return await db.invoiceItem.update({
+            where: { id: item.id },
+            data: {
+              inventory_id: item.inventory_id,
+              invoice_id: id,
+              quantity: item.quantity,
+              selling_price:item.selling_price
+            },
+          });
+        }
+       else {
+          return await db.invoiceItem.create({
+            data: {
+              inventory_id: item.inventory_id,
+              invoice_id: id,
+              quantity: item.quantity,
+              selling_price:item.selling_price
+            },
+          });
+        }
+      })
+    }
+
+    return new NextResponse("Invoice Update Sucessfull", { status: 200 });
+
+  } catch (error) {
+    console.log(error);
+    return new NextResponse("Something went wrong", { status: 500 });
   }
 }

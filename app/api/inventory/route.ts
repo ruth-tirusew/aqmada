@@ -36,8 +36,6 @@ export async function POST(request: Request) {
         initial_price
       },
     });
-  
-    console.log(item);
     return NextResponse.json(item);
   }
 
@@ -76,7 +74,6 @@ export async function GET(request: Request) {
     })
     return NextResponse.json(safeItems, { status: 200 });
   } catch (error) {
-  console.log(error);
   return new NextResponse("Something went wrong", { status: 500 });
 }
 }

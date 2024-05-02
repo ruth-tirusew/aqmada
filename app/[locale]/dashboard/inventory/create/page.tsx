@@ -61,7 +61,6 @@ export default function InventoryFormPage({params: {locale}}) {
       };
       const response = await axios.post("/api/inventory", formData);
       setLoading(true);
-      console.log("Save response:", response.data);
       router.push("/dashboard/inventory");
       setLoading(false);
     } catch (error) {
@@ -174,7 +173,7 @@ export default function InventoryFormPage({params: {locale}}) {
                   onChange={e =>{setDescription(e.target.value)}}
                 />
               </div>
-              <div className="flex gap-4">
+              <div className="sm:flex grid grid-cols-1 gap-4">
                 <div className="flex flex-col w-full">
                   <label htmlFor="name">{dict?.initialPrice}</label>
                   <input

@@ -3,32 +3,48 @@ import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import axios from "axios";
 import Breadcrumb from "@/app/[locale]/components/breadcrumb";
 import { Page, InvoiceItemsType, InvoiceItemForm } from "@/app/[locale]/types";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { ItemType } from "@/app/[locale]/types";
 import { PaymentStatus } from "@prisma/client";
 
 import SelectItems from "@/app/[locale]/components/SelectItem";
 import { PiSpinner } from "react-icons/pi";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { AiOutlineClose } from "react-icons/ai";
+import { Input } from "@/components/ui/input";
 import { getDictionary } from "@/lib/locales";
+import Image from "next/image";
+
 
 
 interface FormData {
   customer_name: string;
   payment_status: PaymentStatus;
-  inventory_items: InvoiceItemForm[];
+  items: InvoiceItemForm[];
 }
 
 export default function Invoices() {
-
+  const pages: Page[] = [
+    {
+      name: "Invoice",
+      href: "/dashboard/invoices",
+    },
+    {
+      name: "Form",
+      href: "/dashboard/invoices/create",
+    },
+  ];
+  const [items, setInventoryItems] = useState<InvoiceItemForm[]>([
+    { inventory_id: "", quantity: 0, selling_price: 0 },
+  ]);
+  
   const [customer_name, setCustomerName] = useState<string>("");
   const [payment_status, setPaymentStatus] = useState<PaymentStatus>(PaymentStatus.PAID);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-  const routeParam = useParams<{ locale: "en" | "am" }>();
-  
-  const [inventory_items, setInventoryItems] = useState<InvoiceItemForm[]>([
-    { inventory_id: "", quantity: 0, selling_price: 0 },
-  ]);
+  const [refNumber, setRefNumber] = useState("")
+  const [date, setDate] = useState("")
+  const routeParam = useParams<{ id: string, locale: "en" |"am" }>();
   const router = useRouter();
   const handleNameChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setCustomerName(event.target.value);
@@ -45,7 +61,7 @@ export default function Invoices() {
     field: keyof InvoiceItemsType,
     value: any
   ): void => {
-    const updatedItems = [...inventory_items];
+    const updatedItems = [...items];
 
     switch (field) {
       case "inventory_id":
@@ -68,33 +84,34 @@ export default function Invoices() {
 
   const handleAddInventoryItem = (): void => {
     setInventoryItems([
-      ...inventory_items,
+      ...items,
       { inventory_id: "", quantity: 0, selling_price: 0 },
     ]);
-    console.log(...inventory_items);
   };
 
-  const handleRemoveInventoryItem = (index: number): void => {
-    const updatedItems = inventory_items.filter((_, i) => i !== index);
+  const handleRemoveInventoryItem = async(index: number, id?: string) => {
+    const updatedItems = items.filter((_, i) => i !== index);
     setInventoryItems(updatedItems);
+    try {
+      if (id){
+        await axios.delete(`/api/invoice/item/${id}`)
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const handleSubmit = async (
-    event: FormEvent<HTMLFormElement>
-  ): Promise<void> => {
-    event.preventDefault();
+  const handleSubmit = async ( ): Promise<void> => {
     setPaymentStatus(PaymentStatus.PAID);
-
     try {
       const formData: FormData = {
         customer_name,
         payment_status,
-        inventory_items,
+        items,
       };
-      console.log(formData.inventory_items);
       setLoading(true)
-      await axios.post("/api/invoice", formData);
-      router.push("/dashboard");
+      await axios.put(`/api/invoice/${routeParam?.id}`, formData);
+      router.push("/dashboard/invoices");
       setLoading(false)
     } catch (error:any) {
       if (error.response.status === 400){
@@ -113,35 +130,36 @@ export default function Invoices() {
     }
   };
 
+
   const [dict, setDict] = useState<any>();
 
-  const dictionary = async () => {
+  const fetchDictionary = async () => {
     try {
-      if (routeParam){
-        const data = await getDictionary(routeParam.locale);
-        setDict(data);
-      }
-      else{
-        
-      }
+      const data = await getDictionary(routeParam?.locale || "en");
+      setDict(data);
     } catch (error) {
-      console.error("Dictionary error:", error);
+      
     }
   };
-  
 
-  const pages: Page[] = [
-    {
-      name: "Invoice",
-      href: "/dashboard/invoices",
-    },
-    {
-      name: "Form",
-      href: "/dashboard/invoices/create",
-    },
-  ];
+  const fetchInvoice = async () => {
+    try {
+      const response = await axios.get(`/api/invoice/${routeParam?.id}`);
+      const data = response.data;
+      setCustomerName(data?.customer_name);
+      setInventoryItems(data?.items)
+      setRefNumber(data.ref_number)
+      setDate(data.created_at)
+    } catch (error) {
+      console.error("invoice error:", error);
+    }
+  };
 
-
+  useEffect(() => {
+    fetchDictionary();
+    fetchInvoice();
+   
+  }, []);  
 
   return (
     <div className="">
@@ -152,7 +170,33 @@ export default function Invoices() {
             Fill in the form to register an invoices.
           </p>
         </div>
-        <form onSubmit={handleSubmit}>
+        <div className="flex items-center px-4 border-gray-200 border-b-[1px] py-4 mb-2">
+                <Image
+                  src="/aqmada-03.png"
+                  width={100}
+                  height={70}
+                  alt="logo"
+                />
+                <div className="ml-auto">
+                  <div className="flex">
+                    <div className="font-semibold text-md text-neutral-700">
+                      {dict?.invoice || "Invoice"}:
+                    </div>
+                    <div className="font-light text-md text-neutral-700 ml-2">
+                      <span>#{refNumber.slice(0, 15)}</span>
+                    </div>
+                  </div>
+                  <div className="flex">
+                    <div className="font-semibold text-md text-neutral-700">
+                      {dict?.dateIssued || "Date Issued"}:
+                    </div>
+                    <div className="font-light text-md text-neutral-700 ml-2">
+                      <span>{date.slice(0, 10)}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+        <form>
 
           <p className="text-sm text-red-500 font-semibold mb-4">
             {error}
@@ -168,11 +212,22 @@ export default function Invoices() {
                   onChange={handleNameChange}
                 />
               </div>
-              {inventory_items.map((item, index) => (
+              {items?.map((item, index) => (
                 <div key={index} className="w-full flex  gap-2 align-center">
-                  <div className="flex flex-col gap-1 w-full">
-                    <label htmlFor="item">Item</label>
-                    <SelectItems onChange={(event) =>
+                  <Table className=" border-r-[1px] border-gray-200">
+                  <TableHeader>
+                  <TableRow>
+                    <TableHead className="">Item</TableHead>
+                    <TableHead>Quantity</TableHead>
+                    <TableHead>Price</TableHead>
+                    {/*
+                    <TableHead className="text-right">Total</TableHead> */}
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                    <TableRow>
+                      <TableCell>
+                      <SelectItems onChange={(event) =>
                         handleInventoryItemChange(
                           index,
                           "inventory_id",
@@ -182,12 +237,10 @@ export default function Invoices() {
                       }
                       value={item.inventory_id}
                       />
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <label htmlFor="name">Quantity</label>
-                    <input
+                      </TableCell>
+                      <TableCell>
+                      <Input
                       type="number"
-                      className="border border-neutral-300 focus:ring-0 active:ring-0 active:outline-none focus:outline-none active:ring-0 focus:border-[#1C40CA] active:border-[#1C40CA] focus:border-black rounded-md px-2 py-1"
                       value={item.quantity}
                       onChange={(event) =>
                         handleInventoryItemChange(
@@ -197,12 +250,10 @@ export default function Invoices() {
                         )
                       }
                     />
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <label htmlFor="name">Selling price</label>
-                    <input
+                      </TableCell>
+                      <TableCell> 
+                      <Input
                       type="number"
-                      className="border border-neutral-300 focus:ring-0 active:ring-0 active:outline-none focus:outline-none active:ring-0 focus:border-[#1C40CA] active:border-[#1C40CA] focus:border-black rounded-md px-2 py-1"
                       value={item.selling_price}
                       onChange={(event) =>
                         handleInventoryItemChange(
@@ -212,35 +263,28 @@ export default function Invoices() {
                         )
                       }
                     />
-                  </div>
-                  {/* <div className="flex flex-col gap-1">
-                    <label htmlFor="name">Selling Price</label>
-                    <input
-                      type="text"
-                      className="border-2 border-neutral-300 focus:ring-0 active:ring-0 active:outline-none focus:outline-none active:ring-0 focus:border-[#1C40CA] active:border-[#1C40CA] focus:border-black rounded-md px-2 py-1"
-                      value={item.selling_price}
-                      onChange={handleNameChange}
-                    />
-                  </div> */}
 
-                  <button
-                    type="button"
-                    onClick={handleAddInventoryItem}
-                    className="pt-4"
-                  >
-                    <span className="text-green-400 text-3xl">+</span>
-                  </button>
+                      </TableCell>
+                      </TableRow>
+                      </TableBody>
+                  </Table>
                   <button
                     type="button"
                     className="pt-4"
-                    onClick={() => handleRemoveInventoryItem(index)}
+                    onClick={() => handleRemoveInventoryItem(index, item.id)}
                   >
-                    <span className="text-red-400 text-3xl">-</span>
+                     <AiOutlineClose className="text-red-500 text-sm cursor-pointer mx-4"/>
                   </button>
                 </div>
               ))}
             </div>
           </div>
+          <input
+          readOnly
+                  className="border border-[#1C40CA] border rounded-md  text-[#1C40CA] px-4 text-center  py-2 cursor-pointer"
+                  onClick={handleAddInventoryItem}
+                  value={"+ Add Items"}
+                />
           <div className="w-full flex justify-end mt-6 mb-2 gap-2">
             <button
               type="reset"
@@ -262,6 +306,7 @@ export default function Invoices() {
                 <>
                   <button
                     type="submit"
+                    onClick={handleSubmit}
                     className="bg-[#1C40CA] rounded-md font-semibold text-white px-8 py-2"
                   >
                     Save

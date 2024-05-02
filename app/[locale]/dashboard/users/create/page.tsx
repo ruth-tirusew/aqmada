@@ -92,7 +92,6 @@ export default function Invoices({params:{locale}}) {
       }
       setLoading(false);
     } catch (error: any) {
-      console.log(error);
       setError(error.response.data.message); 
       setTimeout(() => {
         setError("");

@@ -17,7 +17,6 @@ export async function GET(request: NextRequest, { params }: { params: { user: st
         return new NextResponse(JSON.stringify(company), { status: 200 });
     }
     catch (error) {
-        console.log(error);
         return new NextResponse("Something went wrong", { status: 500 });
     }
 }
