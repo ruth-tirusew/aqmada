@@ -30,7 +30,7 @@ const pages: Page[] = [
   },
 ];
   return (
-    <div className="">
+    <div className="h-screen">
       <Breadcrumb
         page={pages}
         heading= {dict.POHeading}

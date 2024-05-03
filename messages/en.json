@@ -88,6 +88,21 @@
     "printInvoice":"Print Invoice",
     "editInvoice":"Edit Invoice",
     "invoiceFormHeading":"Invoice Form",
-    "invoiceFormSubheading":"Fill in the form to register an invoices.",
-    "Form":"Form"
+    "invoiceFormSubheading":"Fill in the form to register an invoice.",
+    "Form":"Form",
+    "item":"Item",
+    "total":"Total",
+    "customerName":"Customer Name",
+    "sellingPrice":"Selling Price",
+    "addItems":"Add Items",
+    "purchaseFormHeading":"Purchase Form",
+    "purchaseFormSubheading":"Fill in the form to register an purchase.",
+    "vendorName":"Vendor Name",
+    "orderNumber":"Order Number",
+    "attachFiles":"Attach Files",
+    "removeFields":"Remove Fields",
+    "Role":"Role and Permission",
+    "optional":"Optional",
+    "sure":"Are you sure",
+    "sureDescription":"This action cannot be returned. This will permanently delete your record."
 }

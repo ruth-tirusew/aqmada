@@ -8,6 +8,8 @@
     "invoiceDetails":"የደረሰኝ ዝርዝሮች",
     "dateIssued":"የተሰጠበት ቀን",
     "Purchases": "ግዢ",
+    "purchaseFormHeading":"የግዢ ቅጽ",
+    "purchaseFormSubheading":"ግዢ ለመመዝገብ ቅጹን ይሙሉ።",
     "Reports": "ሪፖርትዎች",
     "Users": "ተጠቃሚዎች",
     "userSubheading":"በድርጅትዎ ስር የተመዘገቡ የሁሉም ሰራተኞች ዝርዝር",
@@ -21,7 +23,7 @@
     "Products": "ሸቀጥ",
     "Low Stock Items": "ዝቅተኛ መጠን ሸቀጥ",
     "totalItems": "ድምር ሸቀጥ",
-    "quantity": "መጠን",
+    "quantity": "ብዛት",
     "initialPrice": "የግዢ ዋጋ",
     "addReports": "የሪፖርትን ይመዝግቡ",
     "inventorySubheading": "ያስቀመጡዋቸው ጠቅላላ ዕቃዎች ሪፖርት",
@@ -85,6 +87,18 @@
     "image":"ምስል",
     "printInvoice":"ደረሰኝ ያትሙ",
     "editInvoice":"ደረሰኝ አርትዕ",
-    "Form": "ቅጽ"
-    
+    "Form": "ቅጽ",
+    "item":"ሸቀጥ",
+    "total":"ድምር",
+    "customerName":"የደንበኛ ስም",
+    "sellingPrice":"ዋጋ",
+    "addItems":"ተጨማሪ ቅጽ",
+    "vendorName":"የአቅራቢ ስም",
+    "orderNumber":"የትእዛዝ ቁጥር",
+    "attachFiles":"ፋይሎችን ያያይዙ",
+    "removeFields":"ሰርዝ",
+    "Role":"ሚና እና ፍቃድ",
+    "optional":"አማራጭ",
+    "sure":"እርግጠኛ ኖት?",
+    "sureDescription":"ይህ እርምጃ መመለስ አይቻልም።"
     }

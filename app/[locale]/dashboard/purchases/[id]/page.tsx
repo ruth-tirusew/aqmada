@@ -2,16 +2,13 @@
 import React, { ChangeEvent, use, useEffect, useState } from "react";
 import axios from "axios";
 import { PurchaseItem } from "@prisma/client";
-import Image from "next/image";
-
 
 import Breadcrumb from "@/app/[locale]/components/breadcrumb";
 import { ItemType, Page } from "@/app/[locale]/types";
 import { useParams, useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import SelectItems from "@/app/[locale]/components/SelectItem";
-
-import { CiImageOn } from "react-icons/ci";
+import { getDictionary } from "@/lib/locales";
 
 interface FormData {
   file: string;
@@ -23,7 +20,6 @@ interface FormData {
 interface Item {
   id: string;
   name: string;
-  image: string;
   quantity: number;
   initial_price: number;
 }
@@ -39,18 +35,6 @@ export default function PurchaseOrderForm() {
     { inventory_id:"", quantity:0, price:0 },
   ])
   const router = useRouter()
-
-  const pages: Page[] = [
-    {
-      name: "Purchase",
-      href: `/${routeParam?.locale || "en"}/dashboard/purchase`,
-    },
-    {
-      name: "Form",
-      href: `/${routeParam?.locale || "en"}/purchase/create`,
-    },
-  ];
-
 
   const fetchPurchaseOrder = async () => {
     try{
@@ -123,6 +107,16 @@ export default function PurchaseOrderForm() {
     await axios.delete(`/api/purchase/item/${id}`)
   };
 
+  const [dict, setDict] = useState<any>();
+
+  const dictionary = async () => {
+    try {
+      const data = await getDictionary(routeParam?.locale || "en");
+      setDict(data);
+    } catch (error) {
+      console.error("Dictionary error:", error);
+    }
+  }
   
   
   const handleSubmit = async (event:any) => {
@@ -153,23 +147,34 @@ export default function PurchaseOrderForm() {
   };
 
   useEffect(() => {
+    dictionary();
     fetchPurchaseOrder();
   }, []);
 
+  const pages: Page[] = [
+    {
+      name: dict?.Purchases ||"Purchase",
+      href: `/${routeParam?.locale || "en"}/dashboard/purchase`,
+    },
+    {
+      name: dict?.Form || "Form",
+      href: `/${routeParam?.locale || "en"}/purchase/create`,
+    },
+  ];
 
   return (
     <div className="">
-      <Breadcrumb page={pages} heading="Purchase Form" />
+      <Breadcrumb page={pages} heading={dict?.purchaseFormHeading ||"Purchase Form"} />
       <div className="bg-white rounded-md w-full p-4 dark:bg-black">
         <div className=" mb-4">
           <p className="text-md font-semibold ">
-            Fill in the form to register an purchase.
+          {dict?.purchaseFormSubheading ||" Fill in the form to register an purchase."}
           </p>
         </div>
         <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-4">
                 <div className="vendor-name">
-                    <label className="text-sm font-semibold" htmlFor="vendor-name">Vendor Name</label>
+                    <label className="text-sm font-semibold" htmlFor="vendor-name">{dict?.vendorName ||"Vendor Name"}</label>
                     <Input
                         type="text"
                         placeholder="Vendor Name"
@@ -181,7 +186,7 @@ export default function PurchaseOrderForm() {
                 </div>
                 <div className="flex gap-4 w-full">
                 <div className="p-o w-full">
-                <label className="text-sm font-semibold" htmlFor="purchase-order">Order Number</label>
+                <label className="text-sm font-semibold" htmlFor="purchase-order">{dict?.orderNumber ||"Order Number"}</label>
                     <Input
                         type="text"
                         placeholder="PO Number"
@@ -192,7 +197,7 @@ export default function PurchaseOrderForm() {
                     />
                 </div>
                 <div className="files w-full">
-                <label className="text-sm font-semibold items-center" htmlFor="files">Attach Files</label>
+                <label className="text-sm font-semibold items-center" htmlFor="files">{dict?.attachFiles ||"Attach Files"}</label>
                     <Input
                         type="file"
                         placeholder="PO Number"
@@ -205,56 +210,13 @@ export default function PurchaseOrderForm() {
                 </div>
                 {items.map((item, index) => (
                   <div className="" key={index}>
-                    <div className="flex space-x-2 w-full">
-                      <div className="w-full border border-gray-400 my-4"></div>
-                      <button className="text-red-500 w-1/5" onClick={() => handleRemoveInventoryItem(index, item.id)}>Remove Fields</button>
+                    <div className="flex space-x-2 w-full  items-center">
+                      <hr className="w-full border-b-1 border-neutral-300" />
+                      <button className="text-red-500 w-1/5" onClick={() => handleRemoveInventoryItem(index, item.id)}>{dict?.removeFields ||"Remove Fields"}</button>
                     </div>
-                <div className="grid grid-cols-2 gap-4 items-center w-full">
-                <div className="">
-                <div className="">
-                <div
-            className="
-              relative
-              cursor-pointer
-              transition
-              border-dashed 
-              border-2
-              px-20
-              py-10 
-              border-neutral-300
-              flex
-              flex-col
-              justify-center
-              items-center
-              gap-4
-              text-neutral-600
-            "
-          >
-            <CiImageOn
-              className="
-                w-28
-                h-28
-                text-neutral-600
-                dark:text-white
-              "
-            />
-            {item?.item?.image && (
-              <div className="
-              absolute inset-0 w-full h-full">
-                <Image
-                  fill 
-                  style={{ objectFit: 'cover' }} 
-                  src={item?.item?.image } 
-                  alt="Image" 
-                />
-              </div>
-            )}
-          </div>
-                </div>
-                </div>
                 <div className="flex flex-col gap-2">
                 <div className="p-o w-full">
-                <label className="text-sm font-semibold" htmlFor="purchase-order">Item<span className="ml-2 text-red-600">*</span></label>
+                <label className="text-sm font-semibold" htmlFor="purchase-order">{dict?.item ||"Item"}<span className="ml-2 text-red-600">*</span></label>
                 <SelectItems onChange={(event) =>
                         handleItemChange(
                           index,
@@ -267,7 +229,7 @@ export default function PurchaseOrderForm() {
                       />
                 </div>
                 <div className="files w-full">
-                <label className="text-sm font-semibold items-center" htmlFor="quantity">Quantity<span className="ml-2 text-red-600">*</span></label>
+                <label className="text-sm font-semibold items-center" htmlFor="quantity">{dict?.quantity ||"Quantity"}<span className="ml-2 text-red-600">*</span></label>
                     <Input
                        type="number"
                         placeholder="0"
@@ -285,7 +247,7 @@ export default function PurchaseOrderForm() {
                     />
                 </div>
                 <div className="files w-full">
-                <label className="text-sm font-semibold items-center" htmlFor="initial_price">Price<span className="ml-2 text-red-600">*</span></label>
+                <label className="text-sm font-semibold items-center" htmlFor="initial_price">{dict?.sellingPrice ||"Price"}<span className="ml-2 text-red-600">*</span></label>
                     <Input
                         type="number"
                         placeholder="$ 0.0"
@@ -303,13 +265,12 @@ export default function PurchaseOrderForm() {
                 </div>
                 </div>   
                 </div>
-                  </div>
                 ))}
                 <div
                   className="border border-[#1C40CA] border rounded-md font-semibold text-[#1C40CA] px-8 py-2 text-center cursor-pointer"
                   onClick={handleAddInventoryItem}
                 >
-                  + Add Items
+                  + {dict?.addItems ||"Add Items"}
                 </div>
             </div>
           <div className="w-full flex justify-end mt-6 mb-2 gap-2">
@@ -318,7 +279,7 @@ export default function PurchaseOrderForm() {
               className="bg-[#1C40CA]/[0.05] rounded-md font-semiboldtext-[#1C40CA] px-8 py-2"
               onClick={handleReset}
             >
-              Reset
+              {dict?.reset ||"Reset"}
             </button>
             <div>
             {loading ? (
@@ -331,7 +292,7 @@ export default function PurchaseOrderForm() {
                   type="submit"
                   className="bg-[#1C40CA] rounded-md font-semibold text-white px-8 py-2"
                 >
-                  Save
+                  {dict?.submit ||"Submit"}
                 </button>
               </>
             )}

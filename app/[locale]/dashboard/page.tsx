@@ -110,7 +110,7 @@ const pages: Page[] = [
         </div>
         <div className="bg-white shadow-md rounded-lg items-center pl-2 dark:text-white dark:bg-black">
           <div className="flex align-center py-4 gap-2">
-            <div className="rounded-full bg-[#6E13DF]/[10%] text-[#6E13DF] p-4 dark:bg-[#6E13DF]/[20%]">
+            <div className="rounded-full bg-[#6E13DF]/[10%] text-[#6E13DF] text-center w-12 h-12 p-4 flex items-center justify-center dark:bg-[#6E13DF]/[20%]">
               <FaChartLine />
             </div>
             <div className="">
@@ -120,9 +120,11 @@ const pages: Page[] = [
           </div>
         </div>
         <div className="bg-white shadow-md rounded-lg items-center px-2 dark:bg-black">
-          <div className="flex align-center py-4 gap-2">
-            <div className="rounded-full bg-[#C8895D]/[10%] text-[#C8895D] p-4 dark:bg-[#C8895D]/[20%]">
-              <MdAttachMoney />
+          <div className="flex items-center py-4 gap-2">
+            <div className="rounded-full bg-[#C8895D]/[10%] text-[#C8895D] text-center w-12 h-12 p-4 flex items-center justify-center dark:bg-[#C8895D]/[20%]">
+              <span>
+                <MdAttachMoney />
+              </span>
             </div>
             <div className="">
               <p className="text-md">{totalProfit} ETB</p>
@@ -132,7 +134,7 @@ const pages: Page[] = [
         </div>
         <div className="bg-white shadow-md rounded-lg items-center px-2 dark:bg-black">
           <div className="flex align-center py-4 gap-2">
-            <div className="rounded-full bg-[#FB407D]/[10%] text-[#FB407D] p-4 ">
+            <div className="rounded-full bg-[#FB407D]/[10%] text-[#FB407D] text-center w-12 h-12 p-4 flex items-center justify-center">
               <CiShoppingBasket />
             </div>
             <div className="">

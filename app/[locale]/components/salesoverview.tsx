@@ -115,7 +115,7 @@ const SalesOverview: React.FC<SalesOverviewProps> = ({ items, names }) => {
 
   return (
     <div className="bg-white shadow-md w-full rounded-md py-[9px] px-[12px] px-2 grid grid-cols-1 gap-2 divide-y divide-gray-300 dark:bg-black">
-    {chartData.series.length === 0 || loading || totalSales === 0 ? (
+    {totalSales === 0 ? (
           <div className="w-full h-full flex flex-col items-center justify-center mt-6 dark:text-white text-gray-400">
             <CiShoppingBasket size={100} className=" my-1.5" />
             <p className="font-semibold mb-10">
@@ -123,7 +123,7 @@ const SalesOverview: React.FC<SalesOverviewProps> = ({ items, names }) => {
             </p>
           </div>
         ) : (
-      <div className="mt-1.5 mb-4">
+      <div className="mt-1.5 mb-4 flex flex-col items-center justify-center">
         <Chart type="donut" height={200} width={200} options={options} series={chartData.series} />
       </div>
         )}

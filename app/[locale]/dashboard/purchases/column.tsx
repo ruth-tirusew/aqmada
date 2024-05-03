@@ -57,7 +57,7 @@ export const ItemCategoryColumn: ColumnDef<any>[] = [
         header: "Order Number",
         accessorKey: "order_number",
         cell: ({ row }) => {
-          return <Link href={`/dashboard/purchases/${row.original.id}`} className="text-left text-indigo-500 font-medium cursor-pointer">#{row.getValue("order_number")}</Link>
+          return <Link href={`${row.original.id}`} className="text-left text-indigo-500 font-medium cursor-pointer">#{row.getValue("order_number")}</Link>
         },
     },
     {

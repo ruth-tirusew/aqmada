@@ -15,6 +15,10 @@ import { Input } from "@/components/ui/input";
 import { getDictionary } from "@/lib/locales";
 import Image from "next/image";
 import Logo from '@/public/aqmada-03.png'
+import { AlertDialogHeader, AlertDialogFooter } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogTitle, AlertDialogDescription, AlertDialogCancel, AlertDialogAction } from "@radix-ui/react-alert-dialog";
+import { deleteItem } from "../../columns";
 
 
 
@@ -25,16 +29,6 @@ interface FormData {
 }
 
 export default function Invoices() {
-  const pages: Page[] = [
-    {
-      name: "Invoice",
-      href: "/dashboard/invoices",
-    },
-    {
-      name: "Form",
-      href: "/dashboard/invoices/create",
-    },
-  ];
   const [items, setInventoryItems] = useState<InvoiceItemForm[]>([
     { inventory_id: "", quantity: 0, selling_price: 0 },
   ]);
@@ -143,6 +137,17 @@ export default function Invoices() {
     }
   };
 
+  const pages: Page[] = [
+    {
+      name: dict?.invoice ||"Invoice",
+      href: `/${routeParam?.locale}/dashboard/invoices`,
+    },
+    {
+      name: dict?.Form || "Form",
+      href: `/${routeParam?.locale}/dashboard/invoices/${routeParam?.id}`,
+    },
+  ];
+
   const fetchInvoice = async () => {
     try {
       const response = await axios.get(`/api/invoice/${routeParam?.id}`);
@@ -164,34 +169,34 @@ export default function Invoices() {
 
   return (
     <div className="">
-      <Breadcrumb page={pages} heading="Invoice Form" />
+      <Breadcrumb page={pages} heading= {dict?.invoiceFormHeading || "Invoice Form"} />
       <div className="bg-white dark:bg-black rounded-md w-full p-4">
         <div className="mb-4">
           <p className="text-md font-semibold ">
-            Fill in the form to register an invoices.
+          {dict?.invoiceFormSubheading || " Fill in the form to register an invoices."}:
           </p>
         </div>
-        <div className="flex items-center px-4 border-gray-200 border-b-[1px] py-4 mb-2">app/[locale]/dashboard/purchases/item/[id]
+        <div className="flex items-center sm:px-4 border-gray-200 border-b-[1px] py-4 mb-2">
                 <Image
                   src={Logo}
                   width={100}
                   height={70}
                   alt="logo"
                 />
-                <div className="ml-auto">
+                <div className="sm:ml-auto">
                   <div className="flex">
-                    <div className="font-semibold text-md text-neutral-700">
+                    <div className="font-semibold font-light sm:text-md  text-sm text-neutral-700">
                       {dict?.invoice || "Invoice"}:
                     </div>
-                    <div className="font-light text-md text-neutral-700 ml-2">
+                    <div className="font-light font-light sm:text-md  text-sm text-neutral-700 ml-2">
                       <span>#{refNumber.slice(0, 15)}</span>
                     </div>
                   </div>
                   <div className="flex">
-                    <div className="font-semibold text-md text-neutral-700">
+                    <div className="font-semibold font-light sm:text-md  text-sm text-neutral-700">
                       {dict?.dateIssued || "Date Issued"}:
                     </div>
-                    <div className="font-light text-md text-neutral-700 ml-2">
+                    <div className="font-light font-light sm:text-md  text-sm text-neutral-700 ml-2">
                       <span>{date.slice(0, 10)}</span>
                     </div>
                   </div>
@@ -205,7 +210,7 @@ export default function Invoices() {
           <div className="flex gap-4">
             <div className="flex flex-col gap-4 w-full">
               <div className="flex flex-col gap-1">
-                <label htmlFor="name">Customer Name</label>
+                <label htmlFor="name">{dict?.customerName || "Customer Name"}</label>
                 <input
                   type="text"
                   className="border border-neutral-300 focus:ring-0 active:ring-0 active:outline-none focus:outline-none active:ring-0 focus:border-[#1C40CA] active:border-[#1C40CA] focus:border-black rounded-sm px-2 py-1 bg-transparent"
@@ -214,21 +219,11 @@ export default function Invoices() {
                 />
               </div>
               {items?.map((item, index) => (
-                <div key={index} className="w-full flex  gap-2 align-center">
-                  <Table className=" border-r-[1px] border-gray-200">
-                  <TableHeader>
-                  <TableRow>
-                    <TableHead className="">Item</TableHead>
-                    <TableHead>Quantity</TableHead>
-                    <TableHead>Price</TableHead>
-                    {/*
-                    <TableHead className="text-right">Total</TableHead> */}
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                    <TableRow>
-                      <TableCell>
-                      <SelectItems onChange={(event) =>
+                <div key={index} className="w-full flex w-full align-center  border border-neutral-300 rounded-sm p-2">
+                  <div className=" border-r-[1px] grid sm:grid-cols-3 grid-cols-1 gap-2 border-gray-200 p-2 w-full">
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="name">{dict?.item || "Item"}</label>
+                    <SelectItems onChange={(event) =>
                         handleInventoryItemChange(
                           index,
                           "inventory_id",
@@ -238,9 +233,11 @@ export default function Invoices() {
                       }
                       value={item.inventory_id}
                       />
-                      </TableCell>
-                      <TableCell>
-                      <Input
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="name">
+                    {dict?.quantity || "Quantity"}</label>
+                    <Input
                       type="number"
                       value={item.quantity}
                       onChange={(event) =>
@@ -251,9 +248,10 @@ export default function Invoices() {
                         )
                       }
                     />
-                      </TableCell>
-                      <TableCell> 
-                      <Input
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="name">{dict?.sellingPrice ||"Selling Price"}</label>
+                    <Input
                       type="number"
                       value={item.selling_price}
                       onChange={(event) =>
@@ -264,44 +262,54 @@ export default function Invoices() {
                         )
                       }
                     />
-
-                      </TableCell>
-                      </TableRow>
-                      </TableBody>
-                  </Table>
-                  <button
-                    type="button"
-                    className="pt-4"
-                    onClick={() => handleRemoveInventoryItem(index, item.id)}
-                  >
-                     <AiOutlineClose className="text-red-500 text-sm cursor-pointer mx-4"/>
-                  </button>
+                  </div>
+                  </div>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="ghost" size="sm" className="rounded-full bg-white/90 px-2 py-2 text-gray-400 transition hover:text-red-500">
+                    <AiOutlineClose className="text-red-500 text-sm cursor-pointer mx-4"/>
+                    </Button>
+                    
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>{dict?.sure || "Are you sure"}?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                      {dict?.sureDescription ||  "This action cannot be undone. This will permanently delete your record."}
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction onClick={() => handleRemoveInventoryItem(index, item.id)} className="bg-red-500 px-4 py-2 text-white transition hover:bg-red-600">Continue</AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog> 
                 </div>
               ))}
             </div>
           </div>
-          <input
-          readOnly
-                  className="border border-[#1C40CA] border rounded-md  text-[#1C40CA] px-4 text-center  py-2 cursor-pointer"
+          <button
+                  type="button"
+                  className="border border-[#1C40CA] border rounded-md  text-[#1C40CA] px-4 text-center  py-2 my-4 cursor-pointer"
                   onClick={handleAddInventoryItem}
-                  value={"+ Add Items"}
-                />
+                > + {dict?.addItems || "Add Items"}
+                </button>
           <div className="w-full flex justify-end mt-6 mb-2 gap-2">
             <button
               type="reset"
-              className="bg-[#1C40CA]/[0.05] rounded-md font-semiboldtext-[#1C40CA] px-8 py-2"
+              className="bg-[#1C40CA]/[0.05] rounded-md font-semiboldtext-[#1C40CA] sm:px-8 px-4 py-2"
               disabled={loading}
             >
-              Reset
+              {dict?.reset || "Reset"}
             </button>
             <div>
               {loading ? (
                 <button
-                  className="bg-[#1C40CA] rounded-md font-semibold text-white px-8 py-2 flex items-center"
+                  className="bg-[#1C40CA] rounded-md font-semibold text-white sm:px-8 px-4 py-2 flex items-center"
                   disabled
                 >
                   <PiSpinner className="h-4 w-4 mr-2 animate-spin text-white" />
-                  Loading....
+              {dict?.loading || "Loading"}
                 </button>
               ) : (
                 <>
@@ -310,7 +318,7 @@ export default function Invoices() {
                     onClick={handleSubmit}
                     className="bg-[#1C40CA] rounded-md font-semibold text-white px-8 py-2"
                   >
-                    Save
+                    {dict?.submit || "Submit"}
                   </button>
                 </>
               )}

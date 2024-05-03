@@ -30,7 +30,6 @@ export const deleteItem = async (id: string) => {
     return alert("An error has occured.");
   }
 };
-
 export const columns: ColumnDef<InvoiceType>[] = [
 
   {
@@ -59,7 +58,7 @@ export const columns: ColumnDef<InvoiceType>[] = [
     accessorKey: "ref_number",
     header: () => <div className="text-left">Ref No.</div>,
     cell: ({ row }) => {
-      return <Link href={`/dashboard/invoices/${row.original.id}`} className="text-left text-indigo-500 font-medium cursor-pointer">#{row.getValue("ref_number")}</Link>
+      return <Link href={`invoices/${row.original.id}`} className="text-left text-indigo-500 font-medium cursor-pointer">#{row.getValue("ref_number")}</Link>
     },
   },
   {

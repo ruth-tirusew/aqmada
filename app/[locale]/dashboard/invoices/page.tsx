@@ -26,7 +26,7 @@ export default async function Invoice({ params: { locale } }) {
     ];
 
     return (
-        <div className="">
+        <div className="h-screen">
             <Breadcrumb page={pages} heading={dict.Invoices} subheading={dict.invoiceSubheading} />
             <DataTable
                 columns={columns}

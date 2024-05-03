@@ -3,7 +3,7 @@ import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import axios from "axios";
 import Breadcrumb from "@/app/[locale]/components/breadcrumb";
 import { Page, InvoiceItemsType, InvoiceItemForm } from "@/app/[locale]/types";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { ItemType } from "@/app/[locale]/types";
 import { PaymentStatus } from "@prisma/client";
 
@@ -12,6 +12,7 @@ import { PiSpinner } from "react-icons/pi";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AiOutlineClose } from "react-icons/ai";
 import { Input } from "@/components/ui/input";
+import { getDictionary } from "@/lib/locales";
 interface FormData {
   customer_name: string;
   payment_status: PaymentStatus;
@@ -19,20 +20,12 @@ interface FormData {
 }
 
 export default function Invoices() {
-  const pages: Page[] = [
-    {
-      name: "Invoice",
-      href: "/dashboard/invoices",
-    },
-    {
-      name: "Form",
-      href: "/dashboard/invoices/create",
-    },
-  ];
   const [customer_name, setCustomerName] = useState<string>("");
   const [payment_status, setPaymentStatus] = useState<PaymentStatus>(PaymentStatus.PAID);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
+  const [dict, setDict] = useState<any>();
+  const routeParam = useParams<{ id: string, locale: "en" |"am" }>();
   
   const [inventory_items, setInventoryItems] = useState<InvoiceItemForm[]>([
     { inventory_id: "", quantity: 0, selling_price: 0 },
@@ -118,14 +111,38 @@ export default function Invoices() {
       }, 5000);
     }
   };
+  useEffect(() => {
+  const loadDictionary = async () => {
+    try {
+      const data = await getDictionary(routeParam?.locale || "en");
+      setDict(data);
+    } catch (error) {
+      console.error("Dictionary error:", error);
+    }
+  };
+  loadDictionary();
+  }, [routeParam?.id, routeParam?.locale]);
+
+
+  const pages: Page[] = [
+    {
+      name: dict?.invoice ||"Invoice",
+      href: `/${routeParam?.locale}/dashboard/invoices`,
+    },
+    {
+      name: dict?.Form || "Form",
+      href: `/${routeParam?.locale}/dashboard/invoices/create`,
+    },
+  ];
+
 
   return (
     <div className="">
-      <Breadcrumb page={pages} heading="Invoice Form" />
+      <Breadcrumb page={pages} heading={dict?.invoiceFormHeading || "Invoice Form"} />
       <div className="bg-white dark:bg-black rounded-md w-full p-4">
         <div className="mb-4">
           <p className="text-md font-semibold ">
-            Fill in the form to register an invoices.
+          {dict?.invoiceFormSubheading || "Fill in the form to register an invoice."}
           </p>
         </div>
         <form onSubmit={handleSubmit}>
@@ -136,7 +153,7 @@ export default function Invoices() {
           <div className="flex gap-4">
             <div className="flex flex-col gap-4 w-full">
               <div className="flex flex-col gap-1">
-                <label htmlFor="name">Customer Name</label>
+                <label htmlFor="name">{dict?.customerName || "Customer Name"}</label>
                 <input
                   type="text"
                   className="border border-neutral-300 focus:ring-0 active:ring-0 active:outline-none focus:outline-none active:ring-0 focus:border-[#1C40CA] active:border-[#1C40CA] focus:border-black rounded-sm px-2 py-1 bg-transparent"
@@ -144,22 +161,12 @@ export default function Invoices() {
                   onChange={handleNameChange}
                 />
               </div>
-              {inventory_items.map((item, index) => (
-                <div key={index} className="w-full flex  gap-2 align-center">
-                  <Table className=" border-r-[1px] border-gray-200">
-                  <TableHeader>
-                  <TableRow>
-                    <TableHead className="">Item</TableHead>
-                    <TableHead>Quantity</TableHead>
-                    <TableHead>Price</TableHead>
-                    {/*
-                    <TableHead className="text-right">Total</TableHead> */}
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                    <TableRow>
-                      <TableCell>
-                      <SelectItems onChange={(event) =>
+              {inventory_items?.map((item, index) => (
+                <div key={index} className="w-full flex w-full align-center  border border-neutral-300 rounded-sm p-2">
+                  <div className=" border-r-[1px] grid sm:grid-cols-3 grid-cols-1 gap-2 border-gray-200 p-2 w-full">
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="name">{dict?.item || "Item"}</label>
+                    <SelectItems onChange={(event) =>
                         handleInventoryItemChange(
                           index,
                           "inventory_id",
@@ -169,9 +176,11 @@ export default function Invoices() {
                       }
                       value={item.inventory_id}
                       />
-                      </TableCell>
-                      <TableCell>
-                      <Input
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="name">
+                    {dict?.quantity || "Quantity"}</label>
+                    <Input
                       type="number"
                       value={item.quantity}
                       onChange={(event) =>
@@ -182,9 +191,10 @@ export default function Invoices() {
                         )
                       }
                     />
-                      </TableCell>
-                      <TableCell> 
-                      <Input
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="name">{dict?.sellingPrice ||"Selling Price"}</label>
+                    <Input
                       type="number"
                       value={item.selling_price}
                       onChange={(event) =>
@@ -195,11 +205,8 @@ export default function Invoices() {
                         )
                       }
                     />
-
-                      </TableCell>
-                      </TableRow>
-                      </TableBody>
-                  </Table>
+                  </div>
+                  </div>
                   <button
                     type="button"
                     className="pt-4"
@@ -213,10 +220,10 @@ export default function Invoices() {
           </div>
           <button
                   type="button"
-                  className="border border-[#1C40CA] border rounded-md  text-[#1C40CA] px-8 py-2"
+                  className="border border-[#1C40CA] border rounded-md  text-[#1C40CA] px-8 py-2 my-4"
                   onClick={handleAddInventoryItem}
                 >
-                  + Add Items
+                  + {dict?.addItems || "Add Items"}
                 </button>
           <div className="w-full flex justify-end mt-6 mb-2 gap-2">
             <button
@@ -224,7 +231,7 @@ export default function Invoices() {
               className="bg-[#1C40CA]/[0.05] rounded-md font-semiboldtext-[#1C40CA] px-8 py-2"
               disabled={loading}
             >
-              Reset
+              {dict?.reset || "Reset"}
             </button>
             <div>
               {loading ? (
@@ -233,7 +240,7 @@ export default function Invoices() {
                   disabled
                 >
                   <PiSpinner className="h-4 w-4 mr-2 animate-spin text-white" />
-                  Loading....
+                  {dict?.loading || "Loading"}
                 </button>
               ) : (
                 <>
@@ -241,7 +248,7 @@ export default function Invoices() {
                     type="submit"
                     className="bg-[#1C40CA] rounded-md font-semibold text-white px-8 py-2"
                   >
-                    Save
+                     {dict?.submit || "Submit"}
                   </button>
                 </>
               )}

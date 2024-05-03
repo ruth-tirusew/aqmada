@@ -41,7 +41,7 @@ export const NavLink:React.FC<Props> = ({heading, icon: Icon, link}) => {
         className={`flex items-center group pl-8 py-3 ${
           isActive(link)
             ? "border-[#1C40CA] border-r-4 bg-[#1C40CA]/[0.1]"
-            : "hover:border-r-4 hover:border-[#1C40CA]/[0.5] hover:bg-[#1C40CA]/[0.1] dark:hover:bg-[#1C40CA]/[10%] active:border-[#1C40CA] hover:border-r-2 active:border-r-2"
+            : "group-hover:border-r-4 hover:border-[#1C40CA]/[0.5] hover:bg-[#1C40CA]/[0.1] dark:hover:bg-[#1C40CA]/[10%] active:border-[#1C40CA] hover:border-r-2 active:border-r-2"
         } text-md`}
       >
         <Icon

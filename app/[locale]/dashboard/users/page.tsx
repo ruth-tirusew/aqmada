@@ -19,7 +19,7 @@ export default async function Users({params:{locale}
       ];
 
     return (
-        <div className="">
+        <div className="h-screen">
         <Breadcrumb
             page={pages}
             heading= {dict.Users}

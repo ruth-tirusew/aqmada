@@ -131,7 +131,7 @@ export default function InventoryFormPage({params: {locale}}) {
                 value={selectedWarehouse}
               >
                 <SelectTrigger className="w-full dark:bg-gray-900">
-                  <SelectValue placeholder={dict?.selectWarehouse}/>
+                  <SelectValue placeholder={dict?.selectWarehouse || "Select Warehouse"}/>
                   <SelectContent className="dark:bg-gray-900 dark:text-white dark:hover:bg-black">
                     <SelectGroup className="dark:bg-gray-900 dark:text-white dark:hover:bg-black">
                       {warehouses.map((warehouse) => (
@@ -163,7 +163,7 @@ export default function InventoryFormPage({params: {locale}}) {
               <div className="flex flex-col">
                 <label htmlFor="name">
                   {dict?.description}
-                  <span className="text-neutral-400 text-xs">(optional)</span>
+                  <span className="text-neutral-400 text-xs">({dict?.optional || "optional"})</span>
                 </label>
                 <textarea
                   className="border border-neutral-300 focus:ring-0 active:ring-0 active:outline-none focus:outline-none active:ring-0 focus:border-[#1C40CA] active:border-[#1C40CA] focus:border-black rounded-sm px-2 py-1"
@@ -175,7 +175,7 @@ export default function InventoryFormPage({params: {locale}}) {
               </div>
               <div className="sm:flex grid grid-cols-1 gap-4">
                 <div className="flex flex-col w-full">
-                  <label htmlFor="name">{dict?.initialPrice}</label>
+                  <label htmlFor="name">{dict?.initialPrice || "Initial Price"}</label>
                   <input
                     className="border border-neutral-300 focus:ring-0 active:ring-0 active:outline-none focus:outline-none active:ring-0 focus:border-[#1C40CA] active:border-[#1C40CA] focus:border-black rounded-sm px-2 py-1"
                     placeholder="$ 0.0"
@@ -200,8 +200,8 @@ export default function InventoryFormPage({params: {locale}}) {
             </div>
             <div className="upload">
             <label htmlFor="name">
-                  {dict?.image}
-                  <span className="text-neutral-400 text-xs">(optional)</span>
+                  {dict?.image || "Image"}
+                  <span className="text-neutral-400 text-xs">({dict?.optional || "Optional"})</span>
                 </label>
             <ImageUpload onChange={(value) => setImage(value)} value={image} locale={locale}/>
             </div>
@@ -212,7 +212,7 @@ export default function InventoryFormPage({params: {locale}}) {
               className="bg-[#1C40CA]/[0.05] rounded-md font-semiboldtext-[#1C40CA] px-8 py-2"
               onClick={handleReset}
             >
-              {dict?.reset}
+              {dict?.reset || "Reset"}
             </button>
             <div>
               {loading ? (
@@ -221,7 +221,7 @@ export default function InventoryFormPage({params: {locale}}) {
                   disabled
                 >
                   <PiSpinner className="h-4 w-4 mr-2 animate-spin text-white" />
-                  {dict?.loading}....
+                  {dict?.loading || "Loading"}
                 </button>
               ) : (
                 <>
@@ -230,7 +230,7 @@ export default function InventoryFormPage({params: {locale}}) {
                     type="submit"
                     className="bg-[#1C40CA] rounded-md font-semibold text-white px-8 py-2"
                   >
-                    {dict?.submit}
+                    {dict?.submit || "Submit"}
                     
                   </button>
                 </>

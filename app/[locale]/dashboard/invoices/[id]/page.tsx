@@ -24,7 +24,7 @@ import Logo from '@/public/aqmada-03.png'
 
 // @ts-ignore
 export default function InvoiceDetail({ params: { locale } }) {
-  const routeParam = useParams<{ id: string }>();
+  const routeParam = useParams<{ id: string, locale: "en" | "am" }>();
   const invoiceRef = useRef<HTMLDivElement>(null);
   const [invoiceData, setInvoiceData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -80,9 +80,9 @@ export default function InvoiceDetail({ params: { locale } }) {
   ];
 
   return (
-    <div className="">
+    <div className="h-screen">
       <Breadcrumb page={pages} heading={dict?.invoiceDetails || "Invoice Details"} />
-      <div className="flex gap-4 print:w-full">
+      <div className="sm:flex gap-4 print:w-full">
         <div
           className="bg-white rounded-md w-full p-4 shadow-sm"
           ref={invoiceRef}
@@ -93,7 +93,7 @@ export default function InvoiceDetail({ params: { locale } }) {
             </div>
           ) : (
             <>
-              <div className="flex items-center px-4 border-gray-200 border-b-[1px] py-4 mb-2">
+              <div className="flex items-center sm:px-4 border-gray-200 border-b-[1px] py-4 mb-2">
                 <Image
                   src={Logo}
                   width={100}
@@ -105,7 +105,7 @@ export default function InvoiceDetail({ params: { locale } }) {
                     <div className="font-semibold text-md text-neutral-700">
                       {dict?.invoice || "Invoice"}:
                     </div>
-                    <div className="font-light text-md text-neutral-700 ml-2">
+                    <div className="font-light sm:text-md  text-sm text-neutral-700 ml-2">
                       <span>#{invoiceData.ref_number.slice(0, 15)}</span>
                     </div>
                   </div>
@@ -113,7 +113,7 @@ export default function InvoiceDetail({ params: { locale } }) {
                     <div className="font-semibold text-md text-neutral-700">
                       {dict?.dateIssued || "Date Issued"}:
                     </div>
-                    <div className="font-light text-md text-neutral-700 ml-2">
+                    <div className="font-light sm:text-md text-sm text-neutral-700 ml-2">
                       <span>{invoiceData.created_at.slice(0, 10)}</span>
                     </div>
                   </div>
@@ -123,10 +123,10 @@ export default function InvoiceDetail({ params: { locale } }) {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="">Item</TableHead>
-                    <TableHead>Quantity</TableHead>
-                    <TableHead>Price</TableHead>
-                    <TableHead className="text-right">Total</TableHead>
+                    <TableHead className="">{dict?.item || "Item"}</TableHead>
+                    <TableHead>{dict.quantity || "Quantity"}</TableHead>
+                    <TableHead>{dict.sellingPrice || "Price"}</TableHead>
+                    <TableHead className="text-right">{dict.total || "Total"}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -143,7 +143,7 @@ export default function InvoiceDetail({ params: { locale } }) {
                 </TableBody>
                 <TableFooter>
                   <TableRow>
-                    <TableCell colSpan={3}>Total</TableCell>
+                    <TableCell colSpan={3}>{dict.total || "Total"}</TableCell>
                     <TableCell className="text-right">{total}</TableCell>
                   </TableRow>
                 </TableFooter>
@@ -151,7 +151,7 @@ export default function InvoiceDetail({ params: { locale } }) {
             </>
           )}
         </div>
-        <div className="w-[30%] p-4 flex flex-col gap-4 print:hidden">
+        <div className="sm:w-[30%] p-4 flex flex-col gap-4 print:hidden">
           <button
             className="flex items-center border-2 gap-1 rounded-sm border-[#1C40CA] font-medium text-[#1C40CA] text-md px-8 py-2 hover:bg-gray-200/[30%]"
             onClick={handlePrint}

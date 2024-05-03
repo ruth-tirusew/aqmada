@@ -33,6 +33,7 @@ export default async function RootLayout({
   return (
     <html>
       <body className={montserrat.className}>
+        <div className="h-screen">
       <SessionProvider>
       <Provider>
         <div className="flex relative">
@@ -55,6 +56,7 @@ export default async function RootLayout({
         {/* <Chatbot /> */}
         </Provider>
         </SessionProvider>
+        </div>
       </body>
     </html>
   );
