@@ -119,8 +119,10 @@ export default function InventoryFormPage({ params: { locale } }) {
       setQuantity(data.quantity);
       setInitialPrice(data.initial_price)
       setImage(data.image);
-    } catch (error) {
-      console.error("Inventory error:", error);
+    } catch (error: any) {
+      if(error.response.status === 403){
+        router.push(`/${locale}/dashboard/403`);
+      }
     }
   };
 
@@ -156,25 +158,20 @@ export default function InventoryFormPage({ params: { locale } }) {
             <div className="flex flex-col gap-4 w-full">
               <div className="flex flex-col">
                 <p>{dict?.warehouse}</p>
-                <Select
-                 onValueChange={(value: string) => setWarehouse(value)}
+                <select
+                 onChange={(e) => setWarehouse(e.target.value)}
                   value={warehouse}
+                  className="border border-neutral-300 focus:ring-0 active:ring-0 active:outline-none focus:outline-none active:ring-0 focus:border-[#1C40CA] active:border-[#1C40CA] focus:border-black rounded-sm px-20 py-2 bg-transparent"
                 >
-                  <SelectTrigger className="w-full dark:bg-gray-900">
-                    <SelectValue placeholder={dict?.selectWarehouse} defaultValue={warehouse}/>
-                    <SelectContent className="dark:bg-gray-900 dark:text-white dark:hover:bg-gray-800">
-                      <SelectGroup className="dark:bg-gray-900 dark:text-white dark:hover:bg-gray-800">
+                    <option>{dict?.selectWarehouse || "Select Warehouse"}</option>
                         {warehouses.map((warehouse) => (
-                          <SelectItem key={warehouse.id} value={warehouse.id}>
+                          <option key={warehouse.id} value={warehouse.id}>
                             {warehouse.name}
-                          </SelectItem>
+                          </option>
                         ))}
-                      </SelectGroup>
                       <hr />
                       <Warehouse />
-                    </SelectContent>
-                  </SelectTrigger>
-                </Select>
+                </select>
               </div>
               <div className="flex flex-col gap-1">
                 <label htmlFor="name">{dict?.name || "Name"}</label>

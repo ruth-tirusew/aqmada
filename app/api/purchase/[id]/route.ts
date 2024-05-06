@@ -2,9 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { db } from "@/app/lib/db";
 import { PurchaseItem } from "@prisma/client";
+import { hasPermission } from "@/app/lib/utils/authorize";
 
 
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+    const isAllowed = await hasPermission("DELETE", "Purchase")
+    if(!isAllowed){
+      return NextResponse.json({message:"You are not allowed to delete purchase"}, { status: 403 })
+    }
     try {
         const { id } = params
         const purchaseItems = await db.purchaseItem.deleteMany({
@@ -58,6 +63,10 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   const { id } = params;
+  const isAllowed = await hasPermission("UPDATE", "Purchase")
+  if(!isAllowed){
+    return NextResponse.json({message:"You are not allowed to update purchase"}, { status: 403 })
+  }
   try {
     const body = await request.json();
     if (!id) {

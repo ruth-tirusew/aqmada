@@ -20,7 +20,8 @@ export default async function getCurrentUser() {
         email: session.user.email as string,
       },
       include:{
-        company: true
+        company: true,
+        role: true
       }
     });
 

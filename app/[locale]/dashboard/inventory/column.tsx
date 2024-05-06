@@ -29,9 +29,10 @@ const deleteItem = async (id: string) => {
   try {
     await axios.delete(`/api/inventory/${id}`);
     window.location.reload();
-  } catch (error) {
-    console.error("Error creating invoice:", error);
-    return alert("An error has occured.");
+  } catch (error: any) {
+    if (error?.response.status === 403) {
+      window.location.href = "403";
+    }
   }
 };
 
@@ -86,7 +87,7 @@ export const columns: ColumnDef<ItemType>[] = [
                 size="sm"
                 className="rounded-full bg-white/90 px-2 py-2 text-gray-400 transition hover:text-blue-500"
                 onClick={()=>{
-                  window.location.href = `${item.id}`;
+                  window.location.href = `inventory/${item.id}`;
                 }}
               >
                 <TbPencil className="h-4 w-4 text-blue-500 cursor-pointer"/>

@@ -8,6 +8,7 @@ import Link from "next/link";
 
 import { FcGoogle } from "react-icons/fc";
 import { PiSpinner } from "react-icons/pi";
+import Logo from '@/public/aqmada-03.png'
 
 interface Errors {
   email?: string;
@@ -42,11 +43,8 @@ export default function Listing() {
           callbackUrl: "/onboarding",
           redirect:false
         }).then(((res) => {
-            if(res?.error){
-              setErrors((prev:any) => ({ ...prev, general: res.error }));
-              setTimeout(()=>{
-                setErrors({});  
-              }, 5000);
+            if(res?.status == 200){
+              router.push("/")
             }
             setLoading(false)
           })).catch((err:any)=>{
@@ -71,13 +69,7 @@ export default function Listing() {
     <main className="m-4 mx-10">
       <Link href={"/"}>
                 <div className="logo flex items-center">
-                <Image
-                    src={"/hero-image.png"}
-                    width={60}
-                    height={60}
-                    alt="logo"
-                    className="w-auto h-auto"
-                  />
+                <Image src={Logo} width={50} height={40} alt="logo" />
                   <p className="font-bold text-[#003949] text-xl dark:text-white">AQMADA</p>
                 </div>
           </Link>

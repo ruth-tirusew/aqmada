@@ -8,6 +8,7 @@ import { GoGear } from "react-icons/go";
 import { CiMenuFries } from "react-icons/ci";
 import { IoIosLogOut } from "react-icons/io";
 import { HiOutlineDocumentReport } from "react-icons/hi";
+import { CiLock } from "react-icons/ci";
 import { LiaCartArrowDownSolid } from "react-icons/lia";
 import Logo from '@/public/aqmada-03.png'
 
@@ -108,6 +109,7 @@ const SideBar: React.FC<{ locale: "en" | "am" }> = ({
                     <NavLink heading={dict?.Invoices || "Invoices"} link="invoices" icon={LiaFileInvoiceDollarSolid} />
                     <NavLink heading={dict?.Purchases || "Purchases"} link="purchases" icon={LiaCartArrowDownSolid} />
                     <NavLink heading={dict?.Reports || "Reports"} link="reports" icon={HiOutlineDocumentReport} />
+                    <NavLink heading={dict?.Role || "Role and Permission"} link="permissions" icon={CiLock} />
                     <NavLink heading={dict?.Users || "Users"} link="users" icon={MdOutlineAccountCircle} />
                     <NavLink heading={dict?.Settings || "Settings"} link="settings" icon={GoGear} />
                     <div

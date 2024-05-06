@@ -9,6 +9,9 @@ import {
   InvoiceItem,
   Purchase,
   PurchaseItem,
+  PermissionModels,
+  Role,
+  PermissionEnum
 } from "@prisma/client";
 
 export type Page = {
@@ -24,6 +27,7 @@ export type UserWithCompany = Omit<
 };
 
 export type UserType = Omit<User, "created_at" | "updated_at" | "emailVerified" | "password"> & {
+  role?: Role;
   created_at: String;
   updated_at: String;
 };
@@ -106,3 +110,24 @@ export type ReportType = {
   total_price: number;
   total_profit_margin: number;
 };
+
+
+export type RoleType = Omit<
+Role,
+"created_at" | "updated_at" | "purchase_id"
+> & {
+  created_at: String;
+  updated_at: String;
+};
+
+export type PermissionModelsType = Omit<
+PermissionModels,
+"created_at" | "updated_at" | "role_id"
+> & {
+  created_at: String;
+  updated_at: String;
+};
+
+export type PermissionModelsForm = { id?: string; model: string; permission?: PermissionEnum[] };
+
+

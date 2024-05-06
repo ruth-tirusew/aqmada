@@ -1,5 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 import { db } from "@/app/lib/db";
+import {hasPermission} from "@/app/lib/utils/authorize";
+
 
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
     try {
@@ -23,6 +25,8 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
     const {id} = params;
+    const isAllowed = await hasPermission("DELETE", "Inventory")
+    if(!isAllowed) return new NextResponse("Unauthorized", { status: 403 })
     try {
         if (!id) {
             return NextResponse.next();
@@ -47,6 +51,9 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
     const {id} = params;
     try {
+        const isAllowed = await hasPermission("UPDATE", "Inventory")
+        if(!isAllowed) return new NextResponse("Unauthorized", { status: 403 })
+
         const { image, name, description, quantity, initial_price, warehouse_id } = await request.json();
         if (!id) {
             return NextResponse.next();

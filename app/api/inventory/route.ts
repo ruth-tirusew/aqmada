@@ -3,8 +3,13 @@ import { NextResponse } from "next/server";
 
 import { db } from "@/app/lib/db";
 import getCurrentUser from "@/app/actions/getCurrentUser";
+import { hasPermission } from "@/app/lib/utils/authorize";
 
 export async function POST(request: Request) {
+  const isAllowed = await hasPermission("CREATE", "Inventory")
+  if(!isAllowed){
+    return NextResponse.json({message:"You are not allowed to create invoice"}, { status: 403 })
+  }
     const body = await request.json();
     const { image, name, description, quantity, initial_price, warehouse_id } = body;
     const user = await getCurrentUser();

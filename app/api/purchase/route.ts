@@ -4,8 +4,14 @@ import { db } from "@/app/lib/db";
 import { InvoiceType } from "@/app/[locale]/types";
 
 import {generateRefNumber} from "@/app/lib/utils/generateRefNumber"
+import { hasPermission } from "@/app/lib/utils/authorize";
 
 export async function POST(request: Request) {
+    const isAllowed = await hasPermission("CREATE", "Purchase")
+    if(!isAllowed){
+      return NextResponse.json({message:"You are not allowed to create purchase"}, { status: 403 })
+    }
+
     const body = await request.json();
     let { vendor, order_number,file, items } = body;
      if (!order_number){

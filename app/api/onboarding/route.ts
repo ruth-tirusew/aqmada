@@ -32,7 +32,70 @@ export async function POST(request: Request) {
             location: warehouse.location
       }}
     }});
-    
+
+    const adminRole = {
+      name: "admin",
+      permissionModels: {
+        create: [
+          {
+            model: "Warehouse",
+            permission: ["CREATE",  "UPDATE", "DELETE"]
+          },
+          {
+            model: "Inventory",
+            permission: ["CREATE", "UPDATE", "DELETE"]
+          },
+          {
+            model: "User",
+            permission: ["CREATE", "UPDATE", "DELETE"]
+          },
+          {
+            model: "Invoice",
+            permission: ["CREATE", "UPDATE", "DELETE"]
+          },
+          {
+            model: "Purchase",
+            permission: ["CREATE",  "UPDATE", "DELETE"]
+          }
+        ]
+      }
+    }
+    const role = await db.role.create({
+      data: {
+        name: "Admin",
+        company_id:company_data.id
+      }
+    })
+
+    await db.permissionModels.createMany({
+      data: [
+        {
+          model: "Warehouse",
+          roleId:role.id,
+          permission: ["CREATE",  "UPDATE", "DELETE"]
+        },
+        {
+          model: "Inventory",
+          roleId:role.id,
+          permission: ["CREATE",  "UPDATE", "DELETE"]
+        },
+        {
+          model: "User",
+          roleId:role.id,
+          permission: ["CREATE",  "UPDATE", "DELETE"]
+        },
+        {
+          model: "Invoice",
+          roleId:role.id,
+          permission: ["CREATE",  "UPDATE", "DELETE"]
+        },
+        {
+          model: "Purchase",
+          roleId:role.id,
+          permission: ["CREATE",  "UPDATE", "DELETE"]
+        }
+      ]
+    })
     return NextResponse.json({
       company_data 
     }, {

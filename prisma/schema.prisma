@@ -7,15 +7,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
-enum Role {
-  RootUser
-  CandidateUser
-}
-
 enum PaymentStatus{
   PAID
   DUE
+}
+
+enum PermissionEnum {
+  // permission enums
+  CREATE
+  UPDATE
+  DELETE
+  VIEW
+  APPROVE
 }
 
 model Waitlist{
@@ -25,7 +28,6 @@ model Waitlist{
   updated_at DateTime @updatedAt
   
 }
-
 
 model Account {
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -61,6 +63,7 @@ model Company{
   warehouse Warehouse[]
   invoices Invoice[]
   logs Logs[]
+  role Role[]
 }
 
 model Logs{
@@ -80,7 +83,8 @@ model User {
   image      String?
   password   String?
   emailVerified Boolean? @default(false)
-  role Role @default(RootUser)
+  role      Role?    @relation(fields: [roleId], references: [id])
+  roleId    String? 
 
   company_id String?
   company Company? @relation(fields: [company_id], references: [id])
@@ -91,6 +95,38 @@ model User {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
+
+model Role {
+  id          String   @id @unique @default(uuid())
+  name        String
+
+  permissionModels PermissionModels[]
+  users User[]
+
+  company_id String?
+  company Company? @relation(fields: [company_id], references: [id])
+
+  isDeleted   Boolean  @default(false)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model PermissionModels {
+  id          String   @id @unique @default(uuid())
+  model       String
+  permission  PermissionEnum[] 
+  
+  role      Role     @relation(fields: [roleId], references: [id]) 
+  roleId    String  
+  
+  isDeleted   Boolean  @default(false)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  
+}
+
 
 model Warehouse{
   id  String   @id @unique @default(uuid())

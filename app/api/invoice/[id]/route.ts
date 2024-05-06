@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/app/lib/db";
 import { InvoiceItem } from "@prisma/client";
+import { hasPermission } from "@/app/lib/utils/authorize";
 
 
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
@@ -27,6 +28,10 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {
+    const isAllowed = await hasPermission("DELETE", "Invoice")
+    if(!isAllowed){
+      return NextResponse.json({message:"You are not allowed to create invoice"}, { status: 403 })
+    }
       const { id } = params
        await db.invoiceItem.deleteMany({
           where: {
@@ -52,6 +57,10 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
 }
 
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+  const isAllowed = await hasPermission("UPDATE", "Invoice")
+  if(!isAllowed){
+    return NextResponse.json({message:"You are not allowed to create invoice"}, { status: 403 })
+  }
   const { id } = params;
   try {
     const body = await request.json();

@@ -3,7 +3,7 @@ import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import axios from "axios";
 import Breadcrumb from "@/app/[locale]/components/breadcrumb";
 import { Page, UserType } from "@/app/[locale]/types";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { ItemType } from "@/app/[locale]/types";
 import { PaymentStatus } from "@prisma/client";
 
@@ -20,11 +20,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { CiWarning } from "react-icons/ci";
 
 
 
 // @ts-ignore
-export default function Invoices({params:{locale}}) {
+export default function Invoices({params:{id, locale}}) {
   const pages: Page[] = [
     {
       name: "User",
@@ -35,6 +36,15 @@ export default function Invoices({params:{locale}}) {
       href: "/dashboard/users/create",
     },
   ];
+  const [initialUser, setInitialUser] = useState({
+    image:"",
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    role: "",
+  });
+
   const [userData, setUserData] = useState({
     image:"",
     name: "",
@@ -46,18 +56,17 @@ export default function Invoices({params:{locale}}) {
   const [loading , setLoading] = useState(false);
   const [error, setError] = useState("");
   const[roles, setRoles] = useState([])
+  const routerParams = useParams<{id:string, locale:"en" | "am"}>();
+  const router = useRouter()
 
-  // const handlePaymentStatusChange = (
-  //   event: ChangeEvent<HTMLInputElement>
-  // ): void => {
-  //   setPaymentStatus(event.target.checked);
-  // };
-
+  const handleResetForm = () =>{
+    setUserData(initialUser)
+  }
 
   const [dict, setDict] = useState<any>();
 
   const dictionary = async () => {
-    try {
+    try {   
       const data = await getDictionary(locale);
       setDict(data);
     } catch (error) {
@@ -66,15 +75,34 @@ export default function Invoices({params:{locale}}) {
   };
   
   const fetchRoles = async () => {
-    const response = await axios.get("/api/permissions");
-    console.log(response)
-    setRoles(response.data)
+    try{
+        const response = await axios.get("/api/permissions");
+        setRoles(response.data)
+    }catch(error){
+        
+    }
+
   }
 
+  const fetchUserData = async () => {
+    try{
+        const response = await axios.get(`/api/users/${routerParams?.id}`);
+        console.log(response.data)
+        setInitialUser(response.data)
+        setUserData(response.data)
+    }catch(error){
+        
+    }
+
+  }
+
+  // const [warning, setWarning] = useState(true)
 
   useEffect(() => {
     dictionary();
     fetchRoles()
+    fetchUserData()
+    console.log(userData)
   }, []);
 
 
@@ -87,9 +115,9 @@ export default function Invoices({params:{locale}}) {
     try {
       setLoading(true);
       setError("");
-      const response = await axios.post("/api/users", userData);
+      const response = await axios.put(`/api/users/${routerParams?.id}`, userData);
       if (response.status === 200) {
-        window.location.href = "/dashboard/users";
+        router.push(`${locale}/dashboard/users`)
       }
       else {
         setError(response.data.message);
@@ -100,6 +128,9 @@ export default function Invoices({params:{locale}}) {
       setLoading(false);
     } catch (error: any) {
       setError(error.response.data.message); 
+      if(error.response.status == 403){
+        router.push(`/${locale}/dashboard/403`)
+      }
       setTimeout(() => {
         setError("");
       }, 5000); 
@@ -108,7 +139,7 @@ export default function Invoices({params:{locale}}) {
   };
 
   return (
-    <div className="">
+    <div className="h-screen">
       <Breadcrumb page={pages} heading={dict?.userRegistration || "User Registration"} />
       <div className="bg-white rounded-md w-full p-4">
         <div className="mb-4">
@@ -122,11 +153,19 @@ export default function Invoices({params:{locale}}) {
           <p className="text-sm text-red-500 font-semibold mb-4">
             {error}
           </p>
-          <div className="flex gap-4">
+          <div className="sm:flex gap-4">
+            <div className="hidden sm:block">
             <ImageUpload onChange={(value) => setUserData({...userData, image: value})} value={userData?.image} locale={locale}/>
-            <div className="flex flex-col gap-2 w-full">
-            <div className="flex flex-col ">
-          <label htmlFor="name" className="font-semibold text-sm">{dict?.fullName}: </label>
+            </div>
+            <div className="flex flex-col gap-4 w-full">
+              <div className="border border-2 border-yellow-400 text-yellow-600 rounded-md px-4 sm:px-8 sm:py-2 sm:py-4 flex gap-4 items-center">
+                <CiWarning className="text-xl"/>
+                <span className="text-sm sm:text-lg">
+                {dict?.warning || " Proceed with caution when modifying employee information."}
+                </span>
+              </div>
+              <div className="flex flex-col">
+              <label htmlFor="name" className="font-semibold text-sm">{dict?.fullName || "Full Name"}: </label>
                 <input
                   className="border border-neutral-300 focus:ring-0 active:ring-0 active:outline-none focus:outline-none active:ring-0 focus:border-[#1C40CA] active:border-[#1C40CA] focus:border-black rounded-sm px-2 py-1"
                   placeholder="John Doe"
@@ -138,9 +177,9 @@ export default function Invoices({params:{locale}}) {
                   onChange={e =>{setUserData({...userData, name: e.target.value})}}
                   required
                 />
-              </div>
+                </div>
               <div className="flex flex-col ">
-          <label htmlFor="email" className="font-semibold text-sm">{dict?.email}:</label>
+          <label htmlFor="email" className="font-semibold text-sm">{dict?.email || "Email"}:</label>
                 <input
                   className="border border-neutral-300 focus:ring-0 active:ring-0 active:outline-none focus:outline-none active:ring-0 focus:border-[#1C40CA] active:border-[#1C40CA] focus:border-black rounded-sm px-2 py-1"
                   placeholder="john.doe@aqmada.com"
@@ -154,13 +193,13 @@ export default function Invoices({params:{locale}}) {
                 />
               </div>
               <div className="flex flex-col ">
-          <label htmlFor="role">{dict?.role}</label>
+          <label htmlFor="role" className="font-semibold">{dict?.role ||"Role"}</label>
                               <Select
                       onValueChange={(value) => setUserData({...userData, role: value})}
-                      value={userData?.role}
+                      defaultValue={userData?.role}
                     >
                       <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select Role" />
+                        <SelectValue placeholder="Select a Role" />
                       </SelectTrigger>
                       <SelectContent className="dark:bg-gray-900 dark:text-white dark:hover:bg-black">
                       <SelectGroup className="dark:bg-gray-900 dark:text-white dark:hover:bg-black">
@@ -176,34 +215,6 @@ export default function Invoices({params:{locale}}) {
                       </SelectContent>
                     </Select>
               </div>
-              <div className="flex flex-col ">
-          <label htmlFor="password" className="font-semibold text-sm">{dict?.password}</label>
-                <input
-                  className="border border-neutral-300 focus:ring-0 active:ring-0 active:outline-none focus:outline-none active:ring-0 focus:border-[#1C40CA] active:border-[#1C40CA] focus:border-black rounded-sm px-2 py-1"
-                  placeholder="******"
-                  type="password"
-                  id="password"
-                  name="password"
-                  value={userData?.password}
-                  disabled={loading}
-                  onChange={e =>{setUserData({...userData, password: e.target.value})}}
-                  required
-                />
-              </div>
-              <div className="flex flex-col ">
-          <label htmlFor="confirmPassword" className="font-semibold text-sm">{dict?.confirmPassword}</label>
-                <input
-                  className="border border-neutral-300 focus:ring-0 active:ring-0 active:outline-none focus:outline-none active:ring-0 focus:border-[#1C40CA] active:border-[#1C40CA] focus:border-black rounded-sm px-2 py-1"
-                  placeholder="******"
-                  type="password"
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  value={userData?.confirmPassword}
-                  disabled={loading}
-                  onChange={e =>{setUserData({...userData, confirmPassword: e.target.value})}}
-                  required
-                />
-              </div>
           </div>
           </div>
           <div className="w-full flex justify-end mt-6 mb-2 gap-2">
@@ -211,8 +222,9 @@ export default function Invoices({params:{locale}}) {
               type="reset"
               className="bg-[#1C40CA]/[0.05] rounded-md font-semiboldtext-[#1C40CA] px-8 py-2"
               disabled={loading}
+              onClick={handleResetForm}
             >
-              {dict?.reset}
+              {dict?.reset || "Reset"}
             </button>
             <div>
               {loading ? (
@@ -221,7 +233,7 @@ export default function Invoices({params:{locale}}) {
                   disabled
                 >
                   <PiSpinner className="h-4 w-4 mr-2 animate-spin text-white" />
-                  {dict?.loading}
+                  {dict?.loading || "Loading"}
                 </button>
               ) : (
                 <>
@@ -229,7 +241,7 @@ export default function Invoices({params:{locale}}) {
                     type="submit"
                     className="bg-[#1C40CA] rounded-md font-semibold text-white px-8 py-2"
                   >
-                    {dict?.submit}
+                    {dict?.submit || "Submit"}
                   </button>
                 </>
               )}

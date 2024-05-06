@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from "next/image";
 
 import { UserType } from "@/app/[locale]/types";
+import Link from "next/link";
 
 export const columns: ColumnDef<UserType>[] = [
   {
@@ -27,13 +28,11 @@ export const columns: ColumnDef<UserType>[] = [
       );
     },
     cell: ({ row }) =><div className="text-left flex items-center gap-2">
-        
         <Avatar>
-              <AvatarImage src={row.getValue("image") ?? ""} alt={row.getValue("name")? "" : "No image"} />
               <AvatarFallback>
                 <CiUser className=""/>
               </AvatarFallback>
-            </Avatar> {row.getValue("name")}</div>,
+            </Avatar><Link href={`users/${row.original.id}`} >{row.getValue("name")}</Link> </div>
   },
   {
     accessorKey: "email",
@@ -46,7 +45,7 @@ export const columns: ColumnDef<UserType>[] = [
     accessorKey: "role",
     header: () => <div className="text-left">Role</div>,
     cell: ({ row }) => {
-      return <div className="text-left font-medium">{row.getValue("role")}</div>;
+      return <div className="text-left font-medium">{row.original.role?.name}</div>;
     },
   },
 ];

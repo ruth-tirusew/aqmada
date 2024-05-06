@@ -31,6 +31,7 @@
     "addProduct":"Add Product",
     "addInvoices": "Add Invoices",
     "invoiceSubheading":"Report of the total invoices saved",
+    "permissionSubHeading":"Report of the total roles saved",
     "Add Inventory": "Add Inventory",
     "Add Purchases": "Add Purchases",
     "Customer":"Customer",
@@ -104,5 +105,19 @@
     "Role":"Role and Permission",
     "optional":"Optional",
     "sure":"Are you sure",
-    "sureDescription":"This action cannot be returned. This will permanently delete your record."
+    "sureDescription":"This action cannot be returned. This will permanently delete your record.",
+    "continue":"Continue",
+    "cancel":"Cancel",
+    "role-min":"Roles",
+    "permissionsForm":"Permissions Form",
+    "permissions":"Permissions",
+    "permissionFormSubheading":"Fill in the form to register a permission",
+    "roleName":"Role Name",
+    "record":"Record",
+    "create":"Create",
+    "update":"Update",
+    "delete":"Delete",
+    "addPermission":"Add Permission",
+    "removePermission":"Remove Permission",
+    "warning":"Proceed with caution when modifying employee information."
 }

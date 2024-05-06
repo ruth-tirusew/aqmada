@@ -279,8 +279,8 @@ export default function Invoices() {
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction onClick={() => handleRemoveInventoryItem(index, item.id)} className="bg-red-500 px-4 py-2 text-white transition hover:bg-red-600">Continue</AlertDialogAction>
+                      <AlertDialogCancel>{dict?.cancel || "Cancel"}</AlertDialogCancel>
+                      <AlertDialogAction onClick={() => handleRemoveInventoryItem(index, item.id)} className="bg-red-500 px-4 py-2 text-white transition hover:bg-red-600">{dict?.continue || "Continue"}</AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog> 

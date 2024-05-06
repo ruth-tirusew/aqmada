@@ -57,7 +57,8 @@ export default function Signup() {
           }
           setLoading(false);
         })
-        .catch((err) => {
+        .catch((err:any) => {
+          setErrors({general:err.response.error})
           setLoading(false);
         });
 

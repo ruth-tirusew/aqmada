@@ -13,11 +13,11 @@ export default async function Dashboard({ params: { locale } }) {
     const pages: Page[] = [
         {
             name: dict.Dashboard,
-            href: "/dashboard",
+            href: `/${locale}/dashboard`,
         },
         {
             name: dict.Inventory,
-            href: "/dashboard/inventory",
+            href: `/${locale}/dashboard/inventory`,
         },
     ];
 

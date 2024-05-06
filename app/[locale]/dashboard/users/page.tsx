@@ -9,6 +9,7 @@ import { getDictionary } from "@/lib/locales";
 export default async function Users({params:{locale}
 }) {
       const users = await getUsers()
+      console.log(users)
 
       const dict = await getDictionary(locale)
       const pages: Page[] = [
@@ -26,7 +27,7 @@ export default async function Users({params:{locale}
             subheading={dict.userSubheading}
           />
           <DataTable 
-          columns={columns} data={users} search="name" button={true}
+          columns={columns} data={[...users]} search="name" button={true}
           buttonObj={{
           name: dict.addUsers,
           url: `/${locale}/dashboard/users/create`,

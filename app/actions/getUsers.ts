@@ -2,7 +2,7 @@ import getCurrentUser from "@/app/actions/getCurrentUser";
 import { db } from "@/app/lib/db";
 import { UserType } from "../[locale]/types";
 
-export async function getUsers(): Promise<UserType[]> {
+export async function getUsers(): Promise<any[]> {
     try{
       const user = await getCurrentUser();
     
@@ -17,17 +17,12 @@ export async function getUsers(): Promise<UserType[]> {
             name: true,
             email: true,
             role: true,
+            roleId:true,
             company_id: true,
-            created_at : true,
-            updated_at: true,
-          },
+          }
       });
-      const safeEmployees = employees.map((employee) => ({
-        ...employee,
-        created_at: employee.created_at.toISOString(),
-        updated_at: employee.updated_at.toISOString(),
-      }));
-      return safeEmployees;
+      console.log(employees)
+      return employees;
     
       
     }catch(e:any){
