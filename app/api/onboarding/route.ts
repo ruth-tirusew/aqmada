@@ -96,6 +96,15 @@ export async function POST(request: Request) {
         }
       ]
     })
+
+    await db.user.update({
+      where:{
+        email: user
+      },
+      data:{
+        roleId:role.id
+      }
+    })
     return NextResponse.json({
       company_data 
     }, {

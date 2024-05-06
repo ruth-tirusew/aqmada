@@ -140,9 +140,10 @@ export default function PurchaseOrderForm() {
       const response = await axios.put(`/api/purchase/${routeParam?.id}`, formData);
       setLoading(true)
       router.push('/dashboard/purchases')
-    } catch (error) {
-
-      console.error("Save error:", error);
+    } catch (error:any) {
+      if(error.response.status === 403){
+        router.push(`/${routeParam?.locale || "en"}/dashboard/403`);
+      }
     }
   };
 

@@ -123,8 +123,10 @@ export default function Permissions() {
     try {
       const data = await getDictionary(routeParams?.locale || "en");
       setDict(data);
-    } catch (error) {
-      console.error("Dictionary error:", error);
+    } catch (error:any) {
+      if(error.response.status === 403){
+        router.push(`/${routeParams?.locale || "en"}/dashboard/403`);
+      }
     }
   };
 

@@ -46,6 +46,7 @@ export default function Invoices({params:{locale}}) {
   const [loading , setLoading] = useState(false);
   const [error, setError] = useState("");
   const[roles, setRoles] = useState([])
+  const router=useRouter()
 
   // const handlePaymentStatusChange = (
   //   event: ChangeEvent<HTMLInputElement>
@@ -99,6 +100,9 @@ export default function Invoices({params:{locale}}) {
       }
       setLoading(false);
     } catch (error: any) {
+      if(error.response.status === 403){
+        router.push(`/${locale || "en"}/dashboard/403`);
+      }
       setError(error.response.data.message); 
       setTimeout(() => {
         setError("");

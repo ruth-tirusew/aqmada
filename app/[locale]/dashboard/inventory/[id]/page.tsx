@@ -71,14 +71,15 @@ export default function InventoryFormPage({ params: { locale } }) {
         quantity: parseInt(quantity),
         initial_price: parseFloat(initial_price),
       };
-      const response = await axios.put(
+      await axios.put(
         `/api/inventory/${routeParam?.id}`,
         formData
       );
-      console.log("Save response:", response.data);
       router.push("/dashboard/inventory");
-    } catch (error) {
-      console.error("Save error:", error);
+    } catch (error:any) {
+      if(error.response.status == 403){
+        router.push(`/${locale}/dashboard/403`)
+      }
     } finally {
       setLoading(false);
     }
@@ -89,9 +90,7 @@ export default function InventoryFormPage({ params: { locale } }) {
       setWarehouseLoading(true);
       const response = await axios.get("/api/warehouse");
       setWarehouses(response.data);
-      console.log(warehouses, "WAREHOUSES")
     } catch (error) {
-      console.error("Warehouses error:", error);
     } finally {
       setWarehouseLoading(false);
     }

@@ -20,6 +20,7 @@ import { getDictionary } from "@/lib/locales";
 import { TbPencil } from "react-icons/tb";
 import Link from "next/link";
 import Logo from '@/public/aqmada-03.png'
+import { PiSpinner } from "react-icons/pi";
 
 
 // @ts-ignore
@@ -88,9 +89,10 @@ export default function InvoiceDetail({ params: { locale } }) {
           ref={invoiceRef}
         >
           {loading ? (
-            <div>
-              {dict?.loading || "Loading..."}
-            </div>
+            <div className="flex flex-col  flex flex-col gap-2 items-center my-auo justify-center align-center p-10">
+            <Image src={Logo} width={100} height={240} alt="logo" className="w-auto h-auto"/>
+            <PiSpinner className="h-10 w-10 animate-spin text-[#00A0EA]" />
+          </div>
           ) : (
             <>
               <div className="flex items-center sm:px-4 border-gray-200 border-b-[1px] py-4 mb-2">
@@ -106,7 +108,7 @@ export default function InvoiceDetail({ params: { locale } }) {
                       {dict?.invoice || "Invoice"}:
                     </div>
                     <div className="font-light sm:text-md  text-sm text-neutral-700 ml-2">
-                      <span>#{invoiceData.ref_number.slice(0, 15)}</span>
+                      <span>#{invoiceData?.ref_number.slice(0, 15)}</span>
                     </div>
                   </div>
                   <div className="flex">
@@ -114,7 +116,7 @@ export default function InvoiceDetail({ params: { locale } }) {
                       {dict?.dateIssued || "Date Issued"}:
                     </div>
                     <div className="font-light sm:text-md text-sm text-neutral-700 ml-2">
-                      <span>{invoiceData.created_at.slice(0, 10)}</span>
+                      <span>{invoiceData?.created_at.slice(0, 10)}</span>
                     </div>
                   </div>
                 </div>
@@ -124,9 +126,9 @@ export default function InvoiceDetail({ params: { locale } }) {
                 <TableHeader>
                   <TableRow>
                     <TableHead className="">{dict?.item || "Item"}</TableHead>
-                    <TableHead>{dict.quantity || "Quantity"}</TableHead>
-                    <TableHead>{dict.sellingPrice || "Price"}</TableHead>
-                    <TableHead className="text-right">{dict.total || "Total"}</TableHead>
+                    <TableHead>{dict?.quantity || "Quantity"}</TableHead>
+                    <TableHead>{dict?.sellingPrice || "Price"}</TableHead>
+                    <TableHead className="text-right">{dict?.total || "Total"}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -143,7 +145,7 @@ export default function InvoiceDetail({ params: { locale } }) {
                 </TableBody>
                 <TableFooter>
                   <TableRow>
-                    <TableCell colSpan={3}>{dict.total || "Total"}</TableCell>
+                    <TableCell colSpan={3}>{dict?.total || "Total"}</TableCell>
                     <TableCell className="text-right">{total}</TableCell>
                   </TableRow>
                 </TableFooter>

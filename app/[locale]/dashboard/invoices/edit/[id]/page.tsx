@@ -117,6 +117,9 @@ export default function Invoices() {
         }, 5000);
         return
       }
+      if(error.response.status === 403){
+        router.push(`/${routeParam?.locale || "en"}/dashboard/403`);
+      }
       setError("Something went wrong")
       setLoading(false)
       setTimeout(() => {

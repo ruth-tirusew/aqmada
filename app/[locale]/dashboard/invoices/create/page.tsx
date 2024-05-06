@@ -62,7 +62,6 @@ export default function Invoices() {
       default:
         break;
     }
-    console.log(updatedItems);
 
     setInventoryItems(updatedItems);
   };
@@ -104,6 +103,9 @@ export default function Invoices() {
         }, 5000);
         return
       }
+      if(error.response.status === 403){
+        router.push(`/${routeParam?.locale || "en"}/dashboard/403`);
+      }
       setError("Something went wrong")
       setLoading(false)
       setTimeout(() => {
@@ -137,7 +139,7 @@ export default function Invoices() {
 
 
   return (
-    <div className="">
+    <div className="h-screen">
       <Breadcrumb page={pages} heading={dict?.invoiceFormHeading || "Invoice Form"} />
       <div className="bg-white dark:bg-black rounded-md w-full p-4">
         <div className="mb-4">

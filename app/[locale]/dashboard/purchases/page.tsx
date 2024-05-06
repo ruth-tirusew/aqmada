@@ -44,7 +44,7 @@ const pages: Page[] = [
         button={true}
         buttonObj={{
           name: dict.addPO,
-          url: "/dashboard/purchases/create",
+          url: `/${locale}/dashboard/purchases/create`,
           }}
       />
     </div>

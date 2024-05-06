@@ -130,12 +130,13 @@ export default function PurchaseOrderForm({params:{locale}}) {
           }
         }
       }
-      const response = await axios.post("/api/purchase", formData);
+     await axios.post("/api/purchase", formData);
       setLoading(true)
       router.push('/dashboard/purchases')
-    } catch (error) {
-
-      console.error("Save error:", error);
+    } catch (error:any) {
+      if(error.response.status === 403){
+        router.push(`/${locale || "en"}/dashboard/403`);
+      }
     }
   };
 

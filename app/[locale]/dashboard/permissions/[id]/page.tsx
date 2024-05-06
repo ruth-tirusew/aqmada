@@ -102,6 +102,9 @@ export default function Permissions() {
         }, 5000);
         return;
       }
+      if(error.response.status === 403){
+        router.push(`/${routeParams?.locale || "en"}/dashboard/403`);
+      }
       setError("Something went wrong");
       setLoading(false);
       setTimeout(() => {

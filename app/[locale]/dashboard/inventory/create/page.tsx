@@ -63,9 +63,11 @@ export default function InventoryFormPage({params: {locale}}) {
       setLoading(true);
       router.push("/dashboard/inventory");
       setLoading(false);
-    } catch (error) {
+    } catch (error: any) {
+      if(error.response.status == 403){
+        router.push(`/${locale}/dashboard/403`)
+      }
       setLoading(false);
-      console.error("Save error:", error);
     }
   };
 
