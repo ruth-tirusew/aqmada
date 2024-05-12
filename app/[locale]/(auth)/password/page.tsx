@@ -10,10 +10,12 @@ import { FcGoogle } from "react-icons/fc";
 import { PiSpinner } from "react-icons/pi";
 import Logo from '@/public/aqmada-03.png'
 import { error } from "console";
+import { confirm } from "dropzone";
+import axios from "axios";
 
 interface Errors {
-  email?: string;
   password?: string;
+  confirmPassword?: string;
   general?: string;
 }
 
@@ -22,34 +24,26 @@ export default function Listing() {
   const router = useRouter();
   const[loading, setLoading]=useState(false)
 
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrors({});
 
-    if (!email) {
-      setErrors((prev) => ({ ...prev, email: "Email is required" }));
+    if (confirmPassword !== password) {
+      setErrors((prev) => ({ ...prev, confirmPassword: "Passwords do not match" }));
     }
-    if (!password) {
-      setErrors((prev) => ({ ...prev, password: "Password is required" }));
-    }
-    if (email && password){
+    if (password && confirmPassword === password){
       try{
         setLoading(true)
-        const result = await signIn("credentials", {
-          email: email,
-          password: password,
-          callbackUrl: "/password",
-          redirect:false,
-        })
-        if(result?.status === 200 ){
-          router.push("/password");
+        const result = await axios.put('/api/auth/me/password', password)
+        console.log(result.data)
+
+          router.push("/onboarding");
           setLoading(false)
-        }
         if(result?.status !== 200 ){
-          setErrors((prev) => ({ ...prev, general: "Invalid email or password" }));
+          setErrors((prev) => ({ ...prev, general: "Invalid password" }));
           setLoading(false)
           setTimeout(() => {
             setErrors({});
@@ -84,22 +78,11 @@ export default function Listing() {
           <div className="grid place-content-center w-screen">
         <div className="flex flex-col gap-4 py-20">
           <div className="">
-          <p className="font-bold text-xl">Welcome back,</p> 
-            <p className="text-gray- text-lg">Sign in to continue</p>
+          <p className="font-bold text-xl">Welcome,</p> 
+            <p className="text-gray- text-lg">Please change your password to continue</p>
           </div>
-              <button onClick={() => signIn('google', {callbackUrl:"/dashboard"})} className="border-2 border-[#003949] w-full font-semibold rounded relative p-2">
-                <span>
-                  <FcGoogle size={24} className="absolute top-2 left-2"/>
-                  Continue with Google
-                
-                </span>
-            </button>
             <div className="flex gap-2 items-center justify-center">
               <div className="border h-[0.2px] w-full"></div>
-              <p>
-                Or
-              </p>
-              <div className="border h-[0.1px] w-full"></div>
             </div>
             <div className="form">
             <form onSubmit={handleSubmit}>
@@ -111,54 +94,61 @@ export default function Listing() {
                   </div>
                 )
               }
-              <div className="email ">
-                <label htmlFor="email" className="font-medium text-md">
-                  Email
+              <div className="password ">
+                <label htmlFor="password" className="font-medium text-md">
+                  Password
                 </label>
                 <input
-                      type="text"
-                      className={`block rounded-md border-0 dark:text-white py-1.5 pl-7 sm:pr-20 pr:10 w-full text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#003949] sm:text-sm sm:leading-6 ${errors.email ? 'ring-red-300' : ''}`}
-                      placeholder="john.doe@example.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      type="password"
+                      className={`block rounded-md border-0 dark:text-white py-1.5 pl-7 sm:pr-20 pr:10 w-full text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#003949] sm:text-sm sm:leading-6 ${errors.password ? 'ring-red-300' : ''}`}
+                      placeholder="********"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                       required
                       onBlur={(e) => {
                         if (!e.target.value) {
                           setErrors((prev) => ({ ...prev, email: "Email is required" }))
                         } 
+                        else if(password.length < 6){
+                          setErrors((prev) => ({ ...prev, password: "Password must be at least 8 characters" }))
+                        }
                         else{
-                          setErrors((prev) => ({ ...prev, email: "" }))
+                          setErrors((prev) => ({ ...prev, password: "" }))
                         }
                       }}
                     />
                 {
-                  errors.email && (
-                    <span className="text-red-500 font-semibold text-sm">{errors.email}</span>
+                  errors.password && (
+                    <span className="text-red-500 font-semibold text-sm">{errors.password}</span>
                   )
                 }
               </div>
               <div className="password">
                 <label htmlFor="password" className="font-medium text-md">
-                  Password
+                  Confirm Password
                 </label>
                 <input
                   type="password"
-                  className={`block rounded-md dark:text-white border-0 py-1.5 pl-7  sm:pr-20 pr:10 w-full text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#003949] sm:text-sm sm:leading-6 ${errors.password ? 'ring-red-300' : ''}`}
-                  placeholder="Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  className={`block rounded-md dark:text-white border-0 py-1.5 pl-7  sm:pr-20 pr:10 w-full text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#003949] sm:text-sm sm:leading-6 ${errors.confirmPassword ? 'ring-red-300' : ''}`}
+                  placeholder="********"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                   onBlur={(e) => {
                     if (!e.target.value) {
-                      setErrors((prev) => ({ ...prev, password: "Password is required" }))
-                    } 
+                      setErrors((prev) => ({ ...prev, confirmPassword: "Password is required" }))
+                    }
+                    else if(password !== e.target.value){
+                      setErrors((prev) => ({ ...prev, confirmPassword: "Passwords do not match" }))
+                    }
                     else{
-                      setErrors((prev) => ({ ...prev, password: "" }))
+                      setErrors((prev) => ({ ...prev, confirmPassword: "" }))
                     }
                   }}
+                  required
                 />
                 {
-                  errors.password && (
-                    <span className="text-red-500 font-semibold text-sm">{errors.password}</span>
+                  errors.confirmPassword && (
+                    <span className="text-red-500 font-semibold text-sm">{errors.confirmPassword}</span>
                   )
                 }
               </div>
@@ -176,7 +166,7 @@ export default function Listing() {
                   Remeber me
                 </label> */}
               </div>
-              <button type="submit" className="bg-[#021044] w-full p-2 text-white font-medium rounded" disabled={loading || email.length ==0 || password.length == 0}
+              <button type="submit" className="bg-[#021044] w-full p-2 text-white font-medium rounded" disabled={loading || password.length < 8 || password !== confirmPassword}
               >
                 {loading ? (
                   <div className="flex items-center justify-center">
@@ -186,20 +176,11 @@ export default function Listing() {
                   </p>
                   </div>
                 ) : (
-                  <p>Login</p>
+                  <p>Confirm</p>
                 )}
               </button>
             </div>
           </form>
-              <div className="text-center my-4">
-                <p className="text-gray-500 font-semibold">
-                  Don&apos;t have an account?{" "}
-                  <Link href={"/signup"} className="text-[#021044] dark:text-white v">
-                    Sign up
-                  </Link>
-                </p>
-              </div>
-
             </div>
         </div>
       </div>

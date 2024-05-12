@@ -1,26 +1,59 @@
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import NextAuth, {AuthOptions} from "next-auth";
+import NextAuth, { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 
 import { db } from "@/app/lib/db";
 
+async function linkAccount(profile: any) {
+  try {
+    const user = await db.user.findUnique({
+      where: { email: profile.email },
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const account = await db.account.findFirst({
+      where: {
+        userId: user.id,
+        provider: "google",
+      },
+    });
+    if (!account) {
+      db.account.create({
+        data: {
+          userId: user.id,
+          provider: "google",
+          providerAccountId: profile.id,
+          type: profile.type,
+          access_token: profile.accessToken,
+          refresh_token: profile.refreshToken,
+          expires_at: profile.expiresAt,
+          token_type: profile.tokenType,
+          scope: profile.scope,
+          id_token: profile.idToken,
+        },
+      });
+    }
+
+    return user;
+  } catch (error) {
+    throw new Error("User not found");
+  }
+}
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(db),
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-      profile(profile){
-        return{
-          id: profile.sub,
-          name: profile.name,
-          email: profile.email,
-          image: profile.picture,
-        }
-        
-      }
+      profile(profile) {
+       return linkAccount(profile);
+      },
+      allowDangerousEmailAccountLinking: true,
     }),
     CredentialsProvider({
       name: "Credentials",
@@ -29,33 +62,34 @@ export const authOptions: AuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-          const user = await db.user.findUnique({
-            where: { email: credentials?.email as string },
-          });
-  
-          if (!user) {
-            throw new Error("Invalid email or password");
-          }
-          try{
-            const isValid = await bcrypt.compare(
-              credentials?.password as string,
-              user?.password as string
-            );
-            if (!isValid) {
-              throw new Error("Invalid email or password");
-            }
-          }catch{
-            throw new Error("Invalid email or password");
+        const user = await db.user.findUnique({
+          where: { email: credentials?.email as string },
+        });
 
+        if (!user) {
+          throw new Error("Invalid email or password");
+        }
+        try {
+          const isValid = await bcrypt.compare(
+            credentials?.password as string,
+            user?.password as string
+          );
+          console.log(isValid);
+          if (!isValid) {
+            throw new Error("Invalid email or password");
           }
-    
-          return user;
+        } catch (error) {
+          console.log(error);
+          throw new Error("Invalid email or password");
+        }
+
+        return user;
       },
     }),
   ],
   pages: {
     signIn: "/login",
-    error:"/login"
+    error: "/login",
   },
   //   callbacks: {
   //     async session({ session, token, user }) {
@@ -73,6 +107,5 @@ export const authOptions: AuthOptions = {
   // },
   debug: process.env.NODE_ENV === "development",
 };
-
 
 export default NextAuth(authOptions);

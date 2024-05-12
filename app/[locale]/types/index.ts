@@ -11,7 +11,8 @@ import {
   PurchaseItem,
   PermissionModels,
   Role,
-  PermissionEnum
+  PermissionEnum,
+  Waitlist
 } from "@prisma/client";
 
 export type Page = {
@@ -131,3 +132,10 @@ PermissionModels,
 export type PermissionModelsForm = { id?: string; model: string; permission?: PermissionEnum[] };
 
 
+export type WaitlistType = Omit<
+Waitlist,
+"created_at" | "updated_at" | "role_id"
+> & {
+  created_at: String;
+  updated_at: String;
+};

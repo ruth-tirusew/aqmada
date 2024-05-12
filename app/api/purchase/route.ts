@@ -53,7 +53,7 @@ export async function POST(request: Request) {
       for (const item of items) {
         await db.item.update({
           where: { id: item.id },
-          data: { quantity: { increment: item.quantity } },
+          data: { quantity: { increment: item.quantity }, initial_price: item.initial_price },
         });
       }
 

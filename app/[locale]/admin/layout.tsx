@@ -1,0 +1,63 @@
+import { Metadata } from "next";
+import { Montserrat } from "next/font/google";
+import getCurrentUser from "@/app/actions/getCurrentUser";
+
+import "../globals.css";
+import SideBar from "../components/admin-sidebar";
+import Topnav from "../components/topnav";
+
+import SessionProvider  from "../dashboard/sessionprovider";
+import {Provider} from "../dashboard/providers";
+import Chatbot from "../components/chattbot";
+import Link from "next/link";
+import { getDictionary } from "@/lib/locales";
+
+
+const montserrat = Montserrat({ subsets: ["latin"] });
+export const metadata: Metadata = {
+  title: "Aqmada | Dashboard",
+};
+
+export default async function RootLayout({
+  children,
+  params: {
+    locale = "en",
+  },
+}: {
+  children: React.ReactNode;
+  params: {
+    locale: "en" | "am";
+  };
+}) {
+  const dict = await getDictionary(locale);
+  return (
+    <html>
+      <body className={montserrat.className}>
+        <div className="h-screen">
+      <SessionProvider>
+      <Provider>
+        <div className="flex relative">
+          <div className="sm:w-1/4">
+          <SideBar locale= {locale} />
+          </div>
+          {/* <TopNavBar /> */}
+          <div className="bg-slate-100 dark:bg-neutral-900 px-4 sm:px-10 py-4 w-full">
+            <div className="">
+              <Topnav />
+            </div>
+             {children} 
+            <footer className="text-center pt-10 bottom-0">
+             <span>
+               {dict.copyright}  <Link href="https://perbytes.com" target="_blank" rel="noopener noreferrer" aria-label="Perbytes Systems, Inc." title="Perbytes Systems, Inc." aria-hidden="true" className="text-blue-700 hover:text-blue-800">Perbytes Systems, Inc.</Link> &copy; 2024
+                </span>
+            </footer>
+          </div>
+        </div>
+        {/* <Chatbot /> */}
+        </Provider>
+        </SessionProvider>
+        </div>
+      </body>
+    </html>
+  );
+}
