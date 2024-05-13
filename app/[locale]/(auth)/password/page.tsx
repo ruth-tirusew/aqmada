@@ -37,7 +37,7 @@ export default function Listing() {
     if (password && confirmPassword === password){
       try{
         setLoading(true)
-        const result = await axios.put('/api/auth/me/password', password)
+        const result = await axios.put('/api/auth/me/password', {password})
         console.log(result.data)
 
           router.push("/onboarding");
@@ -50,7 +50,9 @@ export default function Listing() {
           }, 5000);
         }
       }catch(error:any){
-        setErrors((prev) => ({ ...prev, general: error}));
+        console.log(error)
+
+        setErrors((prev) => ({ ...prev, general: "Something went wrong"}));
         setLoading(false)
         setTimeout(() => {
           setErrors({});

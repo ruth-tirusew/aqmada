@@ -11,6 +11,7 @@ import {Provider} from "./providers";
 import Chatbot from "../components/chattbot";
 import Link from "next/link";
 import { getDictionary } from "@/lib/locales";
+import  Network  from "@/app/[locale]/components/network"
 
 
 const montserrat = Montserrat({ subsets: ["latin"] });
@@ -36,6 +37,7 @@ export default async function RootLayout({
         <div className="h-screen">
       <SessionProvider>
       <Provider>
+      <Network />
         <div className="flex relative">
           <div className="sm:w-1/4">
           <SideBar locale= {locale} />

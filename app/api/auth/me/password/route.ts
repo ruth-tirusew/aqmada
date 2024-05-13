@@ -11,9 +11,9 @@ export async function PUT(request: Request) {
     if (!user) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
-    const body = await request.json();
+    const {password} = await request.json();
     const saltRounds = 12; 
-    const hashedPassword = await bcrypt.hash(body.toString(), saltRounds);
+    const hashedPassword = await bcrypt.hash(password.toString(), saltRounds);
 
 
     const updatedUser = await db.user.update({
@@ -21,7 +21,8 @@ export async function PUT(request: Request) {
         id: user.id,
       },
       data: {
-        password:hashedPassword
+        password:hashedPassword,
+        passwordChanged: true
       },
     });
 
