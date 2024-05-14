@@ -127,7 +127,7 @@ const pages: Page[] = [
               </span>
             </div>
             <div className="">
-              <p className="text-md">{totalProfit} ETB</p>
+              <p className="text-md">{totalProfit < 0 ? 0 : totalProfit } ETB</p>
               <p className="text-sm text-gray-500 dark:text-white">{dict.totalProfit}</p>
             </div>
           </div>
