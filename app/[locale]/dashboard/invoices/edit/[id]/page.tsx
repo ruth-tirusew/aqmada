@@ -1,5 +1,14 @@
 "use client";
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import axios from "axios";
 import Breadcrumb from "@/app/[locale]/components/breadcrumb";
 import { Page, InvoiceItemsType, InvoiceItemForm } from "@/app/[locale]/types";
@@ -32,7 +41,8 @@ export default function Invoices() {
   const [items, setInventoryItems] = useState<InvoiceItemForm[]>([
     { inventory_id: "", quantity: 0, selling_price: 0 },
   ]);
-  
+
+  const [fetchedItems, setFetchedItems] = useState<ItemType[]>([]);  
   const [customer_name, setCustomerName] = useState<string>("");
   const [payment_status, setPaymentStatus] = useState<PaymentStatus>(PaymentStatus.PAID);
   const [loading, setLoading] = useState<boolean>(false);
@@ -40,6 +50,7 @@ export default function Invoices() {
   const [refNumber, setRefNumber] = useState("")
   const [date, setDate] = useState("")
   const routeParam = useParams<{ id: string, locale: "en" |"am" }>();
+  const [total, setTotal] = useState<number>(0);
   const router = useRouter();
   const handleNameChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setCustomerName(event.target.value);
@@ -131,15 +142,6 @@ export default function Invoices() {
 
   const [dict, setDict] = useState<any>();
 
-  const fetchDictionary = async () => {
-    try {
-      const data = await getDictionary(routeParam?.locale || "en");
-      setDict(data);
-    } catch (error) {
-      
-    }
-  };
-
   const pages: Page[] = [
     {
       name: dict?.invoice ||"Invoice",
@@ -151,6 +153,24 @@ export default function Invoices() {
     },
   ];
 
+  useEffect(() => {
+    let total = 0;
+    items.forEach((item) => {
+      total += item.quantity * item.selling_price;
+    });
+    setTotal(total);
+
+    
+  const fetchItems = async () => {
+    try {
+      const response = await axios.get("/api/inventory")
+      setFetchedItems(response.data);
+      setLoading(false);
+    } catch (error) {
+    }
+  };
+
+    
   const fetchInvoice = async () => {
     try {
       const response = await axios.get(`/api/invoice/${routeParam?.id}`);
@@ -164,10 +184,19 @@ export default function Invoices() {
     }
   };
 
-  useEffect(() => {
+  const fetchDictionary = async () => {
+    try {
+      const data = await getDictionary(routeParam?.locale || "en");
+      setDict(data);
+    } catch (error) {
+      
+    }
+  };
+
+    
     fetchDictionary();
     fetchInvoice();
-   
+    fetchItems();
   }, []);  
 
   return (
@@ -223,10 +252,11 @@ export default function Invoices() {
               </div>
               {items?.map((item, index) => (
                 <div key={index} className="w-full flex w-full align-center  border border-neutral-300 rounded-sm p-2">
-                  <div className=" border-r-[1px] grid sm:grid-cols-3 grid-cols-1 gap-2 border-gray-200 p-2 w-full">
+                  <div className=" border-r-[1px] grid grid-cols-1 gap-2 border-gray-200 p-2 w-full">
                   <div className="flex flex-col gap-1">
                     <label htmlFor="name">{dict?.item || "Item"}</label>
-                    <SelectItems onChange={(event) =>
+                    <Select
+                        onValueChange={(event) =>
                         handleInventoryItemChange(
                           index,
                           "inventory_id",
@@ -235,7 +265,49 @@ export default function Invoices() {
 
                       }
                       value={item.inventory_id}
-                      />
+                      required
+                    >
+                      <SelectTrigger className="w-full bg-transparent">
+                        <SelectValue placeholder="Select item" />
+                      </SelectTrigger>
+                      {loading ? (
+                        <SelectContent>Loading...</SelectContent>
+                      ) : fetchedItems.length === 0 ? (
+                        <SelectContent>No items found</SelectContent>
+                      ) : (
+                        <SelectContent className="dark:bg-gray-900 dark:text-white">
+                          {fetchedItems.map((group) => (
+                            <SelectGroup key={group.id}>
+                              <SelectItem
+                                value={group.id}
+                              >
+                                {group.name}
+                              </SelectItem>
+                            </SelectGroup>
+                          ))}
+                          <hr />
+                          <button
+                            className="flex justify-center space-x-4 py-2 items-center w-full"
+                            onClick={() => {
+                              router.push("/dashboard/inventory/create");
+                            }}
+                          >
+                            <span className="font-semibold text-[#1C40CA] text-xl">+</span>
+                            <p>Register Item</p>
+                          </button>
+                        </SelectContent>
+                      )}
+                    </Select>
+                    {/* <SelectItems onChange={(event) =>
+                        handleInventoryItemChange(
+                          index,
+                          "inventory_id",
+                          event
+                        )
+
+                      }
+                      value={item.inventory_id}
+                      /> */}
                   </div>
                   <div className="flex flex-col gap-1">
                     <label htmlFor="name">
@@ -250,6 +322,7 @@ export default function Invoices() {
                           parseInt(event.target.value)
                         )
                       }
+                      required
                     />
                   </div>
                   <div className="flex flex-col gap-1">
@@ -264,6 +337,7 @@ export default function Invoices() {
                           parseInt(event.target.value)
                         )
                       }
+                      required
                     />
                   </div>
                   </div>
@@ -291,6 +365,13 @@ export default function Invoices() {
               ))}
             </div>
           </div>
+          <div className="flex  gap-1 w-full justify-end p-2 border-t-[1px] border-neutral-300">
+                <p className="text-md font-semibold"> {dict?.total || "Total"}:</p>
+                <p>
+                {total} ETB
+                </p>
+
+              </div>
           <button
                   type="button"
                   className="border border-[#1C40CA] border rounded-md  text-[#1C40CA] px-4 text-center  py-2 my-4 cursor-pointer"

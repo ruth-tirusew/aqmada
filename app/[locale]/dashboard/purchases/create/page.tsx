@@ -1,14 +1,21 @@
-'use client'
-import React, { ChangeEvent, useState } from "react";
+"use client";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import axios from "axios";
 import Breadcrumb from "@/app/[locale]/components/breadcrumb";
 import { ItemType, Page } from "@/app/[locale]/types";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 
-
-import SelectItems from "@/app/[locale]/components/SelectItem";
-import ImageUpload from "@/app/[locale]/components/image";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { AiOutlineClose } from "react-icons/ai";
 
 interface FormData {
   file: string;
@@ -25,16 +32,18 @@ interface Item {
   initial_price: number;
 }
 
+
 // @ts-ignore
-export default function PurchaseOrderForm({params:{locale}}) {
+export default function PurchaseOrderForm({ params: { locale } }) {
   const [order_number, setPurchaseOrder] = useState("");
   const [file, setFile] = useState("");
   const [vendor, setVendorName] = useState("");
   const [loading, setLoading] = useState(false);
-  const[items, setItems] = useState<Item[]>([
-    { id:"", name: "", image:"", quantity: 0, initial_price: 0, },
-  ])
-  const router = useRouter()
+  const [error, setError] = useState("");
+  const [items, setItems] = useState<Item[]>([
+    { id: "", name: "", image: "", quantity: 0, initial_price: 0 },
+  ]);
+  const router = useRouter();
 
   const pages: Page[] = [
     {
@@ -46,6 +55,20 @@ export default function PurchaseOrderForm({params:{locale}}) {
       href: "/dashboard/purchase/create",
     },
   ];
+
+  const [inventoryItems, setInventoryItems] = useState<ItemType[]>([]);
+
+  const fetchItems = async () => {
+    try {
+      const response = await axios.get("/api/inventory");
+      setInventoryItems(response.data);
+      setLoading(false);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    fetchItems();
+  }, []);
 
   const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setVendorName(event.target.value);
@@ -73,17 +96,17 @@ export default function PurchaseOrderForm({params:{locale}}) {
       case "id":
         updatedItems[index][field] = value as string;
         break;
-        case "name":
-          updatedItems[index][field] = value as string;
-          break;
+      case "name":
+        updatedItems[index][field] = value as string;
+        break;
       case "image":
-          updatedItems[index][field] = value as string;
-          break;
+        updatedItems[index][field] = value as string;
+        break;
       case "quantity":
-        updatedItems[index][field] = value as number;
+        updatedItems[index][field] = value;
         break;
       case "initial_price":
-        updatedItems[index][field] = value as number;
+        updatedItems[index][field] = value;
         break;
       default:
         break;
@@ -91,7 +114,6 @@ export default function PurchaseOrderForm({params:{locale}}) {
     setItems(updatedItems);
   };
 
-  
   const handleAddInventoryItem = (): void => {
     setItems([
       ...items,
@@ -110,30 +132,33 @@ export default function PurchaseOrderForm({params:{locale}}) {
     setItems(updatedItems);
   };
 
-  
-  
-  const handleSubmit = async (event:any) => {
+  const handleSubmit = async (event: any) => {
     event.preventDefault();
+    setLoading(true);
 
     try {
-      const formData:FormData = {
+      const formData: FormData = {
         file,
         //@ts-ignore
-        items, 
+        items,
         vendor,
-        order_number
+        order_number,
       };
-      if (items.length ===1){
-        for(const item of items){
-          if(item.id === ""){
-            return
+      if (items.length === 1) {
+        for (const item of items) {
+          if (item.id === "") {
+            return;
           }
         }
       }
-     await axios.post("/api/purchase", formData);
-      setLoading(true)
-      router.push('/dashboard/purchases')
+      await axios.post("/api/purchase", formData);
+      router.push("/dashboard/purchases");
     } catch (error:any) {
+      setError("Something went wrong");
+      setTimeout(() => {
+        setError("");
+      }, 5000);
+      setLoading(false)
       if(error.response.status === 403){
         router.push(`/${locale || "en"}/dashboard/403`);
       }
@@ -150,120 +175,179 @@ export default function PurchaseOrderForm({params:{locale}}) {
           </p>
         </div>
         <form onSubmit={handleSubmit}>
-            <div className="flex flex-col gap-4">
-                <div className="vendor-name">
-                    <label className="text-sm font-semibold" htmlFor="vendor-name">Vendor Name</label>
-                    <Input
-                        type="text"
-                        placeholder="Vendor Name"
-                        value={vendor}
-                        onChange={handleNameChange}
-                        id="vendor-name"
-                        className="bg-transparent"
-                    />
+        {error && (
+                <div className="bg-red-100/[0.2] rounded-md p-2 border-2 border-red-500">
+                  <p className="text-red-500 text-center font-medium">
+                    {error}
+                  </p>
                 </div>
-                <div className="flex gap-4 w-full">
-                <div className="p-o w-full">
-                <label className="text-sm font-semibold" htmlFor="purchase-order">Order Number</label>
-                    <Input
-                        type="text"
-                        placeholder="PO Number"
-                        value={order_number}
-                        onChange={handleOrderNumberChange}
-                        id="purchase-order"
-                        className="bg-transparent"
-                    />
+              )}
+          <div className="flex flex-col gap-4">
+            <div className="vendor-name">
+              <label className="text-sm font-semibold" htmlFor="vendor-name">
+                Vendor Name
+              </label>
+              <Input
+                type="text"
+                placeholder="Vendor Name"
+                value={vendor}
+                onChange={handleNameChange}
+                id="vendor-name"
+                className="bg-transparent"
+              />
+            </div>
+            <div className="flex gap-4 w-full">
+              <div className="p-o w-full">
+                <label
+                  className="text-sm font-semibold"
+                  htmlFor="purchase-order"
+                >
+                  Order Number
+                </label>
+                <Input
+                  type="text"
+                  placeholder="PO Number"
+                  value={order_number}
+                  onChange={handleOrderNumberChange}
+                  id="purchase-order"
+                  className="bg-transparent"
+                />
+              </div>
+              <div className="files w-full">
+                <label
+                  className="text-sm font-semibold items-center"
+                  htmlFor="files"
+                >
+                  Attach Files
+                </label>
+                <Input
+                  type="file"
+                  placeholder="PO Number"
+                  value={file}
+                  onChange={handleFileChange}
+                  id="files"
+                  className="bg-transparent"
+                />
+              </div>
+            </div>
+            {items.map((item, index) => (
+              <div className="" key={index}>
+                <div className="flex space-x-2 w-full">
+                  <div className="w-full border-[0.5px] border-gray-400 my-4"></div>
                 </div>
-                <div className="files w-full">
-                <label className="text-sm font-semibold items-center" htmlFor="files">Attach Files</label>
-                    <Input
-                        type="file"
-                        placeholder="PO Number"
-                        value={file}
-                        onChange={handleFileChange}
-                        id="files"
-                        className="bg-transparent"
-                    />
-                </div>
-                </div>
-                {items.map((item, index) => (
-                  <div className="" key={index}>
-                    <div className="flex space-x-2 w-full">
-                      <div className="w-full border border-gray-400 my-4"></div>
-                      <button className="text-red-500 w-1/5" onClick={() => handleRemoveInventoryItem(index)}>Remove Fields</button>
+                <div className="grid grid-cols-1 gap-4 items-center w-full">
+                  <div className="w-full flex w-full align-center  border border-neutral-300 rounded-sm p-2">
+                    <div className=" border-r-[1px] gap-2 grid grid-cols-1 border-gray-200 p-4 w-full">
+                    <div className="flex flex-col gap-1 w-full">
+                      <label
+                        className="text-sm font-semibold"
+                        htmlFor="purchase-order"
+                      >
+                        Item<span className="text-red-600">*</span>
+                      </label>
+                      <Select
+                        onValueChange={(value) =>
+                          handleItemChange(index, "id", value)
+                        }
+                        required
+                      >
+                        <SelectTrigger className="w-full bg-transparent">
+                          <SelectValue placeholder="Select item" />
+                        </SelectTrigger>
+                        {loading ? (
+                          <SelectContent>Loading...</SelectContent>
+                        ) : inventoryItems.length === 0 ? (
+                          <SelectContent>No items found</SelectContent>
+                        ) : (
+                          <SelectContent className="dark:bg-gray-900 dark:text-white">
+                            {inventoryItems.map((group) => (
+                              <SelectGroup key={group.id}>
+                                <SelectItem value={group.id}>
+                                  {group.name}
+                                </SelectItem>
+                              </SelectGroup>
+                            ))}
+                            <hr />
+                            <button
+                              className="flex justify-center space-x-4 py-2 items-center w-full"
+                              onClick={() => {
+                                router.push("/dashboard/inventory/create");
+                              }}
+                            >
+                              <span className="font-semibold text-[#1C40CA] text-xl">
+                                +
+                              </span>
+                              <p>Register Item</p>
+                            </button>
+                          </SelectContent>
+                        )}
+                      </Select>
                     </div>
-                <div className="grid grid-cols-2 gap-4 items-center w-full">
-                <div className="">
-                <div className="">
-                <ImageUpload onChange={(event) =>
-                        handleItemChange(
-                          index,
-                          "image",
-                          event
-                        )
-                      } value={item.image || ""} 
-                      locale={locale}
-                      />
-                </div>
-                </div>
-                <div className="flex flex-col gap-2">
-                <div className="p-o w-full">
-                <label className="text-sm font-semibold" htmlFor="purchase-order">Item<span className="ml-2 text-red-600">*</span></label>
-                <SelectItems onChange={(event) =>
-                        handleItemChange(
-                          index,
-                          "id",
-                          event
-                        )
-                      }
-                      value={item.id}
-                      />
-                </div>
-                <div className="files w-full">
-                <label className="text-sm font-semibold items-center" htmlFor="quantity">Quantity<span className="ml-2 text-red-600">*</span></label>
-                    <Input
+                    <div className="w-full">
+                      <label
+                        className="text-sm font-semibold items-center"
+                        htmlFor="quantity"
+                      >
+                        Quantity<span className="ml-2 text-red-600">*</span>
+                      </label>
+                      <Input
                         placeholder="0"
                         value={item.quantity}
-                        onChange= {(event) =>
-                        handleItemChange(
-                          index,
-                          "quantity",
-                          parseInt(event.target.value)
-                        )
-                      }
+                        onChange={(event) =>
+                          handleItemChange(
+                            index,
+                            "quantity",
+                            event.target.value
+                          )
+                        }
                         // onChange={handlequantityChange}
                         id="quantity"
                         className="bg-transparent"
-                    />
-                </div>
-                <div className="files w-full">
-                <label className="text-sm font-semibold items-center" htmlFor="initial_price">Price<span className="ml-2 text-red-600">*</span></label>
-                    <Input
+                        required
+                      />
+                    </div>
+                    <div className="w-full">
+                      <label
+                        className="text-sm font-semibold items-center"
+                        htmlFor="initial_price"
+                      >
+                        Price<span className="ml-2 text-red-600">*</span>
+                      </label>
+                      <Input
                         type="number"
                         placeholder="$ 0.0"
                         value={item.initial_price}
-                        onChange= {(event) =>
-                        handleItemChange(
-                          index,
-                          "initial_price",
-                          parseFloat(event.target.value)
-                        )
-                      }
+                        onChange={(event) =>
+                          handleItemChange(
+                            index,
+                            "initial_price",
+                            event.target.value
+                          )
+                        }
                         id="initial_price"
                         className="bg-transparent"
-                    />
-                </div>
-                </div>   
-                </div>
+                        required
+                      />
+                    </div>
+                    </div>
+                    <button
+                    type="button"
+                    className="pt-4"
+                    onClick={() => handleRemoveInventoryItem(index)}
+                  >
+                     <AiOutlineClose className="text-red-500 text-sm cursor-pointer mx-4"/>
+                  </button>
                   </div>
-                ))}
-                <button
-                  className="border border-[#1C40CA] border rounded-md font-semibold text-[#1C40CA] px-8 py-2"
-                  onClick={handleAddInventoryItem}
-                >
-                  + Add Items
-                </button>
-            </div>
+                </div>
+              </div>
+            ))}
+            <button
+               className="border border-[#1C40CA] border rounded-md  text-[#1C40CA] px-8 py-2 my-4"
+              onClick={handleAddInventoryItem}
+            >
+              + Add Items
+            </button>
+          </div>
           <div className="w-full flex justify-end mt-6 mb-2 gap-2">
             <button
               type="button"
@@ -273,21 +357,24 @@ export default function PurchaseOrderForm({params:{locale}}) {
               Reset
             </button>
             <div>
-            {loading ? (
-              <button className="bg-[#1C40CA] rounded-md font-semibold text-white px-8 py-2" disabled>
-                Loading....
-              </button>
-            ) : (
-              <>
+              {loading ? (
                 <button
-                  type="submit"
                   className="bg-[#1C40CA] rounded-md font-semibold text-white px-8 py-2"
+                  disabled
                 >
-                  Save
+                  Loading....
                 </button>
-              </>
-            )}
-          </div>
+              ) : (
+                <>
+                  <button
+                    type="submit"
+                    className="bg-[#1C40CA] rounded-md font-semibold text-white px-8 py-2"
+                  >
+                    Save
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         </form>
       </div>

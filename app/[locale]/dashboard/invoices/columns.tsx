@@ -21,6 +21,10 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { getDictionary } from "@/lib/locales";
+import { useParams } from "next/navigation";
+
+
 export const deleteItem = async (id: string) => {
   try {
     await axios.delete(`/api/invoice/${id}`);
@@ -30,6 +34,8 @@ export const deleteItem = async (id: string) => {
     return alert("An error has occured.");
   }
 };
+
+
 export const columns: ColumnDef<InvoiceType>[] = [
 
   {

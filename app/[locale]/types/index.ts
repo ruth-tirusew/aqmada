@@ -42,9 +42,16 @@ export type InvoiceType = Omit<Invoice, "created_at" | "updated_at"> & {
 
 
 export type ItemType = Omit<Item, "created_at" | "updated_at"> & {
-  created_at: String;
-  updated_at: String;
+  created_at?: String;
+  updated_at?: String;
 };
+
+export type ItemFormType = {
+  warehouse_id: string;
+  name: string;
+  initial_price:GLfloat;
+  quantity: number;
+}
 
 
 export type InvoiceItemsType = Omit<InvoiceItem, "created_at"> & {

@@ -119,5 +119,6 @@
     "delete":"Delete",
     "addPermission":"Add Permission",
     "removePermission":"Remove Permission",
-    "warning":"Proceed with caution when modifying employee information."
+    "warning":"Proceed with caution when modifying employee information.",
+    "refNo":"Ref No."
 }

@@ -17,7 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { PiSpinner } from "react-icons/pi";
+import { PiCheck, PiSpinner } from "react-icons/pi";
 import { useRouter } from "next/navigation";
 
 interface Error {
@@ -32,6 +32,8 @@ export default function Admin() {
   const [loading, setLoading] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
   const [error, setErrors] = useState<Error>({});
+  const [success, setSuccess] = useState(false);
+
 
   const handleSubmit = async () => {
     try {
@@ -39,6 +41,17 @@ export default function Admin() {
       const response = await axios.post("/api/waitlist", {
         email: registeredUser,
       })
+      if(response.status === 403) {
+        router.push("/login");
+        return
+      }
+      else if (response.status === 200  || response.status === 201) {
+      setSuccess(true);
+      setTimeout(() => {
+        setSuccess(false);
+      }, 5000);
+      setRegisteredUser("");
+      }
       
     } catch (error: any) {
       console.log(error);
@@ -105,6 +118,15 @@ export default function Admin() {
                   </p>
                 </div>
               )}
+              {
+                success && (
+                  <div className="bg-emerald-100/[0.2] rounded-md p-2 border-2 border-emerald-500">
+                    <p className="text-emerald-500 text-center font-medium flex gap-2">
+                     <PiCheck/> Registered Successfully
+                    </p>
+                  </div>
+                )
+              }
               <div className="grid grid-cols gap-2">
                 <label htmlFor="name" className="dark:text-white font-semibold">
                   Email:

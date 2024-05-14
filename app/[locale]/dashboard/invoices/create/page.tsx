@@ -25,6 +25,8 @@ export default function Invoices() {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const [dict, setDict] = useState<any>();
+  const [total, setTotal] = useState<number>(0);
+
   const routeParam = useParams<{ id: string, locale: "en" |"am" }>();
   
   const [inventory_items, setInventoryItems] = useState<InvoiceItemForm[]>([
@@ -123,7 +125,17 @@ export default function Invoices() {
     }
   };
   loadDictionary();
-  }, [routeParam?.id, routeParam?.locale]);
+    let total = 0;
+    inventory_items.forEach((item) => {
+      total += item.quantity * item.selling_price;
+    });
+    if(total > 0 && typeof total === "number"){
+      setTotal(total)
+    }else{
+      setTotal(0)
+    }
+   
+  }, [routeParam?.id, routeParam?.locale, inventory_items]);
 
 
   const pages: Page[] = [
@@ -149,9 +161,13 @@ export default function Invoices() {
         </div>
         <form onSubmit={handleSubmit}>
 
-          <p className="text-sm text-red-500 font-semibold mb-4">
-            {error}
-          </p>
+        {error && (
+                <div className="bg-red-100/[0.2] rounded-md p-2 border-2 border-red-500">
+                  <p className="text-red-500 text-center font-medium">
+                    {error}
+                  </p>
+                </div>
+              )}
           <div className="flex gap-4">
             <div className="flex flex-col gap-4 w-full">
               <div className="flex flex-col gap-1">
@@ -165,7 +181,7 @@ export default function Invoices() {
               </div>
               {inventory_items?.map((item, index) => (
                 <div key={index} className="w-full flex w-full align-center  border border-neutral-300 rounded-sm p-2">
-                  <div className=" border-r-[1px] grid sm:grid-cols-3 grid-cols-1 gap-2 border-gray-200 p-2 w-full">
+                  <div className=" border-r-[1px] grid grid-cols-1 gap-2 border-gray-200 p-2 w-full">
                   <div className="flex flex-col gap-1">
                     <label htmlFor="name">{dict?.item || "Item"}</label>
                     <SelectItems onChange={(event) =>
@@ -218,6 +234,13 @@ export default function Invoices() {
                   </button>
                 </div>
               ))}
+              <div className="flex  gap-1 w-full justify-end p-2 border-t-[1px] border-neutral-300">
+                <p className="text-md font-semibold"> {dict?.total || "Total"}:</p>
+                <p>
+                {total} ETB
+                </p>
+
+              </div>
             </div>
           </div>
           <button

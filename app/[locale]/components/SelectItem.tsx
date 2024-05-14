@@ -46,6 +46,7 @@ const SelectItems: React.FC<SelectItemsProps> = ({ onChange, value }) => {
   return (
     <Select
       onValueChange={(value) => handleSelectChange(value)}
+      defaultValue={value as string}
     >
       <SelectTrigger className="w-full bg-transparent">
         <SelectValue placeholder="Select item" defaultValue={value as string} />

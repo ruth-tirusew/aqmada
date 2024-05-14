@@ -9,6 +9,18 @@ import { useParams, useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import SelectItems from "@/app/[locale]/components/SelectItem";
 import { getDictionary } from "@/lib/locales";
+import { PiSpinner } from "react-icons/pi";
+import { AiOutlineClose } from "react-icons/ai";
+
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface FormData {
   file: string;
@@ -31,10 +43,24 @@ export default function PurchaseOrderForm() {
   const [file, setFile] = useState("");
   const [vendor, setVendorName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [inventoryItems, setInventoryItems] = useState<ItemType[]>([]);
+  const [error, setError] = useState("");
   const[items, setItems] = useState<any[]>([
     { inventory_id:"", quantity:0, price:0 },
   ])
   const router = useRouter()
+
+  const fetchItems = async () => {
+    try {
+      const response = await axios.get("/api/inventory");
+      setInventoryItems(response.data);
+      setLoading(false);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    fetchItems();
+  }, []);
 
   const fetchPurchaseOrder = async () => {
     try{
@@ -50,7 +76,6 @@ export default function PurchaseOrderForm() {
         setLoading(false)
 
     }catch(error){
-        console.log(error)
     }
   }
 
@@ -121,6 +146,7 @@ export default function PurchaseOrderForm() {
   
   const handleSubmit = async (event:any) => {
     event.preventDefault();
+    setLoading(true)
 
     try {
       const formData:FormData = {
@@ -138,9 +164,13 @@ export default function PurchaseOrderForm() {
         }
       }
       const response = await axios.put(`/api/purchase/${routeParam?.id}`, formData);
-      setLoading(true)
       router.push('/dashboard/purchases')
     } catch (error:any) {
+      setError("Something went wrong");
+      setTimeout(() => {
+        setError("");
+      }, 5000);
+      setLoading(false)
       if(error.response.status === 403){
         router.push(`/${routeParam?.locale || "en"}/dashboard/403`);
       }
@@ -174,6 +204,13 @@ export default function PurchaseOrderForm() {
         </div>
         <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-4">
+            {error && (
+                <div className="bg-red-100/[0.2] rounded-md p-2 border-2 border-red-500">
+                  <p className="text-red-500 text-center font-medium">
+                    {error}
+                  </p>
+                </div>
+              )}
                 <div className="vendor-name">
                     <label className="text-sm font-semibold" htmlFor="vendor-name">{dict?.vendorName ||"Vendor Name"}</label>
                     <Input
@@ -211,23 +248,50 @@ export default function PurchaseOrderForm() {
                 </div>
                 {items.map((item, index) => (
                   <div className="" key={index}>
-                    <div className="flex space-x-2 w-full  items-center">
+                    <div className="flex space-x-2 w-full  items-center my-4">
                       <hr className="w-full border-b-1 border-neutral-300" />
-                      <button className="text-red-500 w-1/5" onClick={() => handleRemoveInventoryItem(index, item.id)}>{dict?.removeFields ||"Remove Fields"}</button>
                     </div>
-                <div className="flex flex-col gap-2">
+                    <div className="w-full flex w-full align-center  border border-neutral-300 rounded-sm p-2">
+                    <div className=" border-r-[1px] gap-2 grid grid-cols-1 border-gray-200 p-4 w-full">
                 <div className="p-o w-full">
                 <label className="text-sm font-semibold" htmlFor="purchase-order">{dict?.item ||"Item"}<span className="ml-2 text-red-600">*</span></label>
-                <SelectItems onChange={(event) =>
-                        handleItemChange(
-                          index,
-                          "inventory_id",
-                          event
-                        )
-
-                      }
-                      value={item.id}
-                      />
+                <Select
+                        onValueChange={(value) =>
+                          handleItemChange(index, "inventory_id", value)
+                        }
+                        value={item.inventory_id}
+                      >
+                        <SelectTrigger className="w-full bg-transparent">
+                          <SelectValue placeholder="Select item" />
+                        </SelectTrigger>
+                        {loading ? (
+                          <SelectContent>Loading...</SelectContent>
+                        ) : inventoryItems.length === 0 ? (
+                          <SelectContent>No items found</SelectContent>
+                        ) : (
+                          <SelectContent className="dark:bg-gray-900 dark:text-white">
+                            {inventoryItems.map((group) => (
+                              <SelectGroup key={group.id}>
+                                <SelectItem value={group.id}>
+                                  {group.name}
+                                </SelectItem>
+                              </SelectGroup>
+                            ))}
+                            <hr />
+                            <button
+                              className="flex justify-center space-x-4 py-2 items-center w-full"
+                              onClick={() => {
+                                router.push("/dashboard/inventory/create");
+                              }}
+                            >
+                              <span className="font-semibold text-[#1C40CA] text-xl">
+                                +
+                              </span>
+                              <p>Register Item</p>
+                            </button>
+                          </SelectContent>
+                        )}
+                      </Select>
                 </div>
                 <div className="files w-full">
                 <label className="text-sm font-semibold items-center" htmlFor="quantity">{dict?.quantity ||"Quantity"}<span className="ml-2 text-red-600">*</span></label>
@@ -264,7 +328,15 @@ export default function PurchaseOrderForm() {
                         className="bg-transparent"
                     />
                 </div>
-                </div>   
+                </div>  
+                <button
+                    type="button"
+                    className="pt-4"
+                    onClick={() => handleRemoveInventoryItem(index, item.id)}
+                  >
+                     <AiOutlineClose className="text-red-500 text-sm cursor-pointer mx-4"/>
+                  </button>
+                </div>
                 </div>
                 ))}
                 <div
@@ -284,19 +356,23 @@ export default function PurchaseOrderForm() {
             </button>
             <div>
             {loading ? (
-              <button className="bg-[#1C40CA] rounded-md font-semibold text-white px-8 py-2" disabled>
-                Loading....
-              </button>
-            ) : (
-              <>
                 <button
-                  type="submit"
-                  className="bg-[#1C40CA] rounded-md font-semibold text-white px-8 py-2"
+                  className="bg-[#1C40CA] rounded-md font-semibold text-white px-8 py-2 flex items-center"
+                  disabled
                 >
-                  {dict?.submit ||"Submit"}
+                  <PiSpinner className="h-4 w-4 mr-2 animate-spin text-white" />
+                  {dict?.loading || "Loading"}
                 </button>
-              </>
-            )}
+              ) : (
+                <>
+                  <button
+                    type="submit"
+                    className="bg-[#1C40CA] rounded-md font-semibold text-white px-8 py-2"
+                  >
+                     {dict?.submit || "Submit"}
+                  </button>
+                </>
+              )}
           </div>
           </div>
         </form>

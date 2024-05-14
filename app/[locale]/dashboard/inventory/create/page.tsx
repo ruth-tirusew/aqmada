@@ -21,6 +21,14 @@ import { Page, WarehouseType } from "@/app/[locale]/types";
 import Warehouse from "@/app/[locale]/components/warehouse";
 import {getDictionary} from "@/lib/locales";
 
+interface Errors{
+  name?: string,
+  quantity?: string,
+  initial_price?: string,
+  general?:string
+}
+
+
 
 // @ts-ignore
 export default function InventoryFormPage({params: {locale}}) {
@@ -34,6 +42,8 @@ export default function InventoryFormPage({params: {locale}}) {
   const [quantity, setQuantity] = useState("");
   const [initial_price, setInitialPrice] = useState("");
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<Errors>({});
+
   const router = useRouter();
 
   const handleWarehouseChange = (value: string) => {
@@ -97,11 +107,11 @@ export default function InventoryFormPage({params: {locale}}) {
   
   const pages: Page[] = [
     {
-      name: dict?.Inventory,
+      name: dict?.Inventory || "Inventory",
       href: `/${locale}/dashboard/inventory`,
     },
     {
-      name: dict?.inventoryForm,
+      name: dict?.inventoryForm || "Inventory Form",
       href: `/${locale}/dashboard/inventory/create`,
     },
   ];
@@ -120,7 +130,7 @@ export default function InventoryFormPage({params: {locale}}) {
       <div className="bg-white rounded-md w-full p-4 dark:bg-gray-900">
         <div className="mb-4">
           <p className="text-md font-semibold ">
-            {dict?.invFormHeading}
+            {dict?.invFormHeading || "Fill in the form to register an item."}
           </p>
         </div>
         <form>
@@ -153,14 +163,25 @@ export default function InventoryFormPage({params: {locale}}) {
               </Select>
               </div>
               <div className="flex flex-col gap-1">
-                <label htmlFor="name">{dict?.name}</label>
+                <label htmlFor="name">{dict?.name || "Name"}</label>
                 <input
-                  className="border border-neutral-300 focus:ring-0 active:ring-0 active:outline-none focus:outline-none active:ring-0 focus:border-[#1C40CA] active:border-[#1C40CA] focus:border-black rounded-sm px-2 py-1"
+                  className={`block w-full rounded-md border-0 py-1.5 px-7 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-[#021044] sm:text-sm sm:leading-6 ${errors.name ? "ring-red-500 border-1 border-red-500" :""}`}
                   placeholder="Item-1"
                   value={name}
                   onChange={e =>{setName(e.target.value)}}
                   required
-                />
+                  onBlur={(e) => {
+                    if (!e.target.value) {
+                      setErrors((prev) => ({ ...prev, name: "Field is required" }))
+                    } 
+                    else{
+                      setErrors((prev) => ({ ...prev, name: "" }))
+                    }
+                  }}
+                  />
+                  {errors.name && (
+                    <p className="text-red-500 font-semibold">{errors.name}</p>
+                  )}
               </div>
               <div className="flex flex-col">
                 <label htmlFor="name">
@@ -179,24 +200,46 @@ export default function InventoryFormPage({params: {locale}}) {
                 <div className="flex flex-col w-full">
                   <label htmlFor="name">{dict?.initialPrice || "Initial Price"}</label>
                   <input
-                    className="border border-neutral-300 focus:ring-0 active:ring-0 active:outline-none focus:outline-none active:ring-0 focus:border-[#1C40CA] active:border-[#1C40CA] focus:border-black rounded-sm px-2 py-1"
+                    className={`block w-full rounded-md border-0 py-1.5 px-7 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-[#021044] sm:text-sm sm:leading-6 ${errors.initial_price ? "ring-red-500 border-1 border-red-500" :""}`}
                     placeholder="$ 0.0"
                     type="number"
                     value={initial_price}
                     onChange={e =>{setInitialPrice(e.target.value)}}
                     required
+                    onBlur={(e) => {
+                      if (!e.target.value) {
+                        setErrors((prev) => ({ ...prev, initial_price: "Field is required" }))
+                      } 
+                      else{
+                        setErrors((prev) => ({ ...prev, initial_price: "" }))
+                      }
+                    }}
                   />
+                  {errors.initial_price && (
+                    <p className="text-red-500 font-semibold">{errors.initial_price}</p>
+                  )}
                 </div>
                 <div className="flex flex-col w-full">
                   <label htmlFor="name">{dict?.quantity}</label>
                   <input
-                    className="border border-neutral-300 focus:ring-0 active:ring-0 active:outline-none focus:outline-none active:ring-0 focus:border-[#1C40CA] active:border-[#1C40CA] focus:border-black rounded-sm px-2 py-1"
-                    placeholder="12"
+                    className={`block w-full rounded-md border-0 py-1.5 px-7 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-[#021044] sm:text-sm sm:leading-6 ${errors.quantity ? "ring-red-500 border-1 border-red-500" :""}`}
+                    placeholder="0"
                     type="number"
                     value={quantity}
                     onChange={e =>{setQuantity(e.target.value)}}
                     required
+                    onBlur={(e) => {
+                      if (!e.target.value) {
+                        setErrors((prev) => ({ ...prev, quantity: "Field is required" }))
+                      } 
+                      else{
+                        setErrors((prev) => ({ ...prev, quantity: "" }))
+                      }
+                    }}
                   />
+                  {errors.quantity && (
+                    <p className="text-red-500 font-semibold">{errors.quantity}</p>
+                  )}
                 </div>
               </div>
             </div>
@@ -205,7 +248,7 @@ export default function InventoryFormPage({params: {locale}}) {
                   {dict?.image || "Image"}
                   <span className="text-neutral-400 text-xs">({dict?.optional || "Optional"})</span>
                 </label>
-            <ImageUpload onChange={(value) => setImage(value)} value={image} locale={locale}/>
+            <ImageUpload onChange={(value) => setImage(value)} locale={locale}/>
             </div>
           </div>
           <div className="w-full flex justify-end mt-6 mb-2 gap-2">
@@ -217,26 +260,21 @@ export default function InventoryFormPage({params: {locale}}) {
               {dict?.reset || "Reset"}
             </button>
             <div>
-              {loading ? (
-                <button
-                  className="bg-[#1C40CA] rounded-md font-semibold text-white px-8 py-2 flex items-center"
-                  disabled
-                >
-                  <PiSpinner className="h-4 w-4 mr-2 animate-spin text-white" />
-                  {dict?.loading || "Loading"}
-                </button>
-              ) : (
-                <>
-                  <button
-                    onClick={handleSubmit}
-                    type="submit"
-                    className="bg-[#1C40CA] rounded-md font-semibold text-white px-8 py-2"
-                  >
-                    {dict?.submit || "Submit"}
-                    
-                  </button>
-                </>
-              )}
+            <button
+                onClick={handleSubmit}
+                type="submit"
+                className="bg-[#1C40CA] rounded-md font-semibold text-white px-8 py-2 flex items-center"
+                disabled={loading || !(name.length === 0) || !(quantity.length === 0) || !(initial_price.length === 0)}
+              >
+                {loading ? (
+                  <>
+                    <PiSpinner className="h-4 w-4 mr-2 animate-spin text-white" />
+                    {dict?.loading}....
+                  </>
+                ) : (
+                  dict?.submit
+                )}
+              </button>
             </div>
           </div>
         </form>

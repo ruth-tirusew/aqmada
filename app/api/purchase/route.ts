@@ -41,8 +41,8 @@ export async function POST(request: Request) {
         return {
           inventory_id: item.id,
           purchase_id: purchase.id,
-          quantity: item.quantity,
-          price: item.initial_price,
+          quantity: parseInt(item.quantity),
+          price: parseFloat(item.initial_price),
         };
       });
   
@@ -53,7 +53,7 @@ export async function POST(request: Request) {
       for (const item of items) {
         await db.item.update({
           where: { id: item.id },
-          data: { quantity: { increment: item.quantity }, initial_price: item.initial_price },
+          data: { quantity: { increment: parseInt(item.quantity) }, initial_price: parseFloat(item.initial_price) },
         });
       }
 
