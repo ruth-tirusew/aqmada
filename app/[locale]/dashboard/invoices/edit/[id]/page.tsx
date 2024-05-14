@@ -83,8 +83,6 @@ export default function Invoices() {
       default:
         break;
     }
-    console.log(updatedItems);
-
     setInventoryItems(updatedItems);
   };
 
@@ -154,14 +152,7 @@ export default function Invoices() {
   ];
 
   useEffect(() => {
-    let total = 0;
-    items.forEach((item) => {
-      total += item.quantity * item.selling_price;
-    });
-    setTotal(total);
-
-    
-  const fetchItems = async () => {
+    const fetchItems = async () => {
     try {
       const response = await axios.get("/api/inventory")
       setFetchedItems(response.data);
@@ -192,8 +183,6 @@ export default function Invoices() {
       
     }
   };
-
-    
     fetchDictionary();
     fetchInvoice();
     fetchItems();
@@ -365,13 +354,6 @@ export default function Invoices() {
               ))}
             </div>
           </div>
-          <div className="flex  gap-1 w-full justify-end p-2 border-t-[1px] border-neutral-300">
-                <p className="text-md font-semibold"> {dict?.total || "Total"}:</p>
-                <p>
-                {total} ETB
-                </p>
-
-              </div>
           <button
                   type="button"
                   className="border border-[#1C40CA] border rounded-md  text-[#1C40CA] px-4 text-center  py-2 my-4 cursor-pointer"

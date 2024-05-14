@@ -94,6 +94,7 @@ export type ReceivingNoteType = Omit<
 };
 
 export type PurchaseType = Omit<Purchase, "created_at" | "updated_at"> & {
+  vendor: String
   items: PurchaseItemType[];
   created_at: String;
   updated_at: String;
