@@ -44,7 +44,8 @@ function ImageUpload({ uwConfig, setPublicId, onChange, value }: CloudinaryUploa
   const initializeCloudinaryWidget = () => {
     if (loaded) {
       try {
-        const widget = window.cloudinary.createUploadWidget(
+        // @ts-ignore
+        const widget = window?.cloudinary.createUploadWidget(
           {
             uwConfig,
             cloudName: process.env.CLOUDINARY_CLOUD_NAME,
