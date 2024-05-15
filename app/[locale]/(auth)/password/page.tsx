@@ -38,8 +38,6 @@ export default function Listing() {
       try{
         setLoading(true)
         const result = await axios.put('/api/auth/me/password', {password})
-        console.log(result.data)
-
           router.push("/onboarding");
           setLoading(false)
         if(result?.status !== 200 ){
@@ -50,8 +48,6 @@ export default function Listing() {
           }, 5000);
         }
       }catch(error:any){
-        console.log(error)
-
         setErrors((prev) => ({ ...prev, general: "Something went wrong"}));
         setLoading(false)
         setTimeout(() => {
