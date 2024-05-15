@@ -15,7 +15,6 @@ const TotalSales: React.FC<{ name: string, invoice:InvoiceType[] }> = ({ name, i
   const [totalSales, setTotalSales] = useState<number>(0);
 
   const fetchInvoices: any = useCallback(async () => {
-    console.log("Called")
     try {
       invoice.map((i: any) => {});
 

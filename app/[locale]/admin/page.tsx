@@ -54,7 +54,6 @@ export default function Admin() {
       }
       
     } catch (error: any) {
-      console.log(error);
       setErrors((prev) => ({ ...prev, general: error.response.data.error}));
       setTimeout(() => {
         setErrors({});
@@ -70,12 +69,12 @@ export default function Admin() {
     try {
       setSaveLoading(true);
       const { data, status } = await axios.get("/api/waitlist");
-      if(status === 403) {
-        router.push("/login");
-        return
-      }
       setWaitlist(data);
-    } catch {
+    } catch(error: any){
+      if(error.response.status === 403) {
+        router.push("/dashboard");
+        return
+      };
       setErrors((prev) => ({ ...prev, general: "Something went wrong" }));
     } finally {
       setSaveLoading(false);

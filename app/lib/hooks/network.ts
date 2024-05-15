@@ -11,7 +11,6 @@ const useNetworkStatus = () => {
     window.addEventListener("load", updateNetworkStatus);
     window.addEventListener("online", updateNetworkStatus);
     window.addEventListener("offline", updateNetworkStatus);
-    console.log(navigator.onLine, "Online")
     return () => {
         window.removeEventListener("load", updateNetworkStatus);
         window.removeEventListener("online", updateNetworkStatus);

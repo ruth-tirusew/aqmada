@@ -44,29 +44,27 @@ export function withAuthMiddleware(middleware: CustomMiddleware) {
       signInUrl.searchParams.set('callbackUrl', pathname)
       return NextResponse.redirect(signInUrl)
     }
-
-    // If the user is authenticated and on a protected route
     if (token && protectedPathsWithLocale.includes(pathname)) {
       try {
         const res = await axios.get(`/api/auth/me`)
-        console.log(res.data)
         if (res?.data?.isSuperuser) {
-          // Redirect to admin page
           const adminUrl = new URL('/admin', request.url)
           return NextResponse.redirect(adminUrl)
         }
         if (!res?.data?.passwordChanged) {
-          // Redirect to password change page
           const passwordChangeUrl = new URL('/password', request.url)
           return NextResponse.redirect(passwordChangeUrl)
         }
         if (!res?.data?.companyId && !res?.data?.isSuperuser) {
-          // Redirect to onboarding page
           const onboardingUrl = new URL('/onboarding', request.url)
           return NextResponse.redirect(onboardingUrl)
         }
+        if (!res?.data?.isSuperuser && (request.url ==='/admin')) {
+          const dashboardUrl = new URL('/dashboard', request.url)
+          return NextResponse.redirect(dashboardUrl)
+        }
       } catch (error) {
-        // Handle error
+
       }
     }
 

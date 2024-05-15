@@ -24,11 +24,6 @@ export const NavLink:React.FC<Props> = ({heading, icon: Icon, link}) => {
           return true;
         }
       }
-
-      //   console.log(path, "path")
-      //   console.log(href, "href")
-      //   return path.startsWith(href);
-      // }
     };
 
 

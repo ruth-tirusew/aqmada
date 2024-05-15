@@ -81,7 +81,7 @@ export default function Listing() {
                   <p className="font-bold text-[#003949] text-xl dark:text-white">AQMADA</p>
                 </div>
           </Link>
-          <div className="grid place-content-center w-screen">
+          <div className="mx-auto max-w-md px-4 sm:max-w-2xl sm:px-6 lg:max-w-lg lg:px-8 mt-10 ">
         <div className="flex flex-col gap-4 py-20">
           <div className="">
           <p className="font-bold text-xl">Welcome back,</p> 
@@ -117,7 +117,7 @@ export default function Listing() {
                 </label>
                 <input
                       type="text"
-                      className={`block rounded-md border-0 dark:text-white py-1.5 pl-7 sm:pr-20 pr:10 w-full text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#003949] sm:text-sm sm:leading-6 ${errors.email ? 'ring-red-300' : ''}`}
+                      className={`block rounded-md border-0 dark:text-white py-1.5 pl-7 sm:pr-10 pr:10 w-full text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#003949] sm:text-sm sm:leading-6 ${errors.email ? 'ring-red-300' : ''}`}
                       placeholder="john.doe@example.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}

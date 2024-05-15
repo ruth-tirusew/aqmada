@@ -77,10 +77,8 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     if(!existingInvoice){
     return new NextResponse("Invoice Not Found", { status: 404 }); 
     }
-    console.log(body)
     if(body !== null){
       let data = {}
-      console.log(body)
       if(existingInvoice.vendor_id !== null){
         data ={
           order_number:body.order_number,
@@ -105,15 +103,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
           inventory:true
         }
         })
-
-      // if(body.vendor){
-      //   purchaseUpdate.vendor = body.vendor
-      // }
-      console.log(purchaseUpdate)
-
-
       body.items.map(async (item: PurchaseItem) => {
-        console.log(item)
         if (item.id) {
 
         }
@@ -133,7 +123,6 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     return new NextResponse("Invoice Update Sucessfull", { status: 200 });
 
   } catch (error) {
-    console.log(error);
     return new NextResponse("Something went wrong", { status: 500 });
   }
 }

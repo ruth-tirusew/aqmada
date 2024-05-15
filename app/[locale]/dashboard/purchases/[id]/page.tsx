@@ -68,7 +68,6 @@ export default function PurchaseOrderForm() {
         const {data} = await axios.get(`/api/purchase/${
             routeParam?.id
         }`)
-        console.log(data)
         setPurchaseOrder(data.order_number)
         setVendorName(data.vendor.name)
         setItems(data.inventory)

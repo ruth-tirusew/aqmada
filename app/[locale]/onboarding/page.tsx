@@ -96,31 +96,13 @@ export default function Onboarding() {
     } catch (error) {
       setErrors({ general: "Something went wrong" });
     }
-  };
-
-  // useEffect(() => {
-  //   const fetchCompany = async () => {
-  //     if(user){
-  //       try {
-  //         const res = await getCompany(user)
-  //         console.log(res)
-  //         if(res?.id){
-  //           router.push("/dashboard")
-  //         }
-  //       } catch (error) {
-  //         console.log(error)
-  //       }
-
-  //     }
-  //   }
-  //   fetchCompany()
-  // }, [router, user])         
+  };     
 
   return (
     <main>
       
       <div className="">
-        <div className="mx-auto max-w-md px-4 sm:max-w-2xl sm:px-6 lg:max-w-7xl lg:px-8 mt-4 flex">
+        <div className="mx-auto max-w-md px-4 sm:max-w-2xl sm:px-6 lg:max-w-7xl lg:px-8 mt-4 flex dark:text-white dark:bg-black">
           <Link href={"/"} className="flex items-center gap-2" prefetch={true}>
             <Image src={Logo} width={50} height={40} alt="logo" />
             <span className="text-lg font-bold text-[#021044] dark:text-white">

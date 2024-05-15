@@ -40,7 +40,6 @@ export async function POST(request: Request) {
     }))
     return NextResponse.json(createdRole);
   }catch (error) {
-    console.log(error)
     return new NextResponse("Something went wrong", { status: 500 });
   }
   }

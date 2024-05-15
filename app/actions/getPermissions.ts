@@ -12,7 +12,6 @@ export default async function getPermissions(){
             permissionModels:true
         }
        })
-       console.log(permissions)
        return permissions
     }
     catch (error: any) {

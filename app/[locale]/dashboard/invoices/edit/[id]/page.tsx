@@ -101,7 +101,6 @@ export default function Invoices() {
         await axios.delete(`/api/invoice/item/${id}`)
       }
     } catch (error) {
-      console.log(error);
     }
   };
 

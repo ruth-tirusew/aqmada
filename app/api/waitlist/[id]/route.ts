@@ -32,8 +32,6 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
     try {
         const user = await getCurrentUser()
-        console.log(process.env.EMAIL);
-        console.log(process.env.PASSWORD);
         if (!user) {
             return new NextResponse("Unauthorized", { status: 401 });
         }

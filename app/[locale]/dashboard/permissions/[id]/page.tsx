@@ -43,12 +43,9 @@ export default function Permissions() {
   const fetchData = async () =>{
     try{
       const response = await axios.get(`/api/permissions/${routeParams?.id}`)
-      console.log(response?.data)
       setRole(response?.data?.name)
       setPermissions(response.data?.permissionModels || [ { model: "", permission: ["", "", ""] }]);
     }catch(error){
-      console.log(error)
-      
     }
   }
 
@@ -91,7 +88,6 @@ export default function Permissions() {
       setLoading(true);
       await axios.put(`/api/permissions/${routeParams?.id}`, formData);
       router.push("/dashboard/permissions");
-      console.log(formData)
       setLoading(false);
     } catch (error: any) {
       if (error.status === 400) {

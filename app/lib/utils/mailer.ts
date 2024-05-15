@@ -23,7 +23,6 @@ import Mail from "nodemailer/lib/mailer";
       mailOptions.html = mail;
       await transporter.sendMail(mailOptions);
         }catch(err){
-      console.log(err);
   }
   }
   

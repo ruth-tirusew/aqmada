@@ -77,7 +77,6 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 
         }
         catch (error) {
-            console.log(error)
             return new NextResponse("Something went wrong", { status: 500 });
         }
 }

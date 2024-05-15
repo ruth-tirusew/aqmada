@@ -21,7 +21,6 @@ export async function getUsers(): Promise<any[]> {
             company_id: true,
           }
       });
-      console.log(employees)
       return employees;
     
       

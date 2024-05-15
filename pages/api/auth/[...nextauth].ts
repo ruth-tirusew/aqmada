@@ -74,12 +74,10 @@ export const authOptions: AuthOptions = {
             credentials?.password as string,
             user?.password as string
           );
-          console.log(isValid);
           if (!isValid) {
             throw new Error("Invalid email or password");
           }
         } catch (error) {
-          console.log(error);
           throw new Error("Invalid email or password");
         }
 

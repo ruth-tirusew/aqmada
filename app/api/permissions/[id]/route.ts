@@ -17,7 +17,6 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
                     permissionModels:true
                 }
             });
-            console.log(permission);
             return new NextResponse(JSON.stringify(permission), { status: 200 });
         }
     } catch (error) {

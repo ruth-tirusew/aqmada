@@ -87,7 +87,6 @@ export default function Invoices({params:{id, locale}}) {
   const fetchUserData = async () => {
     try{
         const response = await axios.get(`/api/users/${routerParams?.id}`);
-        console.log(response.data)
         setInitialUser(response.data)
         setUserData(response.data)
     }catch(error){
@@ -102,7 +101,6 @@ export default function Invoices({params:{id, locale}}) {
     dictionary();
     fetchRoles()
     fetchUserData()
-    console.log(userData)
   }, []);
 
 

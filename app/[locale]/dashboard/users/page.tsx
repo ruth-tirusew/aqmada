@@ -9,8 +9,6 @@ import { getDictionary } from "@/lib/locales";
 export default async function Users({params:{locale}
 }) {
       const users = await getUsers()
-      console.log(users)
-
       const dict = await getDictionary(locale)
       const pages: Page[] = [
         {

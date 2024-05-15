@@ -68,7 +68,6 @@ export default function Invoices({params:{locale}}) {
   
   const fetchRoles = async () => {
     const response = await axios.get("/api/permissions");
-    console.log(response)
     setRoles(response.data)
   }
 

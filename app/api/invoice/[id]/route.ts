@@ -123,7 +123,6 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     return new NextResponse("Invoice Update Sucessfull", { status: 200 });
 
   } catch (error) {
-    console.log(error);
     return new NextResponse("Something went wrong", { status: 500 });
   }
 }

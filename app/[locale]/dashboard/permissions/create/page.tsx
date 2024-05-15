@@ -86,7 +86,6 @@ export default function Permissions() {
       setLoading(true);
       await axios.post("/api/permissions", formData);
       router.push("/dashboard/permissions");
-      console.log(formData)
       setLoading(false);
     } catch (error: any) {
       if (error.status === 400) {
