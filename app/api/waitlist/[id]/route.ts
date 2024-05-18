@@ -147,8 +147,97 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 </html>
       
         `;
+
+        const amharic_mail = `
+        <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exclusive [Your App Name] Preview</title>
+    <style>
+            .logo-con {
+              display: flex;
+              justify-self: center;
+            }
+            .logo{
+                width: 200px; 
+            }
+            .email-content {
+              font-family: Arial, sans-serif;
+              font-size: 16px;
+              line-height: 1.5;
+            }
+            h1 {
+              font-size: 24px;
+            }
+            p {
+              margin-bottom: 16px;
+            }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        p {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        .header{
+            font-weight: 600;
+            font-size: medium;
+            text-align: center;
+        }
+        /* Add more styles as needed */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div  class="logo" >
+            <img src="https://res.cloudinary.com/ddbdbuuqw/image/upload/v1714507511/aqmada-01_kg33nv.png" class="logo"/>
+          </div>
+          <div class="email-content">
+            <p class="header">
+                ስለተመዘገቡ እናመሰግናለን
+            </p>
+            <p>
+                በአክማዳ ላይ ከመጀመሪያ ተጠቃሚዎቻችን መካከል እርስዎን በማግኘታችን ጓጉተናል። በይፋ ከመጀመሩ በፊት የእኛን አቅርቦት በማጣራት እና በማበልጸግ የእርስዎ እውቀት እና አስተያየት ለእኛ ጠቃሚ ናቸው።
+            </p>
+            <p>
+            ልዩ የተጠቃሚ ተሞክሮ እንድንፈጥር ለመርዳት ያላችሁን ቁርጠኝነት እና ትጋት እናደንቃለን። ለመጀመር፣ እባክዎ ከታች የቀረበውን ኢሜል እና የይለፍ ቃል ይጠቀሙ
+            </p>
+            <p>
+              <strong>ኢሜል:</strong> ${newUser.email}
+            </p>
+            <p>
+              <strong>የይለፍ ቃል:</strong> ${password}
+            </p>
+            
+            <p>
+                ከሰላምታ ጋር፣
+            <p>
+            ፐርባይስ
+              </p>
+            </p>
+          </div>
+    </div>
+</body>
+</html>
+      
+        `;
     
         await sendEmail(waitlist.email, mail);
+        setTimeout(async()=>{
+            await sendEmail(waitlist.email, amharic_mail)
+        }, 36000)
         return NextResponse.json({
             message: "Waitlisted User approved successfully",
             data: waitlist
