@@ -126,8 +126,12 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
               We are excited to invite you to participate as a beta tester for our groundbreaking platform Aqmada. Your expertise and feedback are invaluable to us as we refine and enhance our offering before its official launch.
             </p>
             <p>
-              We greatly appreciate your commitment and dedication to helping us create an exceptional user experience. To get started, please find your unique beta testing credentials below:
+              We greatly appreciate your commitment and dedication to helping us create an exceptional user experience. To get started click on this  credentials below:
             </p>
+            <p>
+            <a href="dashboard.aqmada.com">dashboard.aqmada.com</a>
+          </p>
+
             <p>
               <strong>Email:</strong> ${newUser.email}
             </p>
@@ -214,6 +218,9 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
             <p>
             ልዩ የተጠቃሚ ተሞክሮ እንድንፈጥር ለመርዳት ያላችሁን ቁርጠኝነት እና ትጋት እናደንቃለን። ለመጀመር፣ እባክዎ ከታች የቀረበውን ኢሜል እና የይለፍ ቃል ይጠቀሙ
             </p>
+            <p>
+            <a href="dashboard.aqmada.com">dashboard.aqmada.com</a>
+          </p>
             <p>
               <strong>ኢሜል:</strong> ${newUser.email}
             </p>
