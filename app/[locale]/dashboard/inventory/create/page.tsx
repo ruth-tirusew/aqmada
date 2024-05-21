@@ -264,7 +264,7 @@ export default function InventoryFormPage({params: {locale}}) {
                 onClick={handleSubmit}
                 type="submit"
                 className="bg-[#1C40CA] rounded-md font-semibold text-white px-8 py-2 flex items-center"
-                disabled={loading || !(name.length === 0) || !(quantity.length === 0) || !(initial_price.length === 0)}
+                disabled={loading}
               >
                 {loading ? (
                   <>
