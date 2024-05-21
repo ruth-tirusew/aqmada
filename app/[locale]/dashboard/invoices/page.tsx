@@ -4,18 +4,13 @@ import { columns } from "./columns"
 import getInvoices from "@/app/actions/getInvoices"
 import { DataTable } from "@/components/ui/datatable"
 import { getDictionary } from "@/lib/locales"
+import { useEffect } from "react"
 
 // @ts-ignore
 export default async function Invoice({ params: { locale } }) {
-    let data: InvoiceType[] = [];
+    
+    const data =  await getInvoices();
     let error;
-    
-    try {
-        data = await getInvoices();
-    } catch (error) {
-        error = "Uh! Oh Something went wrong";
-    }
-    
     
     const dict = await getDictionary(locale);
     const pages: Page[] = [

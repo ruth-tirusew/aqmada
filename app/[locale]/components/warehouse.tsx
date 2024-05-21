@@ -15,8 +15,8 @@ import { PiSpinner } from "react-icons/pi";
 
 const Warehouse = () => {
   const [loading, setLoading] = useState(false);
-  const [name, setName] = useState("");
-  const [location, setLocation] = useState("");
+  const [warehouseName, setWarehouseName] = useState("");
+  const [warehouseLocation, setWarehouseLocation] = useState("");
   const [error, setError] = useState("");
 
   const saveWarehouse = async (name: string, location:string) => {
@@ -58,7 +58,7 @@ const Warehouse = () => {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            saveWarehouse(name, location);
+            saveWarehouse(warehouseName, warehouseLocation);
           }}
         >
           <div className="">
@@ -73,8 +73,8 @@ const Warehouse = () => {
               id="name"
               name="name"
               placeholder="Warehouse Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={warehouseName}
+              onChange={(e) => setWarehouseName(e.target.value)}
               className="col-span-3 placeholder:text-gray-200 mb-4 dark:bg-gray-900"
               required
             />
@@ -92,8 +92,8 @@ const Warehouse = () => {
               id="location"
               name="location"
               placeholder="Warehouse Location"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
+              value={warehouseLocation}
+              onChange={(e) => setWarehouseLocation(e.target.value)}
               className="col-span-3 placeholder:text-gray-200 mb-4 dark:bg-gray-900"
               required
             />

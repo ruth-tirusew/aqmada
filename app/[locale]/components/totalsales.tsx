@@ -103,7 +103,20 @@ const TotalSales: React.FC<{ name: string, invoice:InvoiceType[] }> = ({ name, i
     },
     responsive: [
       {
-        breakpoint: 1100,
+        breakpoint: 960,
+        options: {
+          chart: {
+            width: 500,
+            height: 200,
+          },
+          legend: {
+            position: "bottom" as "bottom",
+          },
+        },
+      },
+
+      {
+        breakpoint: 450,
         options: {
           chart: {
             width: 300,

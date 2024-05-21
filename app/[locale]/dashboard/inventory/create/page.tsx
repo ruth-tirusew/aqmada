@@ -16,6 +16,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 
 import { Page, WarehouseType } from "@/app/[locale]/types";
 import Warehouse from "@/app/[locale]/components/warehouse";
@@ -264,7 +275,7 @@ export default function InventoryFormPage({params: {locale}}) {
                 onClick={handleSubmit}
                 type="submit"
                 className="bg-[#1C40CA] rounded-md font-semibold text-white px-8 py-2 flex items-center"
-                disabled={loading || !(name.length === 0) || !(quantity.length === 0) || !(initial_price.length === 0)}
+                disabled={loading}
               >
                 {loading ? (
                   <>

@@ -39,7 +39,7 @@ export default async function RootLayout({
       <Provider>
       <Network />
         <div className="flex relative">
-          <div className="sm:w-1/4">
+          <div className="sm:w-1/4 sticky">
           <SideBar locale= {locale} />
           </div>
           {/* <TopNavBar /> */}
