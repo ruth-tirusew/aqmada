@@ -4,22 +4,16 @@ import getCurrentUser from "@/app/actions/getCurrentUser";
 
 export async function hasPermission(permissions: PermissionEnum, model: string): Promise<boolean> {
     try {
-
-  
       const user = await getCurrentUser()
-  
-      if (!user) {
-        return false;
-      }
-  
-      if (!user.role) {
+    
+      if (user && !user.role) {
         return false; 
       }
 
       const permissionModels = await db.permissionModels.findMany({
         where: {
           model,
-          roleId: user.role.id
+          roleId: user?.role?.id
         },
       });
 
