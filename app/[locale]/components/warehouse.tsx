@@ -70,6 +70,8 @@ export const WarehouseModal:React.FC<warehouseProps> = ({ isOpen, handleClose })
             flex-col 
             w-full 
             bg-white 
+            dark:bg-black
+            dark:text-white
             outline-none 
             focus:outline-none
             ${isOpen ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}
@@ -97,10 +99,10 @@ export const WarehouseModal:React.FC<warehouseProps> = ({ isOpen, handleClose })
                 placeholder="Warehouse Name"
                 value={warehouseName}
                 onChange={(e) => setWarehouseName(e.target.value)}
-                className="w-full placeholder:text-gray-200 dark:bg-black"
+                className="w-full placeholder:text-gray-200 dark:bg-black bg-transparent"
                 required
               />
-            </div>
+            </div> 
             <div className="">
               <label htmlFor="location" className="dark:text-white font-semibold mb-2 block">
                 Warehouse Location:
@@ -112,7 +114,7 @@ export const WarehouseModal:React.FC<warehouseProps> = ({ isOpen, handleClose })
                 placeholder="Warehouse Location"
                 value={warehouseLocation}
                 onChange={(e) => setWarehouseLocation(e.target.value)}
-                className="w-full placeholder:text-gray-200 dark:bg-black"
+                className="w-full placeholder:text-gray-200 bg-transparent"
                 required
               />
             </div>
