@@ -53,7 +53,7 @@ const Topnav = () => {
   }
 
   return (
-    <div className="flex justify-end items-center">
+    <div className="flex justify-end items-cente print:hidden">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <div className="hover:bg-transparent dark:hover:text-white p-2 pointer-cursor">

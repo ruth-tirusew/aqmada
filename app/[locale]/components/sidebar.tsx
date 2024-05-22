@@ -41,7 +41,7 @@ const SideBar: React.FC<{ locale: "en" | "am" }> = ({
     fetchData();
   }, [locale]);
   return (
-    <div className="">
+    <div className="print:hidden">
       <div className='block lg:hidden absolute left-1 z-50 cursor-pointer bg-transparent  dark:text-white rounded-full p-4 rounded-full' onClick={()=>{setOpen(!open)}}>
         <CiMenuFries className='text-xl' />
       </div>
