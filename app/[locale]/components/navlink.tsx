@@ -44,11 +44,10 @@ export const NavLink:React.FC<Props> = ({heading, icon: Icon, link}) => {
             isActive(link) ? "text-[#1C40CA]" : ""
           }`}
         />
-        <span
-          className={`group-hover:text-black font-semibold text-sm dark:group-hover:text-white  ${
+         <span className={`group-hover:text-black text-gray-500 dark:group-hover:text-white font-semibold  pointer-cursor  ${
             isActive(link)
               ? "text-black dark:text-white"
-              : "text-gray-500"
+              : ""
           }`}
         >
           {heading}
