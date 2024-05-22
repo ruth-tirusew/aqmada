@@ -5,6 +5,9 @@ import {columns} from './column'
 import getInventory from "@/app/actions/getInventory"
 import {getDictionary} from "@/lib/locales";
 
+import { Button } from "@/components/ui/button";
+import { IoCloudUploadOutline } from "react-icons/io5";
+
 // @ts-ignore
 export default async function Dashboard({ params: { locale } }) {
     const data = await getInventory()
@@ -24,7 +27,9 @@ export default async function Dashboard({ params: { locale } }) {
 
     return (
         <div className="h-screen">
+            <div className="flex justify-between items-center">
             <Breadcrumb page={pages} heading={dict.Inventory} subheading={dict.inventorySubheading} />
+            </div>
             <DataTable
                 columns={columns}
                 data={[...data]} 
@@ -33,8 +38,9 @@ export default async function Dashboard({ params: { locale } }) {
                 button={true}
                 buttonObj={{
                 name: dict.addProduct,
-                url: `/${locale}/dashboard/inventory/create`
+                url: `/${locale}/dashboard/inventory/create`,
                 }}
+                upload={true}
                 />
         </div>
     )

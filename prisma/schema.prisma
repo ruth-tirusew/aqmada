@@ -56,6 +56,7 @@ model Company{
   size String
   industry String
   location String
+  excel_urls String[]
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt

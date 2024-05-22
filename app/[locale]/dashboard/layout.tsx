@@ -12,6 +12,7 @@ import Chatbot from "../components/chattbot";
 import Link from "next/link";
 import { getDictionary } from "@/lib/locales";
 import  Network  from "@/app/[locale]/components/network"
+import { Toaster } from "@/components/ui/toaster"
 
 
 const montserrat = Montserrat({ subsets: ["latin"] });
@@ -48,6 +49,7 @@ export default async function RootLayout({
               <Topnav />
             </div>
              {children} 
+             <Toaster />
             <footer className="text-center pt-10 bottom-0">
              <span>
                {dict.copyright}  <Link href="https://perbytes.com" target="_blank" rel="noopener noreferrer" aria-label="Perbytes Systems, Inc." title="Perbytes Systems, Inc." aria-hidden="true" className="text-blue-700 hover:text-blue-800">Perbytes Systems, Inc.</Link> &copy; 2024
