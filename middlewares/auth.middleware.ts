@@ -39,7 +39,8 @@ export function withAuthMiddleware(middleware: CustomMiddleware) {
       ...i18n.locales
     ])
 
-    if (!token && protectedPathsWithLocale.includes(pathname)) {
+    console.log()
+    if (!token && protectedPathsWithLocale.includes(pathname) || (!token && pathname.includes('/dashboard'))) {
       const signInUrl = new URL('/api/auth/signin', request.url)
       signInUrl.searchParams.set('callbackUrl', pathname)
       return NextResponse.redirect(signInUrl)

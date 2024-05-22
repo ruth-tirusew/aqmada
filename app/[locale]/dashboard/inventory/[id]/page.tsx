@@ -269,7 +269,7 @@ export default function InventoryFormPage({ params: { locale } }) {
           <div className="w-full flex justify-end mt-6 mb-2 gap-2">
             <button
               type="button"
-              className="bg-[#1C40CA]/[0.05] rounded-md font-semiboldtext-[#1C40CA] px-8 py-2"
+              className="bg-[#1C40CA]/[0.1] rounded-md font-semibold text-[#1C40CA] px-8 py-2"
               onClick={handleReset}
             >
               {dict?.reset || "Reset"}

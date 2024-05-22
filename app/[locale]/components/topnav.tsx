@@ -21,26 +21,26 @@ import { signOut } from "next-auth/react";
 import { IoIosLogOut } from "react-icons/io";
 import { CiUser } from "react-icons/ci";
 import { GoGear } from "react-icons/go";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const Topnav = () => {
   const { setTheme } = useTheme();
   const { data: session, status } = useSession();
-  
-  const pathName = usePathname()
+  const router = useRouter()
+
+  const pathName = usePathname();
 
   const changeLanguage = (locale: string) => {
-    if (!pathName) return '/'
-    const segments = pathName.split('/')
-    segments[1] = locale
-    return segments.join('/')
-  }
-
+    if (!pathName) return "/";
+    const segments = pathName.split("/");
+    segments[1] = locale;
+    return segments.join("/");
+  };
 
   const languages = [
-    {code: 'en', translateKey: 'English'},
-    {code: 'am', translateKey: 'Amharic'},
-  ]
+    { code: "en", translateKey: "English" },
+    { code: "am", translateKey: "Amharic" },
+  ];
 
   const user = session?.user;
   const user_initials = user?.name
@@ -52,14 +52,11 @@ const Topnav = () => {
     return null;
   }
 
-
   return (
     <div className="flex justify-end items-center">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-        <div
-            className="hover:bg-transparent dark:hover:text-white p-2 pointer-cursor"
-          >
+          <div className="hover:bg-transparent dark:hover:text-white p-2 pointer-cursor">
             <SunIcon className="absolute h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
             <MoonIcon className="h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
             <span className="sr-only">Toggle theme</span>
@@ -79,23 +76,18 @@ const Topnav = () => {
       </DropdownMenu>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <div
-            className="hover:bg-transparent dark:hover:text-white p-2 pointer-cursor"
-          >
+          <div className="hover:bg-transparent dark:hover:text-white p-2 pointer-cursor">
             <IoLanguageOutline className="text-2xl" />
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-        {languages.map((language) => (
-          <Link href={changeLanguage(language.code)} key={language.code}>
-          <DropdownMenuItem  
-            
-            data-id={`${language.code}-button`}          
-          >
-          {language.translateKey}
-          </DropdownMenuItem>
-          </Link>
-        ))}
+          {languages.map((language) => (
+            <Link href={changeLanguage(language.code)} key={language.code}>
+              <DropdownMenuItem data-id={`${language.code}-button`}>
+                {language.translateKey}
+              </DropdownMenuItem>
+            </Link>
+          ))}
         </DropdownMenuContent>
       </DropdownMenu>
       <DropdownMenu>
@@ -103,7 +95,7 @@ const Topnav = () => {
           <Avatar>
             <AvatarImage src={user?.image ?? ""} alt={user?.name ?? ""} />
             <AvatarFallback className="text-white bg-[#021044] rounded-full pointer-cursor">
-            <CiUser className=" text-2xl"/>
+              <CiUser className=" text-2xl" />
             </AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
@@ -112,7 +104,7 @@ const Topnav = () => {
             <Avatar>
               <AvatarImage src={user?.image ?? ""} alt={user?.name ?? ""} />
               <AvatarFallback>
-                <CiUser className=""/>
+                <CiUser className="" />
               </AvatarFallback>
             </Avatar>
             <div className="flex flex-col gap-1">
@@ -124,14 +116,19 @@ const Topnav = () => {
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <Link href={ ``}>
-            <DropdownMenuItem>
-              <GoGear className="mr-2"/>
-              Settings
-            </DropdownMenuItem>
-            </Link>   
-            <DropdownMenuItem onClick={() => signOut()}>
-              <IoIosLogOut className= "mr-2 text-red-500" />
+            <Link href={``}>
+              <DropdownMenuItem>
+                <GoGear className="mr-2" />
+                Settings
+              </DropdownMenuItem>
+            </Link>
+            <DropdownMenuItem
+              onClick={() => {
+                signOut();
+                router.push("/login");
+              }}
+            >
+              <IoIosLogOut className="mr-2 text-red-500" />
               Logout
             </DropdownMenuItem>
           </DropdownMenuGroup>

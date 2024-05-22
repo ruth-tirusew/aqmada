@@ -27,6 +27,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast"
 import { Page, WarehouseType } from "@/app/[locale]/types";
 import { getDictionary } from "@/lib/locales";
+import {WarehouseModal} from "@/app/[locale]/components/warehouse";
 
 interface Errors {
   name?: string;
@@ -41,6 +42,7 @@ const InventoryFormPage = ({ params: { locale } }) => {
   const [warehouseLoading, setWarehouseLoading] = useState(false);
   const [warehouseCreateLoading, setWarehouseCreateLoading] = useState(false);
   const [warehouseCreateError, setWarehouseCreateError] = useState("");
+  const [isOpen, setIsOpen] = useState(false)
 
   const [sucess, setSuccess] = useState(false)
   const [warehouseName, setWarehouseName] = useState("");
@@ -168,10 +170,11 @@ const InventoryFormPage = ({ params: { locale } }) => {
             <div className="flex flex-col gap-4 w-full">
               <div className="flex flex-col">
                 <p>{dict?.warehouse}</p>
+                <WarehouseModal isOpen={isOpen} handleClose={()=>{setIsOpen(!isOpen)}} />
                 <Select value={selectedWarehouse} onValueChange={handleWarehouseChange}>
                   <SelectTrigger className="w-full bg-transparent">
                     <SelectValue placeholder={dict?.selectWarehouse || "Select Warehouse"} />
-                    <SelectContent className="dark:bg-black dark:text-white">
+                    <SelectContent className="dark:bg-black dark:text-white z-40">
                       <SelectGroup>
                         {warehouses.map((warehouse) => (
                           <SelectItem key={warehouse.id} value={warehouse.id}>
@@ -180,73 +183,10 @@ const InventoryFormPage = ({ params: { locale } }) => {
                         ))}
                       </SelectGroup>
                       <hr />
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button variant="ghost" className="w-full text-center px-8 py-4">
-                            <span className="font-semibold text-xl mr-2">+</span>
-                            <p>Register Warehouse</p>
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="w-full dark:bg-black">
-                          <DialogHeader>
-                            <DialogTitle className="tracking-wide dark:text-white">
-                              Register Warehouse
-                            </DialogTitle>
-                          </DialogHeader>
-                          <form
-                            onSubmit={(e) => {
-                              e.preventDefault();
-                              saveWarehouse(warehouseName, warehouseLocation);
-                            }}
-                          >
-                            {warehouseCreateError && (
-                              <p className="text-red-500 mb-4">{warehouseCreateError}</p>
-                            )}
-                            <div className="mb-4">
-                              <label className="dark:text-white font-semibold mb-2 block">
-                                Warehouse Name:
-                              </label>
-                              <Input
-                                type="text"
-                                placeholder="Warehouse Name"
-                                value={warehouseName}
-                                onChange={(e) => setWarehouseName(e.target.value)}
-                                required
-                                className="bg-transparent"
-                              />
-                            </div>
-                            <div className="mb-4">
-                              <label className="dark:text-white font-semibold mb-2 block">
-                                Warehouse Location:
-                              </label>
-                              <Input
-                                type="text"
-                                placeholder="Warehouse Location"
-                                value={warehouseLocation}
-                                onChange={(e) => setWarehouseLocation(e.target.value)}
-                                required
-                                className="bg-transparent"
-                              />
-                            </div>
-                            <DialogFooter>
-                              <Button
-                                disabled={warehouseCreateLoading}
-                                type="submit"
-                                className="bg-[#021044] hover:bg-[#021044]/90 flex w-full"
-                              >
-                                {warehouseCreateLoading ? (
-                                  <>
-                                    <PiSpinner className="animate-spin mr-2" />
-                                    <span>Loading...</span>
-                                  </>
-                                ) : (
-                                  <span>Register</span>
-                                )}
-                              </Button>
-                            </DialogFooter>
-                          </form>
-                        </DialogContent>
-                      </Dialog>
+                      <Button variant="ghost" className="w-full text-center px-8 py-4 relative" onClick={() => setIsOpen(!isOpen)}>
+                          <span className="font-semibold text-xl mr-2">+</span>
+                          <p>Register Warehouse</p>
+                      </Button>
                     </SelectContent>
                   </SelectTrigger>
                 </Select>

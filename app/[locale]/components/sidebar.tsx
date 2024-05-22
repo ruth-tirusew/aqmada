@@ -20,12 +20,14 @@ import Image from "next/image";
 import { signOut } from "next-auth/react";
 import { NavLink } from "./navlink";
 import { getDictionary } from '@/lib/locales';
+import { useRouter } from 'next/navigation';
 
 const SideBar: React.FC<{ locale: "en" | "am" }> = ({
   locale= "en",
 }) => {
   const [dict, setDict] = useState<any>();
   const [open, setOpen] = useState(false); 
+  const router = useRouter()
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -76,6 +78,7 @@ const SideBar: React.FC<{ locale: "en" | "am" }> = ({
                       className="flex items-center group pl-8 py-3 gap-2"
                       onClick={() => {
                         signOut();
+                        router.push('/login')
                       }}
                     >
                       <IoIosLogOut className="group-hover:text-red-500 tex-2xl sm:text-md" />
@@ -116,6 +119,7 @@ const SideBar: React.FC<{ locale: "en" | "am" }> = ({
                       className="flex items-center group pl-8 py-3 gap-2"
                       onClick={() => {
                         signOut();
+                        router.push('/login')
                       }}
                     >
                       <IoIosLogOut className="group-hover:text-red-500 tex-2xl sm:text-md" />
