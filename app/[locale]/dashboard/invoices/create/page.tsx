@@ -159,7 +159,7 @@ export default function Invoices() {
           {dict?.invoiceFormSubheading || "Fill in the form to register an invoice."}
           </p>
         </div>
-        <div className={`border-2 border-[#1C40CA] rounded-md py-4 px-2 flex justify-center items-center my-4 ${loading ? 'block' : 'hidden'}`}>
+        <div className={`py-4 px-2 flex justify-center items-center my-4 ${loading ? 'block' : 'hidden'}`}>
               <PiSpinner className="h-6 w-6 mr-2 animate-spin dark:text-white text-[#1C40CA]" />
               {dict?.loading}....
 

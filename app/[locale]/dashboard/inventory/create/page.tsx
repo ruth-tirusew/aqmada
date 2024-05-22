@@ -15,15 +15,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast"
 import { Page, WarehouseType } from "@/app/[locale]/types";
 import { getDictionary } from "@/lib/locales";
@@ -133,7 +124,7 @@ const InventoryFormPage = ({ params: { locale } }) => {
   }, []);
 
   return (
-    <div>
+    <div className="h-screen">
       <Breadcrumb page={pages} heading={dict?.inventoryForm || "Inventory Form"} />
       <div className="bg-white rounded-md w-full p-4 dark:bg-black">
         <div className="mb-4">
@@ -141,12 +132,12 @@ const InventoryFormPage = ({ params: { locale } }) => {
             {dict?.invFormHeading || "Fill in the form to register an item."}
           </p>
         </div>
-       <div className={`border-2 border-[#1C40CA] rounded-md py-4 px-2 flex justify-center items-center my-4 ${loading ? 'block' : 'hidden'}`}>
+       <div className={`py-4 px-2 flex justify-center items-center my-4 ${loading ? 'block' : 'hidden'}`}>
               <PiSpinner className="h-6 w-6 mr-2 animate-spin dark:text-white text-[#1C40CA]" />
               {dict?.loading}....
 
        </div>
-        <form onSubmit={handleSubmit}>
+        <form>
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-4 w-full">
               <div className="flex flex-col">
@@ -266,7 +257,7 @@ const InventoryFormPage = ({ params: { locale } }) => {
               <button
                 type="submit"
                 className="bg-[#1C40CA] rounded-md font-semibold text-white px-8 py-2 flex items-center"
-                disabled={loading}
+                onClick={handleSubmit}
               >
                 {loading ? (
                   <>
