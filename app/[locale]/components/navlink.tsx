@@ -45,7 +45,7 @@ export const NavLink:React.FC<Props> = ({heading, icon: Icon, link}) => {
           }`}
         />
         <span
-          className={`group-hover:text-black font-semibold text-sm dark:group-hover:text-white hidden sm:block ${
+          className={`group-hover:text-black font-semibold text-sm dark:group-hover:text-white  ${
             isActive(link)
               ? "text-black dark:text-white"
               : "text-gray-500"
