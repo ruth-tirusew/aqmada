@@ -19,8 +19,9 @@ import {
 
 
 import { Page, WarehouseType } from "@/app/[locale]/types";
-import Warehouse from "@/app/[locale]/components/warehouse";
+import { WarehouseModal } from "@/app/[locale]/components/warehouse";
 import { getDictionary } from "@/lib/locales";
+import { Button } from "@/components/ui/button";
 
 interface Errors{
   name?: string,
@@ -33,7 +34,7 @@ interface Errors{
 export default function InventoryFormPage({ params: { locale } }) {
   const [warehouses, setWarehouses] = useState<WarehouseType[]>([]);
   const [warehouseLoading, setWarehouseLoading] = useState(false);
-  const [warehouseError, setWarehouseError] = useState("");
+ const [isOpen, setIsOpen] = useState(false);
   const [warehouse, setWarehouse] = useState("");
   const [image, setImage] = useState("");
   const [name, setName] = useState("");
@@ -159,18 +160,26 @@ export default function InventoryFormPage({ params: { locale } }) {
             <div className="flex flex-col gap-4 w-full">
               <div className="flex flex-col">
                 <p>{dict?.warehouse}</p>
-                <select
-                 onChange={(e) => setWarehouse(e.target.value)}
-                  value={warehouse}
-                  className="border border-neutral-300 focus:ring-0 active:ring-0 active:outline-none focus:outline-none active:ring-0 focus:border-[#1C40CA] active:border-[#1C40CA] focus:border-black rounded-sm px-6 py-2 bg-transparent"
-                >
-                    <option className="bg-white text-md">{dict?.selectWarehouse || "Select Warehouse"}</option>
+                <WarehouseModal isOpen={isOpen} handleClose={()=>{setIsOpen(!isOpen)}} />
+                <Select value={warehouse} onValueChange={(e) => setWarehouse(e)}>
+                  <SelectTrigger className="w-full bg-transparent">
+                    <SelectValue placeholder={dict?.selectWarehouse || "Select Warehouse"} />
+                    <SelectContent className="dark:bg-black dark:text-white z-40">
+                      <SelectGroup>
                         {warehouses.map((warehouse) => (
-                          <option key={warehouse.id} value={warehouse.id}>
+                          <SelectItem key={warehouse.id} value={warehouse.id}>
                             {warehouse.name}
-                          </option>
+                          </SelectItem>
                         ))}
-                </select>
+                      </SelectGroup>
+                      <hr />
+                      <Button variant="ghost" className="w-full text-center px-8 py-4 relative" onClick={() => setIsOpen(!isOpen)}>
+                          <span className="font-semibold text-xl mr-2">+</span>
+                          <p>Register Warehouse</p>
+                      </Button>
+                    </SelectContent>
+                  </SelectTrigger>
+                </Select>
 
               </div>
               <div className="flex flex-col gap-1">

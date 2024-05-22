@@ -40,13 +40,7 @@ interface Errors {
 const InventoryFormPage = ({ params: { locale } }) => {
   const [warehouses, setWarehouses] = useState<WarehouseType[]>([]);
   const [warehouseLoading, setWarehouseLoading] = useState(false);
-  const [warehouseCreateLoading, setWarehouseCreateLoading] = useState(false);
-  const [warehouseCreateError, setWarehouseCreateError] = useState("");
   const [isOpen, setIsOpen] = useState(false)
-
-  const [sucess, setSuccess] = useState(false)
-  const [warehouseName, setWarehouseName] = useState("");
-  const [warehouseLocation, setWarehouseLocation] = useState("");
   const [selectedWarehouse, setSelectedWarehouse] = useState("");
   const [image, setImage] = useState("");
   const [name, setName] = useState("");
@@ -132,19 +126,6 @@ const InventoryFormPage = ({ params: { locale } }) => {
       href: `/${locale}/dashboard/inventory/create`,
     },
   ];
-
-  const saveWarehouse = async (name: string, location: string) => {
-    setWarehouseCreateLoading(true);
-    try {
-      await axios.post("/api/warehouse/create", { name, location });
-      window.location.reload();
-    } catch (error: any) {
-      setWarehouseCreateError(error.response.data.error);
-      setTimeout(() => setWarehouseCreateError(""), 5000);
-    } finally {
-      setWarehouseCreateLoading(false);
-    }
-  };
 
   useEffect(() => {
     loadDictionary();
