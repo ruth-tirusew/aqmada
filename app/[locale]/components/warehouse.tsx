@@ -5,7 +5,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -38,34 +37,31 @@ const Warehouse = () => {
     }
   };
 
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    saveWarehouse(warehouseName, warehouseLocation);
+  };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button
           variant="ghost"
-          className="text-md w-full text-center px-8 py-4 md:px-6 md:py-3 dark:text-white text-black dark:bg-gray-900 "
+          className="text-md w-full text-center px-8 py-4 md:px-6 md:py-3 dark:text-white text-black dark:bg-black"
         >
-            <span className="font-semibold text-xl mr-2">+</span>
-            <p>Register Warehouse</p>
+          <span className="font-semibold text-xl mr-2">+</span>
+          <p>Register Warehouse</p>
         </Button>
       </DialogTrigger>
-      <DialogContent className="w-full dark:bg-gray-900">
+      <DialogContent className="w-full dark:bg-black">
         <DialogHeader>
           <DialogTitle className="tracking-wide dark:text-white">
-          Register Warehouse
+            Register Warehouse
           </DialogTitle>
         </DialogHeader>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            saveWarehouse(warehouseName, warehouseLocation);
-          }}
-        >
-          <div className="">
-          <label
-              htmlFor="name"
-              className="dark:text-white mb-8 font-semibold"
-            >
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label htmlFor="name" className="dark:text-white font-semibold mb-2 block">
               Warehouse Name:
             </label>
             <Input
@@ -75,16 +71,12 @@ const Warehouse = () => {
               placeholder="Warehouse Name"
               value={warehouseName}
               onChange={(e) => setWarehouseName(e.target.value)}
-              className="col-span-3 placeholder:text-gray-200 mb-4 dark:bg-gray-900"
+              className="w-full placeholder:text-gray-200 dark:bg-black"
               required
             />
-
           </div>
-          <div className="">
-          <label
-              htmlFor="location"
-              className="dark:text-white mb-8 font-semibold"
-            >
+          <div className="mb-4">
+            <label htmlFor="location" className="dark:text-white font-semibold mb-2 block">
               Warehouse Location:
             </label>
             <Input
@@ -94,31 +86,25 @@ const Warehouse = () => {
               placeholder="Warehouse Location"
               value={warehouseLocation}
               onChange={(e) => setWarehouseLocation(e.target.value)}
-              className="col-span-3 placeholder:text-gray-200 mb-4 dark:bg-gray-900"
+              className="w-full placeholder:text-gray-200 dark:bg-black"
               required
             />
-
           </div>
-        <DialogFooter>
+          {error && <p className="text-red-500 mb-4">{error}</p>}
+          <DialogFooter>
             <Button
               disabled={loading}
               type="submit"
               className="bg-[#021044] hover:bg-[#021044]/90 flex w-full"
             >
-              {
-                loading ? (
-
-                      <><PiSpinner className="animate-spin mr-2" /><span>Loading...</span></>
-                 
-                ) : (
-                  <>
-
-                      <span>Register</span>
-                  </>
-                
-                )
-              }
-              
+              {loading ? (
+                <>
+                  <PiSpinner className="animate-spin mr-2" />
+                  <span>Loading...</span>
+                </>
+              ) : (
+                <span>Register</span>
+              )}
             </Button>
           </DialogFooter>
         </form>

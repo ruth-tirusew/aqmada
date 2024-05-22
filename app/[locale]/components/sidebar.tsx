@@ -40,13 +40,13 @@ const SideBar: React.FC<{ locale: "en" | "am" }> = ({
   }, [locale]);
   return (
     <div className="">
-      <div className='block sm:hidden absolute left-1 z-50 cursor-pointer bg-transparent  dark:text-white rounded-full p-4 rounded-full' onClick={()=>{setOpen(!open)}}>
+      <div className='block lg:hidden absolute left-1 z-50 cursor-pointer bg-transparent  dark:text-white rounded-full p-4 rounded-full' onClick={()=>{setOpen(!open)}}>
         <CiMenuFries className='text-xl' />
       </div>
       {open && (
         <>
-                    <div className="block sm:hidden  fixed top-0 left-0 h-screen w-screen bg-black bg-opacity-50 z-40" onClick={()=>{setOpen(!open)}}></div>
-                  <aside className="block sm:hidden  fixed top-0 left-0 bg-white dark:bg-black dark:text-white flex flex-col bg-white h-screen w-64 z-50 ">
+                    <div className="block lg:hidden  fixed top-0 left-0 h-screen w-screen bg-black bg-opacity-50 z-40" onClick={()=>{setOpen(!open)}}></div>
+                  <aside className="block lg:hidden  fixed top-0 left-0 bg-white dark:bg-black dark:text-white flex flex-col bg-white h-screen w-64 z-50 ">
                     <div className="flex justify-end">
 
                     </div>
@@ -61,7 +61,7 @@ const SideBar: React.FC<{ locale: "en" | "am" }> = ({
                       alt="logo"
                       className="sm:w-auto sm:h-auto h-16 w-16"
                     />
-                    <p className="hidden md:block dark:text-white font-semibold lg:text-2xl ">{dict?.logo || "Aqmada"}</p> 
+                    <p className="hidden lg:block dark:text-white font-semibold lg:text-2xl ">{dict?.logo || "Aqmada"}</p> 
                   </Link>
             
                   <div className="list mt-4 grid grid-cols-1 gap-3">
@@ -88,7 +88,7 @@ const SideBar: React.FC<{ locale: "en" | "am" }> = ({
         </>
 
       )}
-          <aside className="hidden sm:block sm:h-screen overflow-y-auto print:hidden  border-r-[1.5px] border-gray-200 dark:bg-black dark:text-white flex flex-col bg-white">
+          <aside className="hidden lg:block sm:h-screen overflow-y-auto print:hidden  border-r-[1.5px] border-gray-200 dark:bg-black dark:text-white flex flex-col bg-white">
       <Link
         href="/dashboard"
         className=" flex flex-col items-center justify-center w-full font-bold text-lg my-4 sm:mb-4 sm:p-2"

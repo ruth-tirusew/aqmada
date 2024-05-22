@@ -85,7 +85,7 @@ export default function InvoiceDetail({ params: { locale } }) {
       <Breadcrumb page={pages} heading={dict?.invoiceDetails || "Invoice Details"} />
       <div className="sm:flex gap-4 print:w-full">
         <div
-          className="bg-white rounded-md w-full p-4 shadow-sm"
+          className="bg-white dark:bg-black dark:text-white rounded-md w-full p-4 shadow-sm"
           ref={invoiceRef}
         >
           {loading ? (
@@ -102,21 +102,21 @@ export default function InvoiceDetail({ params: { locale } }) {
                   height={70}
                   alt="logo"
                 />
-                <div className="ml-auto">
+                <div className="ml-auto ">
                   <div className="flex">
                     <div className="font-semibold text-md text-neutral-700">
-                      {dict?.invoice || "Invoice"}:
+                     <span className="dark:text-white"> {dict?.invoice || "Invoice"}:</span>
                     </div>
                     <div className="font-light sm:text-md  text-sm text-neutral-700 ml-2">
-                      <span>#{invoiceData?.ref_number.slice(0, 15)}</span>
+                      <span className="dark:text-white">#{invoiceData?.ref_number.slice(0, 15)}</span>
                     </div>
                   </div>
                   <div className="flex">
                     <div className="font-semibold text-md text-neutral-700">
-                      {dict?.dateIssued || "Date Issued"}:
+                    <span className="dark:text-white">{dict?.dateIssued || "Date Issued"}:</span>
                     </div>
                     <div className="font-light sm:text-md text-sm text-neutral-700 ml-2">
-                      <span>{invoiceData?.created_at.slice(0, 10)}</span>
+                      <span className="dark:text-white">{invoiceData?.created_at.slice(0, 10)}</span>
                     </div>
                   </div>
                 </div>

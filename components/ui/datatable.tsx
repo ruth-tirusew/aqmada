@@ -153,9 +153,9 @@ export function DataTable<TData, TValue>({
         }
       <div className="rounded-md border">
         <Table>
-          <TableHeader>
+          <TableHeader className="bg-transparent hover:bg-transparent">
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow key={headerGroup.id} className="bg-transparent hover:bg-transparent">
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead key={header.id}>

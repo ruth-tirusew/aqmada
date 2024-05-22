@@ -106,7 +106,19 @@ const TotalSales: React.FC<{ name: string, invoice:InvoiceType[] }> = ({ name, i
         breakpoint: 960,
         options: {
           chart: {
-            width: 500,
+            width: 700,
+            height: 200,
+          },
+          legend: {
+            position: "bottom" as "bottom",
+          },
+        },
+      },
+      {
+        breakpoint: 700,
+        options: {
+          chart: {
+            width: 600,
             height: 200,
           },
           legend: {

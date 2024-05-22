@@ -34,16 +34,16 @@ export default async function RootLayout({
   return (
     <html>
       <body className={montserrat.className}>
-        <div className="h-screen">
+        <div className="">
       <SessionProvider>
       <Provider>
       <Network />
         <div className="flex relative">
-          <div className="sm:w-1/4 sticky">
+          <div className="lg:w-[20%] fixed z-50">
           <SideBar locale= {locale} />
           </div>
           {/* <TopNavBar /> */}
-          <div className="bg-slate-100 dark:bg-neutral-900 px-4 sm:px-10 py-4 w-full">
+          <div className="bg-slate-100 dark:bg-neutral-900 p-4  sm:px-10 lg:ml-[20%] w-full">
             <div className="">
               <Topnav />
             </div>

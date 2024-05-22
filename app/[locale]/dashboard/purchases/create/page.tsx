@@ -5,6 +5,7 @@ import Breadcrumb from "@/app/[locale]/components/breadcrumb";
 import { ItemType, Page } from "@/app/[locale]/types";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
+import { getDictionary } from "@/lib/locales";
 
 import {
   Select,
@@ -16,6 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { AiOutlineClose } from "react-icons/ai";
+import { PiSpinner } from "react-icons/pi";
 
 interface FormData {
   file: string;
@@ -43,7 +45,21 @@ export default function PurchaseOrderForm({ params: { locale } }) {
   const [items, setItems] = useState<Item[]>([
     { id: "", name: "", image: "", quantity: 0, initial_price: 0 },
   ]);
+  const [dict, setDict] = useState<any>();
+
+
   const router = useRouter();
+
+  
+  const dictionary = async () => {
+    try {
+      const data = await getDictionary(locale || "en");
+      setDict(data);
+    } catch (error) {
+      console.error("Dictionary error:", error);
+    }
+  }
+  
 
   const pages: Page[] = [
     {
@@ -167,13 +183,18 @@ export default function PurchaseOrderForm({ params: { locale } }) {
 
   return (
     <div className="">
-      <Breadcrumb page={pages} heading="Purchase Form" />
+      <Breadcrumb page={pages} heading={dict?.purchaseFormHeading ||"Purchase Form"} />
       <div className="bg-white rounded-md w-full p-4 dark:bg-black">
         <div className=" mb-4">
           <p className="text-md font-semibold ">
-            Fill in the form to register an purchase.
+          {dict?.purchaseFormSubheading ||" Fill in the form to register an purchase."}
           </p>
         </div>
+        <div className={`border-2 border-[#1C40CA] rounded-md py-4 px-2 flex justify-center items-center my-4 ${loading ? 'block' : 'hidden'}`}>
+              <PiSpinner className="h-6 w-6 mr-2 animate-spin dark:text-white text-[#1C40CA]" />
+              {dict?.loading || "Loading"}....
+
+       </div>
         <form onSubmit={handleSubmit}>
         {error && (
                 <div className="bg-red-100/[0.2] rounded-md p-2 border-2 border-red-500">
@@ -185,7 +206,7 @@ export default function PurchaseOrderForm({ params: { locale } }) {
           <div className="flex flex-col gap-4">
             <div className="vendor-name">
               <label className="text-sm font-semibold" htmlFor="vendor-name">
-                Vendor Name
+              {dict?.vendorName ||"Vendor Name"}
               </label>
               <Input
                 type="text"
@@ -202,7 +223,7 @@ export default function PurchaseOrderForm({ params: { locale } }) {
                   className="text-sm font-semibold"
                   htmlFor="purchase-order"
                 >
-                  Order Number
+                  {dict?.orderNumber ||"Order Number"}
                 </label>
                 <Input
                   type="text"
@@ -218,7 +239,7 @@ export default function PurchaseOrderForm({ params: { locale } }) {
                   className="text-sm font-semibold items-center"
                   htmlFor="files"
                 >
-                  Attach Files
+                  {dict?.attachFiles ||"Attach Files"}
                 </label>
                 <Input
                   type="file"
@@ -243,7 +264,7 @@ export default function PurchaseOrderForm({ params: { locale } }) {
                         className="text-sm font-semibold"
                         htmlFor="purchase-order"
                       >
-                        Item<span className="text-red-600">*</span>
+                        {dict?.item ||"Item"}<span className="text-red-600">*</span>
                       </label>
                       <Select
                         onValueChange={(value) =>
@@ -288,7 +309,7 @@ export default function PurchaseOrderForm({ params: { locale } }) {
                         className="text-sm font-semibold items-center"
                         htmlFor="quantity"
                       >
-                        Quantity<span className="ml-2 text-red-600">*</span>
+                        {dict?.quantity ||"Quantity"}<span className="ml-2 text-red-600">*</span>
                       </label>
                       <Input
                         placeholder="0"
@@ -311,7 +332,7 @@ export default function PurchaseOrderForm({ params: { locale } }) {
                         className="text-sm font-semibold items-center"
                         htmlFor="initial_price"
                       >
-                        Price<span className="ml-2 text-red-600">*</span>
+                        {dict?.sellingPrice ||"Price"}<span className="ml-2 text-red-600">*</span>
                       </label>
                       <Input
                         type="number"
@@ -327,6 +348,7 @@ export default function PurchaseOrderForm({ params: { locale } }) {
                         id="initial_price"
                         className="bg-transparent"
                         required
+                        
                       />
                     </div>
                     </div>
@@ -345,7 +367,7 @@ export default function PurchaseOrderForm({ params: { locale } }) {
                className="border border-[#1C40CA] border rounded-md  text-[#1C40CA] px-8 py-2 my-4"
               onClick={handleAddInventoryItem}
             >
-              + Add Items
+             + {dict?.addItems ||"Add Items"}
             </button>
           </div>
           <div className="w-full flex justify-end mt-6 mb-2 gap-2">
@@ -354,23 +376,24 @@ export default function PurchaseOrderForm({ params: { locale } }) {
               className="bg-[#1C40CA]/[0.05] rounded-md font-semiboldtext-[#1C40CA] px-8 py-2"
               onClick={handleReset}
             >
-              Reset
+              {dict?.reset ||"Reset"}
             </button>
             <div>
               {loading ? (
                 <button
-                  className="bg-[#1C40CA] rounded-md font-semibold text-white px-8 py-2"
-                  disabled
-                >
-                  Loading....
-                </button>
+                className="bg-[#1C40CA] rounded-md font-semibold text-white px-8 py-2 flex items-center"
+                disabled
+              >
+                <PiSpinner className="h-4 w-4 mr-2 animate-spin text-white" />
+                {dict?.loading || "Loading"}
+              </button>
               ) : (
                 <>
                   <button
                     type="submit"
                     className="bg-[#1C40CA] rounded-md font-semibold text-white px-8 py-2"
                   >
-                    Save
+                    {dict?.submit || "Submit"}
                   </button>
                 </>
               )}
