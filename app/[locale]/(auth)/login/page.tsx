@@ -41,11 +41,11 @@ export default function Listing() {
         const result = await signIn("credentials", {
           email: email,
           password: password,
-          callbackUrl: "/password",
+          callbackUrl: "/dashboard",
           redirect:false,
         })
         if(result?.status === 200 ){
-          router.push("/password");
+          router.push("/dashboard");
           setLoading(false)
         }
         if(result?.status !== 200 ){
@@ -120,7 +120,7 @@ export default function Listing() {
                       className={`block rounded-md border-0 dark:text-white py-1.5 pl-7 sm:pr-10 pr:10 w-full text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#003949] sm:text-sm sm:leading-6 ${errors.email ? 'ring-red-300' : ''}`}
                       placeholder="john.doe@example.com"
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={(e) => setEmail((e.target.value).toLowerCase())}
                       required
                       onBlur={(e) => {
                         if (!e.target.value) {
