@@ -191,15 +191,6 @@ export default function Listing() {
               </button>
             </div>
           </form>
-              <div className="text-center my-4">
-                <p className="text-gray-500 font-semibold">
-                  Don&apos;t have an account?{" "}
-                  <Link href={"/signup"} className="text-[#021044] dark:text-white v">
-                    Sign up
-                  </Link>
-                </p>
-              </div>
-
             </div>
         </div>
       </div>
