@@ -45,7 +45,7 @@ export default function Listing() {
           redirect:false,
         })
         if(result?.status === 200 ){
-          router.push("/dashboard");
+          router.push("/password");
           setLoading(false)
         }
         if(result?.status !== 200 ){
