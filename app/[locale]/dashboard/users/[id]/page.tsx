@@ -192,26 +192,21 @@ export default function Invoices({params:{id, locale}}) {
               </div>
               <div className="flex flex-col ">
           <label htmlFor="role" className="font-semibold">{dict?.role ||"Role"}</label>
-                              <Select
-                      onValueChange={(value) => setUserData({...userData, role: value})}
-                      defaultValue={userData?.role}
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select a Role" />
-                      </SelectTrigger>
-                      <SelectContent className="dark:bg-gray-900 dark:text-white dark:hover:bg-black">
-                      <SelectGroup className="dark:bg-gray-900 dark:text-white dark:hover:bg-black">
-                      {roles.map((role:any) => (
-                        <SelectItem
-                          key={role.id}
-                          value={role.id}
-                        >
-                          {role.name}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                      </SelectContent>
-                    </Select>
+          <select
+                  id="model"
+                  name="model"
+                  className="border border-neutral-300 focus:ring-0 active:ring-0 active:outline-none focus:outline-none active:ring-0 focus:border-[#1C40CA] active:border-[#1C40CA] focus:border-black rounded-sm px-20 py-2 bg-transparent"
+                  onChange={(event) => {
+                    setUserData({ ...userData, role: event.target.value });
+                  }}
+                  value={userData?.role}
+                >
+                  {roles.map((role: any) => (
+                    <option key={role.id} value={role.id}>
+                      {role.name}
+                    </option>
+                  ))}
+                </select>
               </div>
           </div>
           </div>

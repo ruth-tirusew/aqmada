@@ -72,6 +72,7 @@ const SideBar: React.FC<{ locale: "en" | "am" }> = ({
                     <NavLink heading={dict?.Invoices || "Invoices"} link="invoices" icon={LiaFileInvoiceDollarSolid} />
                     <NavLink heading={dict?.Purchases || "Purchases"} link="purchases" icon={LiaCartArrowDownSolid} />
                     <NavLink heading={dict?.Reports || "Reports"} link="reports" icon={HiOutlineDocumentReport} />
+                    <NavLink heading={dict?.Role || "Role and Permission"} link="permissions" icon={CiLock} />
                     <NavLink heading={dict?.Users || "Users"} link="users" icon={MdOutlineAccountCircle} />
                     <NavLink heading={dict?.Settings || "Settings"} link="settings" icon={GoGear} />
                     <div

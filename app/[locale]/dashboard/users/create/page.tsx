@@ -21,10 +21,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-
-
 // @ts-ignore
-export default function Invoices({params:{locale}}) {
+export default function Invoices({ params: { locale } }) {
   const pages: Page[] = [
     {
       name: "User",
@@ -36,24 +34,23 @@ export default function Invoices({params:{locale}}) {
     },
   ];
   const [userData, setUserData] = useState({
-    image:"",
+    image: "",
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
     role: "",
   });
-  const [loading , setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const[roles, setRoles] = useState([])
-  const router=useRouter()
+  const [roles, setRoles] = useState([]);
+  const router = useRouter();
 
   // const handlePaymentStatusChange = (
   //   event: ChangeEvent<HTMLInputElement>
   // ): void => {
   //   setPaymentStatus(event.target.checked);
   // };
-
 
   const [dict, setDict] = useState<any>();
 
@@ -65,20 +62,16 @@ export default function Invoices({params:{locale}}) {
       console.error("Dictionary error:", error);
     }
   };
-  
+
   const fetchRoles = async () => {
     const response = await axios.get("/api/permissions");
-    setRoles(response.data)
-  }
-
+    setRoles(response.data);
+  };
 
   useEffect(() => {
     dictionary();
-    fetchRoles()
+    fetchRoles();
   }, []);
-
-
-
 
   const handleSubmit = async (
     event: FormEvent<HTMLFormElement>
@@ -89,9 +82,8 @@ export default function Invoices({params:{locale}}) {
       setError("");
       const response = await axios.post("/api/users", userData);
       if (response.status === 200) {
-        window.location.href = "/dashboard/users";
-      }
-      else {
+        router.push('/dashboard/users')
+      } else {
         setError(response.data.message);
         setTimeout(() => {
           setError("");
@@ -99,37 +91,40 @@ export default function Invoices({params:{locale}}) {
       }
       setLoading(false);
     } catch (error: any) {
-      if(error.response.status === 403){
+      if (error.response.status === 403) {
         router.push(`/${locale || "en"}/dashboard/403`);
       }
-      setError(error.response.data.message); 
+      setError(error.response.data.message);
       setTimeout(() => {
         setError("");
-      }, 5000); 
-      setLoading(false);  
+      }, 5000);
+      setLoading(false);
     }
   };
 
   return (
-    <div className="">
-      <Breadcrumb page={pages} heading={dict?.userRegistration || "User Registration"} />
+    <div className="h-screen">
+      <Breadcrumb
+        page={pages}
+        heading={dict?.userRegistration || "User Registration"}
+      />
       <div className="bg-white rounded-md w-full p-4">
         <div className="mb-4">
-          <p className="text-md font-semibold ">
-            {dict?.userFormHeading}
-          </p>
+          <p className="text-md font-semibold ">{dict?.userFormHeading}</p>
         </div>
         <form onSubmit={handleSubmit}>
-
-
-          <p className="text-sm text-red-500 font-semibold mb-4">
-            {error}
-          </p>
-          <div className="flex gap-4">
-            <ImageUpload onChange={(value) => setUserData({...userData, image: value})} value={userData?.image} locale={locale}/>
+          <p className="text-sm text-red-500 font-semibold mb-4">{error}</p>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <ImageUpload
+              onChange={(value) => setUserData({ ...userData, image: value })}
+              value={userData?.image}
+              locale={locale}
+            />
             <div className="flex flex-col gap-2 w-full">
-            <div className="flex flex-col ">
-          <label htmlFor="name" className="font-semibold text-sm">{dict?.fullName}: </label>
+              <div className="flex flex-col ">
+                <label htmlFor="name" className="font-semibold text-sm">
+                  {dict?.fullName}:{" "}
+                </label>
                 <input
                   className="border border-neutral-300 focus:ring-0 active:ring-0 active:outline-none focus:outline-none active:ring-0 focus:border-[#1C40CA] active:border-[#1C40CA] focus:border-black rounded-sm px-2 py-1"
                   placeholder="John Doe"
@@ -138,12 +133,16 @@ export default function Invoices({params:{locale}}) {
                   name="name"
                   value={userData?.name}
                   disabled={loading}
-                  onChange={e =>{setUserData({...userData, name: e.target.value})}}
+                  onChange={(e) => {
+                    setUserData({ ...userData, name: e.target.value });
+                  }}
                   required
                 />
               </div>
               <div className="flex flex-col ">
-          <label htmlFor="email" className="font-semibold text-sm">{dict?.email}:</label>
+                <label htmlFor="email" className="font-semibold text-sm">
+                  {dict?.email}:
+                </label>
                 <input
                   className="border border-neutral-300 focus:ring-0 active:ring-0 active:outline-none focus:outline-none active:ring-0 focus:border-[#1C40CA] active:border-[#1C40CA] focus:border-black rounded-sm px-2 py-1"
                   placeholder="john.doe@aqmada.com"
@@ -152,15 +151,32 @@ export default function Invoices({params:{locale}}) {
                   name="email"
                   value={userData?.email}
                   disabled={loading}
-                  onChange={e =>{setUserData({...userData, email: e.target.value})}}
+                  onChange={(e) => {
+                    setUserData({ ...userData, email: e.target.value });
+                  }}
                   required
                 />
               </div>
               <div className="flex flex-col ">
-          <label htmlFor="role">{dict?.role}</label>
-                              <Select
+                <label htmlFor="role">{dict?.role}</label>
+                <select
+                  id="model"
+                  name="model"
+                  className="border border-neutral-300 focus:ring-0 active:ring-0 active:outline-none focus:outline-none active:ring-0 focus:border-[#1C40CA] active:border-[#1C40CA] focus:border-black rounded-sm px-20 py-2 bg-transparent"
+                  onChange={(event) => {
+                    setUserData({ ...userData, role: event.target.value });
+                  }}
+                  value={userData?.role}
+                >
+                  {roles.map((role: any) => (
+                    <option key={role.id} value={role.id}>
+                      {role.name}
+                    </option>
+                  ))}
+                </select>
+                {/* <Select
                       onValueChange={(value) => setUserData({...userData, role: value})}
-                      value={userData?.role}
+                      defaultValue={userData?.role}
                     >
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select Role" />
@@ -177,10 +193,12 @@ export default function Invoices({params:{locale}}) {
                       ))}
                     </SelectGroup>
                       </SelectContent>
-                    </Select>
+                    </Select> */}
               </div>
               <div className="flex flex-col ">
-          <label htmlFor="password" className="font-semibold text-sm">{dict?.password}</label>
+                <label htmlFor="password" className="font-semibold text-sm">
+                  {dict?.password}
+                </label>
                 <input
                   className="border border-neutral-300 focus:ring-0 active:ring-0 active:outline-none focus:outline-none active:ring-0 focus:border-[#1C40CA] active:border-[#1C40CA] focus:border-black rounded-sm px-2 py-1"
                   placeholder="******"
@@ -189,12 +207,19 @@ export default function Invoices({params:{locale}}) {
                   name="password"
                   value={userData?.password}
                   disabled={loading}
-                  onChange={e =>{setUserData({...userData, password: e.target.value})}}
+                  onChange={(e) => {
+                    setUserData({ ...userData, password: e.target.value });
+                  }}
                   required
                 />
               </div>
               <div className="flex flex-col ">
-          <label htmlFor="confirmPassword" className="font-semibold text-sm">{dict?.confirmPassword}</label>
+                <label
+                  htmlFor="confirmPassword"
+                  className="font-semibold text-sm"
+                >
+                  {dict?.confirmPassword}
+                </label>
                 <input
                   className="border border-neutral-300 focus:ring-0 active:ring-0 active:outline-none focus:outline-none active:ring-0 focus:border-[#1C40CA] active:border-[#1C40CA] focus:border-black rounded-sm px-2 py-1"
                   placeholder="******"
@@ -203,11 +228,16 @@ export default function Invoices({params:{locale}}) {
                   name="confirmPassword"
                   value={userData?.confirmPassword}
                   disabled={loading}
-                  onChange={e =>{setUserData({...userData, confirmPassword: e.target.value})}}
+                  onChange={(e) => {
+                    setUserData({
+                      ...userData,
+                      confirmPassword: e.target.value,
+                    });
+                  }}
                   required
                 />
               </div>
-          </div>
+            </div>
           </div>
           <div className="w-full flex justify-end mt-6 mb-2 gap-2">
             <button
