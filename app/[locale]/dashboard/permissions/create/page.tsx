@@ -145,7 +145,7 @@ export default function Permissions() {
   ];
 
   return (
-    <div className="">
+    <div className="h-screen">
       <Breadcrumb
         page={pages}
         heading={dict?.permissionsForm || "Permissions Form"}
@@ -162,7 +162,7 @@ export default function Permissions() {
           <div className="flex gap-4">
             <div className="flex flex-col gap-4 w-full">
               <div className="flex flex-col gap-1">
-                <label htmlFor="name">{dict?.roleName || "Role Name"} :</label>
+                <label htmlFor="name" className="font-semibold">{dict?.roleName || "Role Name"} :</label>
                 <input
                   type="text"
                   placeholder="Admin"
@@ -172,27 +172,10 @@ export default function Permissions() {
                 />
               </div>
               {permissions.map((item, index) => (
-                <div
-                  key={index}
-                  className="w-full flex  gap-2 align-center border border-neutral-300 rounded-sm p-2"
-                >
-                  <Table className=" border-r-[1px] border-gray-200">
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="">
-                          {dict?.record || "Record"}
-                        </TableHead>
-                        <TableHead>
-                          {dict?.permissions || "Permission"}
-                        </TableHead>
-                        {/*
-                    <TableHead className="text-right">Total</TableHead> */}
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      <TableRow>
-                        <TableCell>
-                          <div className="w-full">
+                <div key={index} className="w-full flex w-full align-center  border border-neutral-300 rounded-sm p-2">
+                <div className=" border-r-[1px] grid grid-cols-1 sm:grid-cols-2 gap-6 border-gray-200 p-2 w-full">
+                      <div className="flex flex-col gap-1">
+                            <label className="font-semibold">{dict?.record || "Record"}:</label>
                           <select
                                   id="model"
                                   name="model"
@@ -215,9 +198,9 @@ export default function Permissions() {
                                 {dict?.Users || "User"}
                               </option>
                             </select>
-                          </div>
-                        </TableCell>
-                        <TableCell>
+                        </div>
+                          <div className="flex flex-col gap-1">
+                        <label className="font-semibold"> {dict?.permissions || "Permission"}:</label>
                           <div className="grid grid-cols-2 gap-4">
                             <div className="grid sm:grid-cols-2 grid-cols-1 gap-4">
                               <div className="flex items-center space-x-2">
@@ -270,10 +253,8 @@ export default function Permissions() {
                               </div>
                             </div>
                           </div>
-                        </TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
+                        </div>
+                  </div>
                   <button
                     type="button"
                     className="pt-4"
