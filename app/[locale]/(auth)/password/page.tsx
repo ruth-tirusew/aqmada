@@ -1,16 +1,13 @@
 "use client";
 import { useState } from "react";
-
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 
-import { FcGoogle } from "react-icons/fc";
 import { PiSpinner } from "react-icons/pi";
 import Logo from '@/public/aqmada-03.png'
-import { error } from "console";
-import { confirm } from "dropzone";
+
+import { signOut } from "next-auth/react";
 import axios from "axios";
 
 interface Errors {
@@ -37,7 +34,8 @@ export default function Listing() {
       try{
         setLoading(true)
         const result = await axios.put('/api/auth/me/password', {password})
-          router.push("/onboarding");
+          signOut()
+          router.push("/login");
           setLoading(false)
         if(result?.status !== 200 ){
           setErrors((prev) => ({ ...prev, general: "Invalid password" }));
