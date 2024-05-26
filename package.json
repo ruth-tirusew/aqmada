@@ -42,7 +42,7 @@
     "lucide-react": "^0.306.0",
     "negotiator": "^0.6.3",
     "next": "^14.2.3",
-    "next-auth": "^4.24.6",
+    "next-auth": "^4.24.7",
     "next-cloudinary": "^5.20.0",
     "next-i18n-router": "^5.4.2",
     "next-intl": "^3.12.0",

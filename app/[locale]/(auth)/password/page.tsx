@@ -30,7 +30,6 @@ export default function Listing() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrors({});
-
     if (confirmPassword !== password) {
       setErrors((prev) => ({ ...prev, confirmPassword: "Passwords do not match" }));
     }
@@ -48,6 +47,9 @@ export default function Listing() {
           }, 5000);
         }
       }catch(error:any){
+        if(error?.status !== 401){
+          router.push("/login")
+        }
         setErrors((prev) => ({ ...prev, general: "Something went wrong"}));
         setLoading(false)
         setTimeout(() => {

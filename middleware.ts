@@ -1,5 +1,6 @@
-import { chain } from '@/middlewares/chain'
 import { withAuthMiddleware } from '@/middlewares/auth.middleware'
+
+import { chain } from '@/middlewares/chain'
 import { withI18nMiddleware } from '@/middlewares/locale.middleware'
 
 export default chain([withAuthMiddleware, withI18nMiddleware])

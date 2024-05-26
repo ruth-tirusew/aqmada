@@ -65,6 +65,7 @@ export const authOptions: AuthOptions = {
         const user = await db.user.findUnique({
           where: { email: credentials?.email as string },
         });
+       
 
         if (!user) {
           throw new Error("Invalid email or password");
@@ -89,13 +90,12 @@ export const authOptions: AuthOptions = {
     signIn: "/login",
     error: "/login",
   },
-  //   callbacks: {
-  //     async session({ session, token, user }) {
-  //       session.user.id = user.id;
-  //       return session;
-  //     },
-  //   },
-
+  callbacks: {
+    jwt: async ({ token, user }) => {
+      user && (token.user = user)
+      return token
+  },
+  },
   session: {
     strategy: "jwt",
   },
