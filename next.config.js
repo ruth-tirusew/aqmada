@@ -5,6 +5,10 @@ const withNextIntl = createNextIntlPlugin();
 
 
 const nextConfig = {
+  webpack: (config) => {
+        config.externals = [...config.externals, 'bcrypt'];
+        return config;
+     },
     async redirects() {
         return [
           {
