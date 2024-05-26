@@ -45,29 +45,24 @@ export function withAuthMiddleware(middleware: CustomMiddleware) {
       return NextResponse.redirect(signInUrl)
     }
     if (token && protectedPathsWithLocale.includes(pathname)) {
-      console.log(protectedPathsWithLocale.includes(pathname))
+      console.log(token)
       try {
         // @ts-ignore
-        console.log(token.user.passwordChanged)
+        console.log(token.user.company_id === null)
           // @ts-ignore
         if (!token.user.passwordChanged) {
           const passwordChangeUrl = new URL('/password', request.url)
           return NextResponse.redirect(passwordChangeUrl)
         }
          // @ts-ignore
-        if (token.user.isSuperuser) {
-          const adminUrl = new URL('/admin', request.url)
-          return Response.redirect('/admin')
-        }
-         // @ts-ignore
-        if (!token.user.companyId && !token.isSuperuser) {
+        if (token.user.company_id === null) {
           const onboardingUrl = new URL('/onboarding', request.url)
-          return Response.redirect('/onboarding')
+          return NextResponse.redirect(onboardingUrl)
         }
        // @ts-ignore
         if (!token.user.isSuperuser && (request.url === '/admin')) {
           const onboardingUrl = new URL('/onboarding', request.url)
-          return Response.redirect('/onboarding')
+          return NextResponse.redirect(onboardingUrl)
         }
       } catch (error) {
       }
