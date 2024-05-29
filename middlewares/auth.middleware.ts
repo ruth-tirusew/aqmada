@@ -55,7 +55,7 @@ export function withAuthMiddleware(middleware: CustomMiddleware) {
           return NextResponse.redirect(passwordChangeUrl)
         }
         // @ts-ignore
-        if (!token.user.company_id) {
+        if (token.user.company_id === null) {
           const onboardingUrl = new URL('/onboarding', request.url)
           return NextResponse.redirect(onboardingUrl)
         }
