@@ -120,13 +120,11 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
           </div>
           <div class="email-content">
             <p class="header">
-                Thank you for registering as a beta tester, 
+                Thank you for your patience, 
             </p>
+            <p>Due to unprecedented technical difficulties, the testing of our product had to be delayed. Due to unprecedented technical difficulties, the testing of our product had to be delayed</p>
             <p>
-              We are excited to invite you to participate as a beta tester for our groundbreaking platform Aqmada. Your expertise and feedback are invaluable to us as we refine and enhance our offering before its official launch.
-            </p>
-            <p>
-              We greatly appreciate your commitment and dedication to helping us create an exceptional user experience. To get started click on this  credentials below:
+            We are sorry if this has caused you any inconvenience. Fortunately, the problem has been fixed, and we are actively working towards elevating your experience. We appreciate your patience. Use the updated login information that is attached to this email.
             </p>
             <p>
             <a href="dashboard.aqmada.com">dashboard.aqmada.com</a>
@@ -138,9 +136,9 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
             <p>
               <strong>Password:</strong> ${password}
             </p>
-            <p>Please note that these credentials are confidential and should not be shared with anyone else. They are solely for your personal use during the beta testing phase.</p>
+            <p>Kindly be advised that these login credentials are private and must not be disclosed to third parties. They are solely for your personal use during the beta testing phase.</p>
             <p>
-              Best regards,
+              Warmest regards,
             <p>
               The Perbytes Team
               </p>
@@ -158,7 +156,6 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exclusive [Your App Name] Preview</title>
     <style>
             .logo-con {
               display: flex;
@@ -213,10 +210,10 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
                 ስለተመዘገቡ እናመሰግናለን
             </p>
             <p>
-                በአክማዳ ላይ ከመጀመሪያ ተጠቃሚዎቻችን መካከል እርስዎን በማግኘታችን ጓጉተናል። በይፋ ከመጀመሩ በፊት የእኛን አቅርቦት በማጣራት እና በማበልጸግ የእርስዎ እውቀት እና አስተያየት ለእኛ ጠቃሚ ናቸው።
+            በቴክኒክ ችግሮች ምክንያት፣ የምርታችን ሙከራ መዘግየቱ  እንደ ነበረበት የሚታወቅ ነው።ይህ ምንም አይነት ችግር ካደረሰብዎ ይቅርታ እንጠይቃለን። እንደ እድል ሆኖ፣ ችግሩ ተስተካክሏል፣ እኛም የእርስዎን ተሞክሮ ለማሻሻል በንቃት እየሰራን ነው።  
             </p>
             <p>
-            ልዩ የተጠቃሚ ተሞክሮ እንድንፈጥር ለመርዳት ያላችሁን ቁርጠኝነት እና ትጋት እናደንቃለን። ለመጀመር፣ እባክዎ ከታች የቀረበውን ኢሜል እና የይለፍ ቃል ይጠቀሙ
+             ለመጀመር፣ እባክዎ ከታች የቀረበውን አዲሱን ኢሜል እና የይለፍ ቃል ይጠቀሙ
             </p>
             <p>
             <a href="dashboard.aqmada.com">dashboard.aqmada.com</a>
@@ -231,7 +228,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
             <p>
                 ከሰላምታ ጋር፣
             <p>
-            ፐርባይስ
+            ፐርባይትስ
               </p>
             </p>
           </div>
