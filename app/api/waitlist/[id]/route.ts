@@ -122,7 +122,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
             <p class="header">
                 Thank you for your patience, 
             </p>
-            <p>Due to unprecedented technical difficulties, the testing of our product had to be delayed. Due to unprecedented technical difficulties, the testing of our product had to be delayed</p>
+            <p>Due to unprecedented technical difficulties, the testing of our product had to be delayed.</p>
             <p>
             We are sorry if this has caused you any inconvenience. Fortunately, the problem has been fixed, and we are actively working towards elevating your experience. We appreciate your patience. Use the updated login information that is attached to this email.
             </p>
