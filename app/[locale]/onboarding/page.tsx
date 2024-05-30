@@ -58,7 +58,7 @@ export default function Onboarding() {
       try {
         const res = await axios.get(`/api/company/${user}`)
         if(res?.data?.id){
-          router.push("/dashboard")
+          window.location.href = "/dashboard"
         }
       } catch (error) {
         
@@ -92,9 +92,8 @@ export default function Onboarding() {
             company_id
           },
         });
-        e.preventDefault();
-        router.push('/dashboard')
-          
+        window.location.href = "/dashboard"
+
         setLoading(false);  
       } else {
         setErrors({ general: "Something went wrong" });
