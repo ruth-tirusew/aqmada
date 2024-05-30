@@ -11,7 +11,6 @@ export async function PUT(request: Request) {
     }
     try{
         const body = await request.json();
-        console.log(body)
         const files = user?.company?.excel_urls || []
         files.push(body.file)
         await db.company.update({
@@ -26,7 +25,6 @@ export async function PUT(request: Request) {
     return NextResponse.json({ data:"File Upload Successfull"}, { status: 200 });
         
     }catch(error){
-        console.log(error)
         return NextResponse.json({ error:"Something went wrong"}, { status: 500 });
     }
 }

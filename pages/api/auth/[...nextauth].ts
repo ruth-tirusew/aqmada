@@ -89,9 +89,15 @@ export const authOptions: AuthOptions = {
   pages: {
     signIn: "/login",
     error: "/login",
+    newUser:"/onboarding"
   },
   callbacks: {
-    jwt: async ({ token, user }) => {
+    jwt: async ({ token, trigger, user , session}) => {
+      if (trigger === "update" && session) {
+        // @ts-ignore
+        token.user.company_id = session.user.company_id
+        return token
+      }
       user && (token.user = user)
       return token
   },

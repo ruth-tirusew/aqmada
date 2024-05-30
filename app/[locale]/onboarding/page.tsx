@@ -48,7 +48,7 @@ export default function Onboarding() {
       name: "",
       location: "",
   })
-  const { data: session, status } = useSession()
+  const { data: session, update } = useSession()
 
   const user = session?.user?.email
   // check if user has company
@@ -76,9 +76,8 @@ export default function Onboarding() {
     setSteps(steps - 1);
   }
   const handleSubmit = async (e: any) => {
-    e.preventDefault();
-
     try {
+      e.preventDefault();
       setLoading(true);
       const res = await axios.post("/api/onboarding", {
         company,
@@ -86,8 +85,14 @@ export default function Onboarding() {
         user
       });
       if (res.status === 200) {
-        router.push("/dashboard");
-        setLoading(false);
+        const company_id = res.data.company_data?.id
+        await update({
+          user: {
+            company_id
+          },
+        });
+        router.push('/dashboard')
+        setLoading(false);  
       } else {
         setErrors({ general: "Something went wrong" });
         setLoading(false);
@@ -95,6 +100,7 @@ export default function Onboarding() {
      
     } catch (error) {
       setErrors({ general: "Something went wrong" });
+      setLoading(false);
     }
   };     
 

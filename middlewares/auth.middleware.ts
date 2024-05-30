@@ -4,7 +4,7 @@ import { Locale, i18n } from '@/i18n.config'
 import { CustomMiddleware } from './chain'
 import axios from 'axios'
 
-const protectedPaths = ['/dashboard', '/admin', "/dashboard?_rsc=ssey4"]
+const protectedPaths = ['/dashboard', '/admin']
 
 function getProtectedRoutes(protectedPaths: string[], locales: Locale[]) {
   let protectedPathsWithLocale = [...protectedPaths]
@@ -24,7 +24,6 @@ function getProtectedRoutes(protectedPaths: string[], locales: Locale[]) {
 
 export function withAuthMiddleware(middleware: CustomMiddleware) {
   return async (request: NextRequest, event: NextFetchEvent) => {
-    // Create a response object to pass down the chain
     const response = NextResponse.next()
 
     const token = await getToken({ req: request })
@@ -45,10 +44,12 @@ export function withAuthMiddleware(middleware: CustomMiddleware) {
       return NextResponse.redirect(signInUrl)
     }
     if (token && protectedPathsWithLocale.includes(pathname)) {
-      console.log(token)
       try {
         // @ts-ignore
-        console.log(token.user.company_id === null)
+        if (!token.user.company_id) {
+          const onboardingUrl = new URL('/onboarding', request.url)
+          return NextResponse.redirect(onboardingUrl)
+        }
           // @ts-ignore
         if (!token.user.passwordChanged) {
           const passwordChangeUrl = new URL('/password', request.url)
