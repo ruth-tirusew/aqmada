@@ -94,7 +94,7 @@ const pages: Page[] = [
   }, 0);
 
   return (
-    <main className="grid-cols-1 gap-4">
+    <main className="h-screen grid-cols-1 gap-4">
       <Breadcrumb page={pages} heading= {dict.Overview} />
       <div className="grid lg:grid-cols-4 gap-2 grid-cols-2">
         <div className="bg-white shadow-md rounded-lg items-center px-2 dark:bg-black">

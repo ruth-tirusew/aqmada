@@ -76,8 +76,9 @@ export default function Onboarding() {
     setSteps(steps - 1);
   }
   const handleSubmit = async (e: any) => {
+    e.preventDefault();
     try {
-      e.preventDefault();
+      
       setLoading(true);
       const res = await axios.post("/api/onboarding", {
         company,
@@ -91,7 +92,9 @@ export default function Onboarding() {
             company_id
           },
         });
+        e.preventDefault();
         router.push('/dashboard')
+          
         setLoading(false);  
       } else {
         setErrors({ general: "Something went wrong" });
